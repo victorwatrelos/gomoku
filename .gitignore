@@ -1,0 +1,4 @@
+*.o
+gomoku
+*.a
+*.DS_Store
