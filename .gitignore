@@ -3,3 +3,5 @@ gomoku
 *.a
 *.DS_Store
 *.dSYM
+*.swp
+*.swa
