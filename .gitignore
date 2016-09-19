@@ -2,3 +2,4 @@
 gomoku
 *.a
 *.DS_Store
+*.dSYM

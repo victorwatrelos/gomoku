@@ -2,8 +2,7 @@ CC= clang++
 FLAGS=-Wall -Wextra -Werror -std=c++11
 NAME= gomoku
 
-SRC= main.cpp \
-	 Grid.cpp
+SRC= main.cpp
 
 OBJ= $(SRC:.cpp=.o)
 
