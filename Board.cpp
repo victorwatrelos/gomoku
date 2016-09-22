@@ -15,11 +15,11 @@ Board::~Board(void)
 
 Board    &Board::operator=(const Board &p)
 {
-	this->getBoard() = p.getBoard();
+	this->_board = p.getBoard();
 	return *this;
 }
 
-std::vector<Board::Point>			Board::getBoard(void) const
+std::vector<Board::Point> const 	&Board::getBoard(void) const
 {
 	return (this->_board);
 }
