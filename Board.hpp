@@ -5,6 +5,8 @@
 # include <iostream>
 # include "define.hpp"
 
+# define PEMPTY						(Board::Point::EMPTY)
+
 class								Board
 {
 
@@ -18,13 +20,21 @@ class								Board
 		Board&						operator=(const Board &p);
 
 		const std::vector<Point>&	getBoard(void) const;
-		bool						isMoveValid(int pos) const;
+		void						setMove(int pos, Board::Point color);
+		bool						isMoveValid(int pos, Board::Point color) const;
 		bool						isWinningBoard(void) const;
+		int							getIndex(int i, int j) const;
 
 	private:
 		bool						_checkWinningLine(bool isRow) const;
 		bool						_checkWinningDiag(bool down) const;
 		bool						_checkWinningBackDiag(bool down) const;
+		bool						_checkDoubleThree(int pos, Board::Point color) const;
+		void						_resetThreeCheck(int **three, int *it, int *space) const;
+		int							*_checkThreeLine(int pos, Board::Point color, bool isHoriz) const;
+		int							*_checkThreeDiag(int pos, Board::Point color) const;
+		int							*_checkThreeBackDiag(int pos, Board::Point color) const;
+
 
 		std::vector<Point>			_board;
 };

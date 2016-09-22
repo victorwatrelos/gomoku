@@ -19,16 +19,22 @@ void                printT(unsigned long int t)
 int		main()
 {
 	Board b;
-	StdOutDisplay	d;
+//	StdOutDisplay	d;
 	bool	res;
 	
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
-	res = b.isWinningBoard();
+//	res = b.isWinningBoard();
+	res = b.isMoveValid(40, Board::Point::WHITE);
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
+
 	if (res)
-		std::cout << "Won" << std::endl;
+		std::cout << std::endl << "Valid Move" << std::endl;
+	else
+		std::cout << std::endl << "Is Not A Valid Move" << std::endl;
+//		std::cout << "Won" << std::endl;
     auto duration = duration_cast<microseconds>( t2 - t1 ).count();
+
 	printT(duration);
-	d.displayBoard(b);
+//	d.displayBoard(b);
 	return (0);
 }
