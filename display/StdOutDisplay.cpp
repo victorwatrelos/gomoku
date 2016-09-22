@@ -33,7 +33,6 @@ void			StdOutDisplay::displayBoard(const Board &board) const {
 	auto	point = board.getBoard();
 	int		pos = 0;
 
-	point[300] = Board::Point::BLACK;
 	for (auto i = point.begin(); i != point.end(); ++i) {
 		this->_dispPoint(*i);
 		pos++;

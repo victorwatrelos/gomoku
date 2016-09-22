@@ -3,6 +3,12 @@
 STDINPlayer::STDINPlayer(void) {
 }
 
+STDINPlayer::STDINPlayer(const std::string &name, const Board::Point &color) 
+{	
+	this->_name = name;
+	this->_color = color;
+}
+
 STDINPlayer::STDINPlayer(const STDINPlayer &obj) {
 	*this = obj;
 }
