@@ -15,13 +15,13 @@ Board::~Board(void)
 
 Board    &Board::operator=(const Board &p)
 {
-	this->getBoard() = p.getBoard();
+	this->_board = p.getBoard();
 	return *this;
 }
 
-std::vector<Board::Point>			Board::getBoard(void) const
+const std::vector<Board::Point>&			Board::getBoard(void) const
 {
-	return (this->_board);
+	return (const_cast<const std::vector<Board::Point>&>(this->_board));
 }
 
 bool						Board::isMoveValid(int pos) const

@@ -16,7 +16,7 @@ class				Board
 		virtual					~Board(void);
 		Board&					operator=(const Board &p);
 
-		std::vector<Point>		getBoard(void) const;
+		const std::vector<Point>&		getBoard(void) const;
 		bool					isMoveValid(int pos) const;
 		bool					isWinningBoard(void) const;
 
