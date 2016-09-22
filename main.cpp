@@ -1,6 +1,7 @@
 # include <chrono>
 # include <iostream>
 # include "Board.hpp"
+# include "display/StdOutDisplay.hpp"
 
 using namespace std::chrono;
 
@@ -18,6 +19,7 @@ void                printT(unsigned long int t)
 int		main()
 {
 	Board b;
+	StdOutDisplay	d;
 	bool	res;
 	
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
@@ -27,5 +29,6 @@ int		main()
 		std::cout << "Won" << std::endl;
     auto duration = duration_cast<microseconds>( t2 - t1 ).count();
 	printT(duration);
+	d.displayBoard(b);
 	return (0);
 }

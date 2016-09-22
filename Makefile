@@ -4,6 +4,9 @@ NAME= gomoku
 
 SRC= main.cpp \
 	 players/AbstractPlayer.cpp \
+	 players/STDINPlayer.cpp \
+	 display/AbstractDisplay.cpp \
+	 display/StdOutDisplay.cpp \
 	 Board.cpp
 
 OBJ= $(SRC:.cpp=.o)
