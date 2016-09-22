@@ -2,7 +2,12 @@ CC= clang++
 FLAGS=-Wall -Wextra -Werror -std=c++11
 NAME= gomoku
 
-SRC= main.cpp
+SRC= main.cpp \
+	 players/AbstractPlayer.cpp \
+	 players/STDINPlayer.cpp \
+	 display/AbstractDisplay.cpp \
+	 display/StdOutDisplay.cpp \
+	 Board.cpp
 
 OBJ= $(SRC:.cpp=.o)
 
