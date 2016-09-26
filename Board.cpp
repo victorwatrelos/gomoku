@@ -4,9 +4,9 @@ Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY)
 {
 	this->_board[0] = PEMPTY;
 	this->_board[19] = Board::Point::WHITE;
-	this->_board[38] = Board::Point::WHITE;
+	this->_board[38] = Board::Point::BLACK;
 	this->_board[57] = PEMPTY;
-	this->_board[76] = PEMPTY;
+	this->_board[76] = Board::Point::WHITE;
 	this->_board[95] = PEMPTY;
 
 	this->_board[22] = Board::Point::WHITE;
@@ -64,12 +64,14 @@ void						Board::setMove(int pos, Board::Point color)
 bool						Board::isMoveValid(int pos, Board::Point color) const
 {
 	if (pos < 0 || pos >= GRID_SIZE)
-		return false;
+		return (false);
 	else if (this->_board[pos] != Board::Point::EMPTY)
-		return false;
+		return (false);
+	else if (this->_checkMoveInCapture(pos, color))
+		return (false);
 	else if (this->_checkDoubleThree(pos, color))
-		return false;
-	return true;
+		return (false);
+	return (true);
 }
 
 bool						Board::isWinningBoard(void) const
@@ -86,7 +88,7 @@ bool						Board::isWinningBoard(void) const
 		return (true);
 	if (this->_checkWinningBackDiag(false))
 		return (true);
-	return false;
+	return (false);
 }
 
 int							Board::getIndex(int i, int j) const
@@ -122,13 +124,13 @@ bool						Board::_checkWinningLine(bool isRow) const
 			else if (curr == last)
 				streak++;
 			if (streak == 4)
-				return true;
+				return (true);
 			last = curr;
 			j++;
 		}
 		i++;
 	}
-	return false;
+	return (false);
 }
 
 bool						Board::_checkWinningBackDiag(bool down) const
@@ -158,7 +160,7 @@ bool						Board::_checkWinningBackDiag(bool down) const
 			else if (curr == last)
 				streak++;
 			if (streak == 4)
-				return true;
+				return (true);
 			last = curr;
 			i++;
 			j++;
@@ -195,7 +197,7 @@ bool						Board::_checkWinningDiag(bool down) const
 			else if (curr == last)
 				streak++;
 			if (streak == 4)
-				return true;
+				return (true);
 			last = curr;
 			i--;
 			j++;
@@ -219,11 +221,11 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 			if (three[i] == pos)
 				continue ;
 			if ((this->_checkThreeLine(three[i], color, true)) != nullptr)
-				return true;
+				return (true);
 			if ((this->_checkThreeBackDiag(three[i], color)) != nullptr)
-				return true;
+				return (true);
 			if ((this->_checkThreeDiag(three[i], color)) != nullptr)
-				return true;
+				return (true);
 		}
 	}
 	if ((three = this->_checkThreeLine(pos, color, true)) != nullptr)
@@ -232,11 +234,11 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 			if (three[i] == pos)
 				continue ;
 			if ((this->_checkThreeLine(three[i], color, false)) != nullptr)
-				return true;
+				return (true);
 			if ((this->_checkThreeBackDiag(three[i], color)) != nullptr)
-				return true;
+				return (true);
 			if ((this->_checkThreeDiag(three[i], color)) != nullptr)
-				return true;
+				return (true);
 		}
 	}
 	if ((three = this->_checkThreeDiag(pos, color)) != nullptr)
@@ -245,11 +247,11 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 			if (three[i] == pos)
 				continue ;
 			if ((this->_checkThreeLine(three[i], color, true)) != nullptr)
-				return true;
+				return (true);
 			if ((this->_checkThreeLine(three[i], color, false)) != nullptr)
-				return true;
+				return (true);
 			if ((this->_checkThreeBackDiag(three[i], color)) != nullptr)
-				return true;
+				return (true);
 		}
 	}
 	if ((three = this->_checkThreeBackDiag(pos, color)) != nullptr)
@@ -258,14 +260,14 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 			if (three[i] == pos)
 				continue ;
 			if ((this->_checkThreeLine(three[i], color, true)) != nullptr)
-				return true;
+				return (true);
 			if ((this->_checkThreeLine(three[i], color, false)) != nullptr)
-				return true;
+				return (true);
 			if ((this->_checkThreeDiag(three[i], color)) != nullptr)
-				return true;
+				return (true);
 		}
 	}
-	return false;
+	return (false);
 }
 
 void					Board::_resetThreeCheck(int **three, int *it, int *space) const
@@ -422,4 +424,68 @@ int						*Board::_checkThreeDiag(int pos, Board::Point color) const
 		j++;
 	}
 	return nullptr;
+}
+
+/*
+ *			CHECK FOR MOVE IN CAPTURE
+ */
+
+bool					Board::_checkMoveInCapture(int pos, Board::Point color) const
+{
+	int					i, j;
+	int					index1, index2, index3;
+	Board::Point		opp;
+
+	if (color == Board::Point::WHITE)
+		opp = Board::Point::BLACK;
+	else
+		opp = Board::Point::WHITE;
+	i = pos % GRID_LENGTH;
+	j = pos / GRID_LENGTH;
+
+	index1 = this->getIndex(i - 1, j - 1);
+	index2 = this->getIndex(i + 1, j + 1);
+	index3 = this->getIndex(i + 2, j + 2);
+	if (this->_board[index1] == opp && this->_board[index2] == color && this->_board[index3] == opp)
+		return (true);
+	index1 = this->getIndex(i - 2, j - 2);
+	index2 = this->getIndex(i - 1, j - 1);
+	index3 = this->getIndex(i + 1, j + 1);
+	if (this->_board[index1] == opp && this->_board[index2] == color && this->_board[index3] == opp)
+		return (true);
+
+	index1 = this->getIndex(i - 2, j + 2);
+	index2 = this->getIndex(i - 1, j + 1);
+	index3 = this->getIndex(i + 1, j - 1);
+	if (this->_board[index1] == opp && this->_board[index2] == color && this->_board[index3] == opp)
+		return (true);
+	index1 = this->getIndex(i - 1, j + 1);
+	index2 = this->getIndex(i + 1, j - 1);
+	index3 = this->getIndex(i + 2, j - 2);
+	if (this->_board[index1] == opp && this->_board[index2] == color && this->_board[index3] == opp)
+		return (true);
+
+	index1 = this->getIndex(i - 2, j);
+	index2 = this->getIndex(i - 1, j);
+	index3 = this->getIndex(i + 1, j);
+	if (this->_board[index1] == opp && this->_board[index2] == color && this->_board[index3] == opp)
+		return (true);
+	index1 = this->getIndex(i - 1, j);
+	index2 = this->getIndex(i + 1, j);
+	index3 = this->getIndex(i + 2, j);
+	if (this->_board[index1] == opp && this->_board[index2] == color && this->_board[index3] == opp)
+		return (true);
+
+	index1 = this->getIndex(i, j + 2);
+	index2 = this->getIndex(i, j + 1);
+	index3 = this->getIndex(i, j - 1);
+	if (this->_board[index1] == opp && this->_board[index2] == color && this->_board[index3] == opp)
+		return (true);
+	index1 = this->getIndex(i, j + 1);
+	index2 = this->getIndex(i, j - 1);
+	index3 = this->getIndex(i, j - 2);
+	if (this->_board[index1] == opp && this->_board[index2] == color && this->_board[index3] == opp)
+		return (true);
+
+	return (false);
 }

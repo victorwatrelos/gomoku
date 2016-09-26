@@ -34,6 +34,7 @@ class								Board
 		int							*_checkThreeLine(int pos, Board::Point color, bool isHoriz) const;
 		int							*_checkThreeDiag(int pos, Board::Point color) const;
 		int							*_checkThreeBackDiag(int pos, Board::Point color) const;
+		bool						_checkMoveInCapture(int pos, Board::Point color) const;
 
 
 		std::vector<Point>			_board;

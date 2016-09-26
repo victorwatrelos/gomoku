@@ -24,7 +24,7 @@ int		main()
 	
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 //	res = b.isWinningBoard();
-	res = b.isMoveValid(40, Board::Point::WHITE);
+	res = b.isMoveValid(57, Board::Point::BLACK);
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
 
 	if (res)
