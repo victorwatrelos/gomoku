@@ -8,6 +8,9 @@ SRC= main.cpp \
 	 display/AbstractDisplay.cpp \
 	 display/StdOutDisplay.cpp \
 	 engine/GameLoop.cpp \
+	 ai/AI.cpp \
+	 ai/State.cpp \
+	 heuristics/BadHeuristic.cpp \
 	 Board.cpp
 
 OBJ= $(SRC:.cpp=.o)
