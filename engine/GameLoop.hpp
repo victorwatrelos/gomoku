@@ -3,8 +3,11 @@
 
 # include "../players/AbstractPlayer.hpp"
 # include "../players/STDINPlayer.hpp"
+# include "../players/NetworkPlayer.hpp"
 # include "../Board.hpp"
 # include "../display/StdOutDisplay.hpp"
+# include "../display/NetworkDisplay.hpp"
+# include "../network/Server.hpp"
 
 class GameLoop
 {
@@ -18,9 +21,11 @@ class GameLoop
 		AbstractPlayer	*_players[2];
 		AbstractDisplay	*_display;
 		Board			_board;
+		Server			*_server;
 		void			_createPlayers();
 		void			_getPlayerMove(AbstractPlayer &player);
 		void			_initDisplay(void);
+		void			_initServer(void);
 };
 
 #endif

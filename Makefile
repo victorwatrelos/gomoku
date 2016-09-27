@@ -5,9 +5,12 @@ NAME= gomoku
 SRC= main.cpp \
 	 players/AbstractPlayer.cpp \
 	 players/STDINPlayer.cpp \
+	 players/NetworkPlayer.cpp \
 	 display/AbstractDisplay.cpp \
 	 display/StdOutDisplay.cpp \
+	 display/NetworkDisplay.cpp \
 	 engine/GameLoop.cpp \
+	 network/Server.cpp \
 	 Board.cpp
 
 OBJ= $(SRC:.cpp=.o)

@@ -1,6 +1,7 @@
 #include "GameLoop.hpp"
 
 GameLoop::GameLoop(void) {
+	this->_initServer();
 	this->_createPlayers();
 	this->_initDisplay();
 
@@ -14,6 +15,7 @@ GameLoop::~GameLoop(void) {
 	delete this->_players[0];
 	delete this->_players[1];
 	delete this->_display;
+	delete this->_server;
 }
 
 GameLoop	&GameLoop::operator=(const GameLoop &p) {
@@ -22,12 +24,16 @@ GameLoop	&GameLoop::operator=(const GameLoop &p) {
 }
 
 void		GameLoop::_createPlayers(void) {
-	this->_players[0] = new STDINPlayer("Black", Board::Point::BLACK);
-	this->_players[1] = new STDINPlayer("White", Board::Point::WHITE);
+	this->_players[0] = new NetworkPlayer("Black", Board::Point::BLACK, this->_server);
+	this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
+}
+
+void		GameLoop::_initServer(void) {
+	this->_server = new Server();
 }
 
 void		GameLoop::_initDisplay(void) {
-	this->_display = new StdOutDisplay();
+	this->_display = new NetworkDisplay();
 }
 
 void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
@@ -53,8 +59,10 @@ void		GameLoop::loop(void) {
 	{
 		for (auto p : this->_players)
 		{
-			this->_getPlayerMove(*p);
+			(void)p;
+			//this->_getPlayerMove(*p);
 			this->_display->displayBoard(this->_board);
+			terminated = true;
 			if (this->_board.isWinningBoard())
 			{
 				terminated = true;

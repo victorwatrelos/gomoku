@@ -10,7 +10,7 @@ class StdOutDisplay : public AbstractDisplay
 		StdOutDisplay(const StdOutDisplay &obj);
 		StdOutDisplay &operator=(const StdOutDisplay &p);
 		virtual ~StdOutDisplay(void);
-		void	displayBoard(const Board &board) const;
+		void	displayBoard(const Board &board);
 	private:
 		void	_dispPoint(Board::Point &p) const;
 };
