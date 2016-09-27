@@ -13,6 +13,7 @@ NetworkDisplay::~NetworkDisplay(void) {
 }
 
 void	NetworkDisplay::displayBoard(const Board &board) {
+	printf("p:   %p\n", this->_server);
 	this->_server->sendBoard(board);
 }
 

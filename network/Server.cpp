@@ -38,21 +38,26 @@ int		Server::_getClientColor(Board::Point &color) {
 void			Server::_sendMsg(const char *str) {
 	int		ret;
 
-	//const char *str = "toto";
 	size_t size = strlen(str);
-	int fd = open("toto", O_WRONLY|O_CREAT|O_TRUNC);
+	std::cout << "fd: " << this->_connfd << std::endl << std::flush;
 	while (size > 0)
 	{
 		std::cout << "here" << std::endl << std::flush;
 		std::cout << "Str: " << str << " write size: " << size << std::endl << std::flush;
-		printf("p: %p", str);
+		printf("p: %p\n", str);
 		fflush(0);
-		if ((ret = write(fd, str, size)) < 0)
+		if (this->_lostCo)
 		{
-			std::cout << "TOTO" << std::endl << std::flush;
+			std::cout << "Stupid" << std::endl << std::flush;
+		}
+		std::cout << "fd: " << this->_connfd << std::endl << std::flush;
+		if ((ret = write(this->_connfd, "toto", 3)) < 0)
+		{
+			std::cout << "ERROR: " << ret << std::endl << std::flush;
 			this->_lostCo = true;
 			return ;
 		}
+		return ;
 		std::cout << "end" << std::endl << std::flush;
 		size -= ret;
 		str += ret;
