@@ -7,6 +7,7 @@ SRC= main.cpp \
 	 players/STDINPlayer.cpp \
 	 display/AbstractDisplay.cpp \
 	 display/StdOutDisplay.cpp \
+	 engine/GameLoop.cpp \
 	 Board.cpp
 
 OBJ= $(SRC:.cpp=.o)

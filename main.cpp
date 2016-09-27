@@ -2,6 +2,7 @@
 # include <iostream>
 # include "Board.hpp"
 # include "display/StdOutDisplay.hpp"
+# include "engine/GameLoop.hpp"
 
 using namespace std::chrono;
 
@@ -18,23 +19,8 @@ void                printT(unsigned long int t)
 
 int		main()
 {
-	Board b;
-//	StdOutDisplay	d;
-	bool	res;
-	
-	high_resolution_clock::time_point t1 = high_resolution_clock::now();
-//	res = b.isWinningBoard();
-	res = b.isMoveValid(57, Board::Point::BLACK);
-    high_resolution_clock::time_point t2 = high_resolution_clock::now();
+	GameLoop	game;
 
-	if (res)
-		std::cout << std::endl << "Valid Move" << std::endl;
-	else
-		std::cout << std::endl << "Is Not A Valid Move" << std::endl;
-//		std::cout << "Won" << std::endl;
-    auto duration = duration_cast<microseconds>( t2 - t1 ).count();
-
-	printT(duration);
-//	d.displayBoard(b);
+	game.loop();
 	return (0);
 }
