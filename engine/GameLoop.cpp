@@ -31,16 +31,18 @@ void		GameLoop::_initDisplay(void) {
 }
 
 void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
-	int	pos = player.getMove();
+	int	pos;
 
 	while (1)
 	{
+		pos = player.getMove();
+		std::cout << "pos: " << pos << std::endl;
 		if (this->_board.isMoveValid(pos, player.getColor()))
 		{
-			//TODO add stone to board
-			std::cout << "fail" << std::endl;
+			this->_board.setMove(pos, player.getColor());
 			return ;
 		}
+		std::cout << "Move invalid" << std::endl;
 	}
 }
 
