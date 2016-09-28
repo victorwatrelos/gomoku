@@ -23,7 +23,8 @@ GameLoop	&GameLoop::operator=(const GameLoop &p) {
 
 void		GameLoop::_createPlayers(void) {
 	this->_players[0] = new STDINPlayer("Black", Board::Point::BLACK);
-	this->_players[1] = new STDINPlayer("White", Board::Point::WHITE);
+//	this->_players[1] = new STDINPlayer("White", Board::Point::WHITE);
+	this->_players[1] = new AIPlayer("White", Board::Point::WHITE);
 }
 
 void		GameLoop::_initDisplay(void) {
@@ -31,16 +32,18 @@ void		GameLoop::_initDisplay(void) {
 }
 
 void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
-	int	pos = player.getMove();
+	int	pos;
 
 	while (1)
 	{
+		pos = player.getMove(this->_board);
+		std::cout << "pos: " << pos << std::endl;
 		if (this->_board.isMoveValid(pos, player.getColor()))
 		{
-			//TODO add stone to board
-			std::cout << "fail" << std::endl;
+			this->_board.setMove(pos, player.getColor());
 			return ;
 		}
+		std::cout << "Move invalid" << std::endl;
 	}
 }
 
@@ -56,6 +59,7 @@ void		GameLoop::loop(void) {
 			if (this->_board.isWinningBoard())
 			{
 				terminated = true;
+				return ;
 			}
 		}
 	}

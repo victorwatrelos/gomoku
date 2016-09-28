@@ -5,6 +5,7 @@ NAME= gomoku
 SRC= main.cpp \
 	 players/AbstractPlayer.cpp \
 	 players/STDINPlayer.cpp \
+	 players/AIPlayer.cpp \
 	 display/AbstractDisplay.cpp \
 	 display/StdOutDisplay.cpp \
 	 engine/GameLoop.cpp \

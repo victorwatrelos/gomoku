@@ -3,6 +3,7 @@
 
 # include "../players/AbstractPlayer.hpp"
 # include "../players/STDINPlayer.hpp"
+# include "../players/AIPlayer.hpp"
 # include "../Board.hpp"
 # include "../display/StdOutDisplay.hpp"
 

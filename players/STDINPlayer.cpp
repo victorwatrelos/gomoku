@@ -40,15 +40,13 @@ int		STDINPlayer::_getEntry(const std::string &str) const {
 	return in;
 }
 
-int		STDINPlayer::getMove(void) {
-	int		x, y;
+int		STDINPlayer::getMove(const Board & board) {
+	int		x, y, index;
 
-	x = this->_getEntry("Enter your x coord choice (1 - " + std::to_string(GRID_LENGTH) + "): ");
-	y = this->_getEntry("Enter your y coord choice (1 - " + std::to_string(GRID_LENGTH) + "): ");
-	return x + y * GRID_LENGTH;
-}
-
-STDINPlayer	&STDINPlayer::operator=(const STDINPlayer &p) {
-	(void)p;
-	return *this;
+	do {
+		x = this->_getEntry("Enter your x coord choice (1 - " + std::to_string(GRID_LENGTH) + "): ");
+		y = this->_getEntry("Enter your y coord choice (1 - " + std::to_string(GRID_LENGTH) + "): ");
+		index = x + y * GRID_LENGTH;
+	} while (!board.isMoveValid(index, this->_color));
+	return index;
 }

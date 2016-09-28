@@ -10,7 +10,6 @@ class							State
 	public:
 								State(void);
 								State(const State & rhs);
-//								State(Board::Point player_col, AbstractHeuristic *h);
 								State(Board b, Board::Point player_col, AbstractHeuristic *h);
 		virtual					~State(void);
 		State&					operator=(const State & rhs);

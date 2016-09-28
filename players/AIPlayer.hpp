@@ -1,11 +1,13 @@
 #ifndef AIPLAYER_HPP
 # define AIPLAYER_HPP
 
-# include "AI.hpp"
+# include "../ai/AI.hpp"
 # include "AbstractPlayer.hpp"
-# include "AbstractHeuristic.hpp"
+# include "../heuristics/AbstractHeuristic.hpp"
+// to be deleted
+# include "../heuristics/BadHeuristic.hpp"
 
-class						AIPlayer
+class						AIPlayer : public AbstractPlayer
 {
 	public:
 							AIPlayer(void);
@@ -13,10 +15,11 @@ class						AIPlayer
 							AIPlayer(const std::string &name, const Board::Point &color);
 		virtual				~AIPlayer(void);
 		AIPlayer&			operator=(const AIPlayer & rhs);
-		int					getMove();
+		int					getMove(const Board &board);
 
 	private:
 		AbstractHeuristic	*_h;
+		AI					_ai;
 };
 
 #endif
