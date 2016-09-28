@@ -459,3 +459,155 @@ bool					Board::_checkMoveInCapture(int pos, Board::Point color) const
 
 	return (false);
 }
+
+/*
+ * TEST
+ */
+
+
+int							Board::_checkStreakLine(bool isRow) const
+{
+	int						i, j, index;
+	int						streak;
+	Board::Point			curr, last;
+	int						score = 0;
+
+	i = 0;
+	last = Board::Point::EMPTY;
+	while (i < GRID_LENGTH)
+	{
+		j = 0;
+		streak = 0;
+		while (j < GRID_LENGTH)
+		{
+			if (isRow)
+				index = this->getIndex(j, i);
+			else
+				index = this->getIndex(i, j);
+			curr = this->_board[index];
+			if (curr == Board::Point::EMPTY || curr != last)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			else if (curr == last)
+				streak++;
+			if (streak == 4)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			last = curr;
+			j++;
+		}
+		i++;
+	}
+	if (streak != 0)
+		score += std::pow(4, streak);
+	return (score);
+}
+
+int							Board::_checkStreakBackDiag(bool down) const
+{
+	int						a, i, j, index;
+	int						streak;
+	Board::Point			curr, last;
+	int						score = 0;
+
+	last = Board::Point::EMPTY;
+	a = 0;
+	if (down)
+		a++;
+	while (a < GRID_LENGTH - 1)
+	{
+		i = a;
+		j = 0;
+		streak = 0;
+		while (i < GRID_LENGTH)
+		{
+			if (down)
+				index = this->getIndex(j, i);
+			else
+				index = this->getIndex(i, j);
+			curr = this->_board[index];
+			if (curr == Board::Point::EMPTY || curr != last)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			else if (curr == last)
+				streak++;
+			if (streak == 4)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			last = curr;
+			i++;
+			j++;
+		}
+		a++;
+	}
+	if (streak != 0)
+		score += std::pow(4, streak);
+	return (score);
+}
+
+int							Board::_checkStreakDiag(bool down) const
+{
+	int						a, i, j, index;
+	int						streak = 0;
+	Board::Point			curr, last;
+	int						score = 0;
+
+	last = Board::Point::EMPTY;
+	a = GRID_LENGTH - 1;
+	while (a > 0)
+	{
+		i = a;
+		j = 0;
+		if (down)
+			j++;
+		streak = 0;
+		while (i > 0)
+		{
+			if (down)
+				index = this->getIndex(j, i);
+			else
+				index = this->getIndex(i, j);
+			curr = this->_board[index];
+			if (curr == Board::Point::EMPTY || curr != last)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			else if (curr == last)
+				streak++;
+			if (streak == 4)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			last = curr;
+			i--;
+			j++;
+		}
+		a--;
+	}
+	if (streak != 0)
+		score += std::pow(4, streak);
+	return (score);
+}
+
+int					Board::getScore()
+{
+	int				score = 0;
+
+	score += this->_checkStreakLine(true);
+	score += this->_checkStreakDiag(true);
+	score += this->_checkStreakBackDiag(true);
+	score += this->_checkStreakLine(false);
+	score += this->_checkStreakDiag(false);
+	score += this->_checkStreakBackDiag(false);
+	return score;
+}

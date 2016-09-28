@@ -3,6 +3,7 @@
 
 # include <vector>
 # include <iostream>
+# include <cmath>
 # include "define.hpp"
 
 # define PEMPTY						(Board::Point::EMPTY)
@@ -25,6 +26,8 @@ class								Board
 		bool						isWinningBoard(void) const;
 		int							getIndex(int i, int j) const;
 
+		int							getScore();
+
 	private:
 		bool						_checkWinningLine(bool isRow) const;
 		bool						_checkWinningDiag(bool down) const;
@@ -36,6 +39,10 @@ class								Board
 		int							*_checkThreeBackDiag(int pos, Board::Point color) const;
 		bool						_checkMoveInCapture(int pos, Board::Point color) const;
 
+
+		int							_checkStreakLine(bool isRow) const;
+		int							_checkStreakDiag(bool down) const;
+		int							_checkStreakBackDiag(bool down) const;
 
 		std::vector<Point>			_board;
 };

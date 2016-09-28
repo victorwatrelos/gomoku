@@ -40,6 +40,9 @@ int			AI::minimax(State *node, int depth, bool player)
 			if (val > bestValue)
 				bestValue = val;
 		}
+		for (auto &i : children)
+			delete i;
+		children.clear();
 	}
 	else
 	{
@@ -50,6 +53,9 @@ int			AI::minimax(State *node, int depth, bool player)
 			if (val < bestValue)
 				bestValue = val;
 		}
+		for (auto &i : children)
+			delete i;
+		children.clear();
 	}
 	return (bestValue);
 }

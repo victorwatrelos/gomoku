@@ -15,7 +15,7 @@ AIPlayer::AIPlayer(const std::string &name, const Board::Point &color)
 {
 	this->_name = name;
 	this->_color = color;
-	this->_h = new BadHeuristic();
+	this->_h = new SimpleHeuristic();
 }
 
 AIPlayer::~AIPlayer(void) {}
@@ -43,7 +43,7 @@ int					AIPlayer::getMove(const Board &board)
 			new_board = board;
 			new_board.setMove(pos, this->_color);
 			new_state = new State(new_board, this->_color, this->_h);
-			h_value = this->_ai.minimax(new_state, 2, true);
+			h_value = this->_ai.minimax(new_state, 1, true);
 			if (h_value > best_h)
 			{
 				best_h = h_value;

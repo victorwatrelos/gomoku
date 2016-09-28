@@ -14,6 +14,7 @@ SRC= main.cpp \
 	 ai/AI.cpp \
 	 ai/State.cpp \
 	 heuristics/BadHeuristic.cpp \
+	 heuristics/SimpleHeuristic.cpp \
 	 network/Server.cpp \
 	 Board.cpp
 

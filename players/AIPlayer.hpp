@@ -6,6 +6,7 @@
 # include "../heuristics/AbstractHeuristic.hpp"
 // to be deleted
 # include "../heuristics/BadHeuristic.hpp"
+# include "../heuristics/SimpleHeuristic.hpp"
 
 class						AIPlayer : public AbstractPlayer
 {
