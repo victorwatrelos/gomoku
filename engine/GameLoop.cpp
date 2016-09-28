@@ -41,7 +41,7 @@ void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
 
 	while (1)
 	{
-		pos = player.getMove();
+		pos = player.getMove(this->_board);
 		std::cout << "pos: " << pos << std::endl;
 		if (this->_board.isMoveValid(pos, player.getColor()))
 		{
@@ -59,13 +59,32 @@ void			GameLoop::launchGame(void) {
 	this->_server->sendWinner(p->getColor());
 }
 
+void                printT(unsigned long int t)
+{
+	int             m, s, ms, us;
+
+	m = (t / 60000000);
+	s = (t / 1000000) % 60;
+	ms = (t / 1000) % 1000;
+	us = t % 1000;
+	printf("Time taken for turn: %dm%ds%dms%dus\n", m, s, ms, us);
+}
+
 AbstractPlayer	*GameLoop::loop(void) {
+
+	std::chrono::high_resolution_clock::time_point		start, end;
+	long long											dur;
+	
 	this->_display->displayBoard(this->_board);
 	while (1)
 	{
 		for (auto p : this->_players)
 		{
+			start = std::chrono::high_resolution_clock::now();
 			this->_getPlayerMove(*p);
+			end = std::chrono::high_resolution_clock::now();
+			dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
+			printT(dur);
 			this->_display->displayBoard(this->_board);
 			if (this->_board.isWinningBoard())
 			{

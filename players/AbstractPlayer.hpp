@@ -12,7 +12,7 @@ class AbstractPlayer
 		AbstractPlayer(const AbstractPlayer &obj);
 		AbstractPlayer &operator=(const AbstractPlayer &p);
 		virtual ~AbstractPlayer(void);
-		virtual int			getMove() = 0;
+		virtual int			getMove(const Board & board) = 0;
 		const std::string	&getName(void) const;
 		const Board::Point	&getColor(void) const;
 	protected:

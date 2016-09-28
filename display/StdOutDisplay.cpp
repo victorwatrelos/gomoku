@@ -26,18 +26,32 @@ void			StdOutDisplay::_dispPoint(Board::Point &p) const {
 		case Board::Point::WHITE : std::cout << "o";
 		   break;
 	}
-	std::cout << "-";
+	std::cout << " ";
 }
 
 void			StdOutDisplay::displayBoard(const Board &board) {
 	auto	point = board.getBoard();
 	int		pos = 0;
+	int		a;
 
+	std::cout << "   ";
+	for (a = 1 ; a <= GRID_LENGTH ; a++)
+	{
+		if (a < 10)
+			std::cout << a << " ";
+		else
+			std::cout << a;
+	}
+	std:: cout << std::endl << "1  ";
 	for (auto i = point.begin(); i != point.end(); ++i) {
 		this->_dispPoint(*i);
 		pos++;
 		if (!(pos % GRID_LENGTH))
-			std::cout << std::endl;
+		{
+			std::cout << std::endl << pos / GRID_LENGTH + 1 << " ";
+			if (pos / GRID_LENGTH < 9)
+				std::cout << " ";
+		}
 	}
 	std::cout << std::endl;
 }

@@ -17,7 +17,8 @@ AbstractPlayer::~AbstractPlayer(void) {
 }
 
 AbstractPlayer	&AbstractPlayer::operator=(const AbstractPlayer &p) {
-	(void)p;
+	this->_name = p._name;
+	this->_color = p._color;
 	return *this;
 }
 

@@ -5,11 +5,15 @@ NAME= gomoku
 SRC= main.cpp \
 	 players/AbstractPlayer.cpp \
 	 players/STDINPlayer.cpp \
+	 players/AIPlayer.cpp \
 	 players/NetworkPlayer.cpp \
 	 display/AbstractDisplay.cpp \
 	 display/StdOutDisplay.cpp \
 	 display/NetworkDisplay.cpp \
 	 engine/GameLoop.cpp \
+	 ai/AI.cpp \
+	 ai/State.cpp \
+	 heuristics/BadHeuristic.cpp \
 	 network/Server.cpp \
 	 Board.cpp
 

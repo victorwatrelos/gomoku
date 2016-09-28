@@ -11,7 +11,8 @@ NetworkPlayer::NetworkPlayer(const std::string &name, const Board::Point &color,
 	this->_color = color;
 }
 
-int		NetworkPlayer::getMove() {
+int		NetworkPlayer::getMove(const Board & board) {
+	(void)board;
 	return this->_server->getMove(this->_color);
 }
 
@@ -21,9 +22,4 @@ NetworkPlayer::NetworkPlayer(const NetworkPlayer &obj) {
 
 NetworkPlayer::~NetworkPlayer(void) {
 
-}
-
-NetworkPlayer    &NetworkPlayer::operator=(const NetworkPlayer &p) {
-	(void)p;
-	return *this;
 }
