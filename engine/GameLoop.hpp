@@ -16,7 +16,8 @@ class GameLoop
 		GameLoop(const GameLoop &obj);
 		GameLoop &operator=(const GameLoop &p);
 		virtual ~GameLoop(void);
-		void	loop(void);
+		AbstractPlayer	*loop(void);
+		void			launchGame(void);
 	private:
 		AbstractPlayer	*_players[2];
 		AbstractDisplay	*_display;

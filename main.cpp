@@ -21,6 +21,6 @@ int		main()
 {
 	GameLoop	game;
 
-	game.loop();
+	game.launchGame();
 	return (0);
 }

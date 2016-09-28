@@ -9,6 +9,8 @@
 # include <sstream>
 # include "../Board.hpp"
 # include <fcntl.h>
+# include <errno.h>
+# include <stdio.h>
 
 class Server
 {

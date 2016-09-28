@@ -2,36 +2,6 @@
 
 Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY)
 {
-	this->_board[0] = PEMPTY;
-	this->_board[19] = Board::Point::WHITE;
-	this->_board[38] = Board::Point::BLACK;
-	this->_board[57] = PEMPTY;
-	this->_board[76] = Board::Point::WHITE;
-	this->_board[95] = PEMPTY;
-
-	this->_board[22] = Board::Point::WHITE;
-	this->_board[41] = Board::Point::WHITE;
-
-	this->_board[0] = PEMPTY;
-	this->_board[1] = Board::Point::WHITE;
-	this->_board[2] = PEMPTY;
-	this->_board[3] = PEMPTY;
-	this->_board[4] = Board::Point::WHITE;
-	this->_board[5] = PEMPTY;
-
-	this->_board[0] = PEMPTY;
-	this->_board[20] = Board::Point::WHITE;
-	this->_board[40] = PEMPTY;
-	this->_board[60] = Board::Point::WHITE;
-	this->_board[80] = PEMPTY;
-	this->_board[100] = PEMPTY;
-
-	this->_board[18] = PEMPTY;
-	this->_board[36] = Board::Point::WHITE;
-	this->_board[54] = PEMPTY;
-	this->_board[72] = Board::Point::WHITE;
-	this->_board[90] = PEMPTY;
-	this->_board[108] = PEMPTY;
 }
 
 Board::Board(const Board &obj)

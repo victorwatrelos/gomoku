@@ -10,6 +10,12 @@ void	Server::_initServer() {
 	char sendBuff[1025];
 
 	this->_listenFd = socket(AF_INET, SOCK_STREAM, 0);
+	int		enable = 1;
+	if (setsockopt(this->_listenFd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+	{
+		std::cout << "Setsockopt fail: " << strerror(errno) << std::endl;
+		exit(1);
+	}
 	memset(&serv_addr, '0', sizeof(serv_addr));
 	memset(sendBuff, '0', sizeof(sendBuff)); 
 
@@ -17,9 +23,17 @@ void	Server::_initServer() {
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serv_addr.sin_port = htons(4202); 
 
-	bind(this->_listenFd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)); 
+	if (bind(this->_listenFd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
+	{
+		std::cout << "Unable to bind connection: " << strerror(errno) << std::endl;
+		exit(1);
+	}
 
-	listen(this->_listenFd, 10); 
+	if (listen(this->_listenFd, 10) < 0)
+	{
+		std::cout << "Unable to listen: " << strerror(errno) << std::endl;
+		exit(1);
+	}
 	this->_getClient();
 }
 

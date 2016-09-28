@@ -25,7 +25,7 @@ GameLoop	&GameLoop::operator=(const GameLoop &p) {
 
 void		GameLoop::_createPlayers(void) {
 	this->_players[0] = new NetworkPlayer("Black", Board::Point::BLACK, this->_server);
-	this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
+	this->_players[1] = new STDINPlayer("White", Board::Point::WHITE);
 }
 
 void		GameLoop::_initServer(void) {
@@ -52,19 +52,23 @@ void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
 	}
 }
 
-void		GameLoop::loop(void) {
-	bool	terminated = false;
+void			GameLoop::launchGame(void) {
+	auto p = this->loop();
 
-	while (!terminated)
+	std::cout << "Winner is: " << p->getName() << std::endl;
+}
+
+AbstractPlayer	*GameLoop::loop(void) {
+	this->_display->displayBoard(this->_board);
+	while (1)
 	{
 		for (auto p : this->_players)
 		{
-			(void)p;
 			this->_getPlayerMove(*p);
 			this->_display->displayBoard(this->_board);
 			if (this->_board.isWinningBoard())
 			{
-				terminated = true;
+				return (p);
 			}
 		}
 	}
