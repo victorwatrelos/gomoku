@@ -22,8 +22,9 @@ class Server
 		int		getMove(Board::Point &color);
 		int		getColor();
 		void	sendBoard(const Board &board);
+		void	sendWinner(const Board::Point &point);
 	private:
-		int		_getClientColor(Board::Point &color);
+		int		_getClientColor(const Board::Point &color);
 		int		_listenFd;
 		int		_connfd;
 		void	_initServer();

@@ -37,7 +37,7 @@ void	Server::_initServer() {
 	this->_getClient();
 }
 
-int		Server::_getClientColor(Board::Point &color) {
+int		Server::_getClientColor(const Board::Point &color) {
 	switch (color) {
 		case (Board::Point::BLACK):
 			return (0);
@@ -87,6 +87,15 @@ void		Server::sendBoard(const Board &board) {
 	}
 	this->_sendMsg(str.c_str());
 	std::cout << "str: " << str << std::endl;
+}
+
+void		Server::sendWinner(const Board::Point &color) {
+	int		clientColor = this->_getClientColor(color);
+
+	std::string		msg = "WINN-";
+
+	msg += std::to_string(clientColor);
+	this->_sendMsg(msg.c_str());
 }
 
 int			Server::getMove(Board::Point &color)

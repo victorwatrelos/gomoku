@@ -25,7 +25,7 @@ GameLoop	&GameLoop::operator=(const GameLoop &p) {
 
 void		GameLoop::_createPlayers(void) {
 	this->_players[0] = new NetworkPlayer("Black", Board::Point::BLACK, this->_server);
-	this->_players[1] = new STDINPlayer("White", Board::Point::WHITE);
+	this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
 }
 
 void		GameLoop::_initServer(void) {
@@ -56,6 +56,7 @@ void			GameLoop::launchGame(void) {
 	auto p = this->loop();
 
 	std::cout << "Winner is: " << p->getName() << std::endl;
+	this->_server->sendWinner(p->getColor());
 }
 
 AbstractPlayer	*GameLoop::loop(void) {
