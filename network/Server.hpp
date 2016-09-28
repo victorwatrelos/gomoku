@@ -11,6 +11,8 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <stdio.h>
+# include "../exception/SocketException.hpp"
+# include <csignal>
 
 class Server
 {
@@ -23,6 +25,8 @@ class Server
 		int		getColor();
 		void	sendBoard(const Board &board);
 		void	sendWinner(const Board::Point &point);
+		static void	signalHandler(int signal);
+		static Server	*current;
 	private:
 		int		_getClientColor(const Board::Point &color);
 		int		_listenFd;

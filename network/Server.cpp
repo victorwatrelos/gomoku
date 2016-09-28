@@ -1,7 +1,19 @@
 #include "Server.hpp"
 
+Server	*Server::current = nullptr;
+
 Server::Server(void) {
 	this->_initServer();
+	Server::current = this;
+	std::signal(SIGPIPE, Server::signalHandler);
+}
+
+void	Server::signalHandler(int signal) {
+	if (signal == SIGPIPE)
+	{
+		std::cout << "Reconnection" << std::endl;
+		//TODO new game
+	}
 }
 
 void	Server::_initServer() {
@@ -58,9 +70,8 @@ void			Server::_sendMsg(const char *str) {
 		if ((ret = write(this->_connfd, str, size)) < 0)
 		{
 			this->_lostCo = true;
-			return ;
+			throw new SocketException;
 		}
-		return ;
 		size -= ret;
 		str += ret;
 	}
@@ -85,8 +96,14 @@ void		Server::sendBoard(const Board &board) {
 	{
 		str += std::to_string(this->_getClientColor(k));
 	}
-	this->_sendMsg(str.c_str());
-	std::cout << "str: " << str << std::endl;
+	try {
+		this->_sendMsg(str.c_str());
+	} catch (SocketException *e) {
+		std::cout << e->what() << std::endl;
+		delete e;
+		this->_getClient();
+		this->sendBoard(board);
+	}
 }
 
 void		Server::sendWinner(const Board::Point &color) {
@@ -95,7 +112,14 @@ void		Server::sendWinner(const Board::Point &color) {
 	std::string		msg = "WINN-";
 
 	msg += std::to_string(clientColor);
-	this->_sendMsg(msg.c_str());
+	try {
+		this->_sendMsg(msg.c_str());
+	} catch (SocketException *e) {
+		std::cout << e->what() << std::endl;
+		delete e;
+		this->_getClient();
+		this->sendWinner(color);
+	}
 }
 
 int			Server::getMove(Board::Point &color)
@@ -105,10 +129,15 @@ int			Server::getMove(Board::Point &color)
 	std::string	*res;
 
 	msg += std::to_string(iColor);
-	std::cout << msg << std::endl;
-	this->_sendMsg(msg.c_str());
-	res = this->_getMsg(10);
-	std::cout << "res = " << *res << std::endl;
+	try {
+		this->_sendMsg(msg.c_str());
+		res = this->_getMsg(10);
+	} catch (SocketException *e) {
+		std::cout << e->what() << std::endl;
+		delete e;
+		this->_getClient();
+		this->getMove(color);
+	}
 	auto arr = this->_splitString(*res);
 	if (arr->size() < 3 || arr->front() != std::string("SMOV"))
 		return (-1);
@@ -128,7 +157,7 @@ std::string		*Server::_getMsg(size_t size = 0) {
 		if ((ret = read(this->_connfd, p_res, size)) < 0)
 		{
 			this->_lostCo = true;
-			return nullptr;
+			throw new SocketException;
 		}
 		size -= ret;
 		p_res += ret;
@@ -137,17 +166,26 @@ std::string		*Server::_getMsg(size_t size = 0) {
 }
 
 void	Server::_getClient() {
+	std::string	*res;
+
 	std::cout << "waiting for client connection" << std::endl;
 	this->_connfd = accept(this->_listenFd, (struct sockaddr*)NULL, NULL);
-	std::string	*res = this->_getMsg(sizeof(this->ACCEPT_CO));
-	std::cout << *res << std::endl;
+
+	try {
+		res = this->_getMsg(sizeof(this->ACCEPT_CO));
+	} catch (SocketException *e) {
+		std::cout << e->what() << std::endl;
+		delete e;
+		this->_getClient();
+	}
 	if (*res == this->ACCEPT_CO)
 	{
 		this->_lostCo = false;
 		std::cout << "Client successfully connect" << std::endl;
 		return ;
 	}
-	std::cout << "Client fail to connect" << std::endl;
+	std::cout << "Bad confirmation from client" << std::endl;
+	this->_getClient();
 }
 
 Server::Server(const Server &obj) {
