@@ -33,7 +33,7 @@ void		GameLoop::_initServer(void) {
 }
 
 void		GameLoop::_initDisplay(void) {
-	this->_display = new NetworkDisplay();
+	this->_display = new NetworkDisplay(this->_server);
 }
 
 void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
@@ -60,9 +60,8 @@ void		GameLoop::loop(void) {
 		for (auto p : this->_players)
 		{
 			(void)p;
-			//this->_getPlayerMove(*p);
+			this->_getPlayerMove(*p);
 			this->_display->displayBoard(this->_board);
-			terminated = true;
 			if (this->_board.isWinningBoard())
 			{
 				terminated = true;

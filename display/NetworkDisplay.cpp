@@ -1,7 +1,7 @@
 #include "NetworkDisplay.hpp"
 
-NetworkDisplay::NetworkDisplay(void) {
-
+NetworkDisplay::NetworkDisplay(Server *server) {
+	this->_server = server;
 }
 
 NetworkDisplay::NetworkDisplay(const NetworkDisplay &obj) {
@@ -13,7 +13,6 @@ NetworkDisplay::~NetworkDisplay(void) {
 }
 
 void	NetworkDisplay::displayBoard(const Board &board) {
-	printf("p:   %p\n", this->_server);
 	this->_server->sendBoard(board);
 }
 

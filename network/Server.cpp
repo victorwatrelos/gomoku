@@ -15,7 +15,7 @@ void	Server::_initServer() {
 
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	serv_addr.sin_port = htons(4203); 
+	serv_addr.sin_port = htons(4202); 
 
 	bind(this->_listenFd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)); 
 
@@ -39,29 +39,16 @@ void			Server::_sendMsg(const char *str) {
 	int		ret;
 
 	size_t size = strlen(str);
-	std::cout << "fd: " << this->_connfd << std::endl << std::flush;
 	while (size > 0)
 	{
-		std::cout << "here" << std::endl << std::flush;
-		std::cout << "Str: " << str << " write size: " << size << std::endl << std::flush;
-		printf("p: %p\n", str);
-		fflush(0);
-		if (this->_lostCo)
+		if ((ret = write(this->_connfd, str, size)) < 0)
 		{
-			std::cout << "Stupid" << std::endl << std::flush;
-		}
-		std::cout << "fd: " << this->_connfd << std::endl << std::flush;
-		if ((ret = write(this->_connfd, "toto", 3)) < 0)
-		{
-			std::cout << "ERROR: " << ret << std::endl << std::flush;
 			this->_lostCo = true;
 			return ;
 		}
 		return ;
-		std::cout << "end" << std::endl << std::flush;
 		size -= ret;
 		str += ret;
-		std::cout << "then" << std::endl << std::flush;
 	}
 
 }
@@ -80,16 +67,12 @@ void		Server::sendBoard(const Board &board) {
 	std::string		str = "DISP-";
 
 	auto rawBoard = board.getBoard();
-	std::cout << "Before" << std::endl << std::flush;
 	for (auto &k: rawBoard)
 	{
 		str += std::to_string(this->_getClientColor(k));
 	}
-	std::cout << "Here" << std::endl << std::flush;
-	str = "toto";
 	this->_sendMsg(str.c_str());
-	std::cout << "After" << std::endl << std::flush;
-	std::cout << str << std::endl;
+	std::cout << "str: " << str << std::endl;
 }
 
 int			Server::getMove(Board::Point &color)
@@ -149,6 +132,8 @@ Server::Server(const Server &obj) {
 }
 
 Server::~Server(void) {
+	std::cout << "Shutdown client connection" << std::endl;
+	shutdown(this->_connfd, SHUT_RDWR);
 	close(this->_connfd);
 	close(this->_listenFd);
 }

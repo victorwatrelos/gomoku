@@ -7,12 +7,13 @@
 class NetworkDisplay : public AbstractDisplay
 {
 	public:
-		NetworkDisplay(void);
+		NetworkDisplay(Server *server);
 		NetworkDisplay(const NetworkDisplay &obj);
 		NetworkDisplay &operator=(const NetworkDisplay &p);
 		virtual ~NetworkDisplay(void);
 		void	displayBoard(const Board &board);
 	private:
+		NetworkDisplay(void);
 		Server	*_server;
 };
 #endif
