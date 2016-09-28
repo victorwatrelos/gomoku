@@ -43,7 +43,7 @@ int					AIPlayer::getMove(const Board &board)
 			new_board = board;
 			new_board.setMove(pos, this->_color);
 			new_state = new State(new_board, this->_color, this->_h);
-			h_value = this->_ai.minimax(new_state, 1, true);
+			h_value = this->_ai.minimax(new_state, 2, true);
 			if (h_value > best_h)
 			{
 				best_h = h_value;

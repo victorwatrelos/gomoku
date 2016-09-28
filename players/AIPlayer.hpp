@@ -20,6 +20,7 @@ class						AIPlayer : public AbstractPlayer
 	private:
 		AbstractHeuristic	*_h;
 		AI					_ai;
+
 };
 
 #endif

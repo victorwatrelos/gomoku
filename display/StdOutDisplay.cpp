@@ -29,7 +29,7 @@ void			StdOutDisplay::_dispPoint(Board::Point &p) const {
 	std::cout << " ";
 }
 
-void			StdOutDisplay::displayBoard(const Board &board) const {
+void			StdOutDisplay::displayBoard(const Board &board) {
 	auto	point = board.getBoard();
 	int		pos = 0;
 	int		a;

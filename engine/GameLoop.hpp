@@ -4,8 +4,12 @@
 # include "../players/AbstractPlayer.hpp"
 # include "../players/STDINPlayer.hpp"
 # include "../players/AIPlayer.hpp"
+# include "../players/NetworkPlayer.hpp"
 # include "../Board.hpp"
 # include "../display/StdOutDisplay.hpp"
+# include "../display/NetworkDisplay.hpp"
+# include "../network/Server.hpp"
+# include <chrono>
 
 class GameLoop
 {
@@ -14,14 +18,17 @@ class GameLoop
 		GameLoop(const GameLoop &obj);
 		GameLoop &operator=(const GameLoop &p);
 		virtual ~GameLoop(void);
-		void	loop(void);
+		AbstractPlayer	*loop(void);
+		void			launchGame(void);
 	private:
 		AbstractPlayer	*_players[2];
 		AbstractDisplay	*_display;
 		Board			_board;
+		Server			*_server;
 		void			_createPlayers();
 		void			_getPlayerMove(AbstractPlayer &player);
 		void			_initDisplay(void);
+		void			_initServer(void);
 };
 
 #endif
