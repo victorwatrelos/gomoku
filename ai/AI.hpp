@@ -13,6 +13,8 @@ class						AI
 
 		int					minimax(State *node, int depth, bool player);
 
+		int					nb_state = 0;
+
 };
 
 

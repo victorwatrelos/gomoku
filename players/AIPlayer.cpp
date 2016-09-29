@@ -36,6 +36,7 @@ int					AIPlayer::getMove(const Board &board)
 	int					best_pos = 0;
 	int					h_value;
 
+	this->_ai.nb_state = 0;
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
 		if (board.isMoveValid(pos, this->_color))
@@ -43,7 +44,7 @@ int					AIPlayer::getMove(const Board &board)
 			new_board = board;
 			new_board.setMove(pos, this->_color);
 			new_state = new State(new_board, this->_color, this->_h);
-			h_value = this->_ai.minimax(new_state, 1, true);
+			h_value = this->_ai.minimax(new_state, 3, true);
 			if (h_value > best_h)
 			{
 				best_h = h_value;
@@ -51,5 +52,6 @@ int					AIPlayer::getMove(const Board &board)
 			}
 		}
 	}
+	std::cout << "nb state explored : " << this->_ai.nb_state << std::endl;
 	return best_pos;
 }

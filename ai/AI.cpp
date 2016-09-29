@@ -35,6 +35,7 @@ int			AI::minimax(State *node, int depth, bool player)
 	{
 		bestValue = -100000;
 		children = node->expand();
+		this->nb_state += children.size();
 		for (auto child : children) {
 			val = this->minimax(child, depth - 1, false);
 			if (val > bestValue)
@@ -48,6 +49,7 @@ int			AI::minimax(State *node, int depth, bool player)
 	{
 		bestValue = 100000;
 		children = node->expand();
+		this->nb_state += children.size();
 		for (auto child : children) {
 			val = this->minimax(child, depth - 1, true);
 			if (val < bestValue)
