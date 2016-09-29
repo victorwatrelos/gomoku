@@ -619,6 +619,7 @@ int					Board::getScore()
 	return score;
 }
 
+/*
 std::vector<Board*>		Board::expand(Point color)
 {
 	std::vector<Board*>	st;
@@ -635,31 +636,29 @@ std::vector<Board*>		Board::expand(Point color)
 	}
 	return st;
 }
+*/
 
-/*
-std::vector<Board*>		Board::expand(void)
+std::vector<Board*>		Board::expand(Point color)
 {
 	std::vector<Board*>	st;
-	std::vector<Board::Point>	bobo = this->_board.getBoard();
 	int							set = 0;
 
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
-		if (bobo[pos] != PEMPTY)
+		if (this->_board[pos] != PEMPTY)
 		{
-			this->_expandPoint(st, pos);
+			this->_expandPoint(st, color, pos);
 			set++;
 		}
 	}
 	if (set == 0)
-		this->_expandPoint(st, 180);
+		this->_expandPoint(st, color, 180);
 	return st;
 }
-*/
 
-void				Board::_expandPoint(std::vector<Board *>st, Board::Point color, int pos)
+void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int pos)
 {
-	int				i, j;
+	int				i, j, index;
 	int				m, n;
 	Board			*new_board;
 
@@ -676,13 +675,19 @@ void				Board::_expandPoint(std::vector<Board *>st, Board::Point color, int pos)
 		m = GRID_LENGTH - 1;
 	if (n >= GRID_LENGTH)
 		n = GRID_LENGTH - 1;
-	for ( ; i < m ; i++ )
+	while (i < m)
 	{
-		for ( ; j < n ; j++ )
+		while (j < n)
 		{
-			new_board = new Board(*this);
-			new_board->setMove(pos, color);
-			st.push_back(new_board);
+			index = this->getIndex(i, j);
+			if (this->isMoveValid(index, color))
+			{
+				new_board = new Board(*this);
+				new_board->setMove(index, color);
+				st.push_back(new_board);
+			}
+			j++;
 		}
+		i++;
 	}
 }

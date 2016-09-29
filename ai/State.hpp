@@ -19,7 +19,7 @@ class							State
 		std::vector<State*>		expand(void);
 
 	private:
-		void					_expandPoint(std::vector<State *>st, int pos);
+		void					_expandPoint(std::vector<State *> &st, int pos);
 
 		Board					_board;
 		Board::Point			_player_col;

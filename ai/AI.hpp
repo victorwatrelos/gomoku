@@ -15,6 +15,7 @@ class						AI
 
 		int					minimax(Board *node, int depth, bool player);
 
+		int					nb_state = 0;
 
 	private:
 		AbstractHeuristic	*_h;

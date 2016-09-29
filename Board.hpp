@@ -48,7 +48,7 @@ class								Board
 		int							_checkStreakDiag(bool down) const;
 		int							_checkStreakBackDiag(bool down) const;
 
-		void						_expandPoint(std::vector<Board *>st, Board::Point color, int pos);
+		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos);
 
 		std::vector<Point>			_board;
 };
