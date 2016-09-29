@@ -2,7 +2,9 @@
 # define BOARD_HPP
 
 # include <vector>
+# include <unordered_set>
 # include <iostream>
+# include <cmath>
 # include "define.hpp"
 
 # define PEMPTY						(Board::Point::EMPTY)
@@ -25,6 +27,12 @@ class								Board
 		bool						isWinningBoard(void) const;
 		int							getIndex(int i, int j) const;
 
+		int							getScore();
+
+		std::vector<Board*>			expand(Point color);
+		
+		static Point				getOppColor(Point player_col);
+
 	private:
 		bool						_checkWinningLine(bool isRow) const;
 		bool						_checkWinningDiag(bool down) const;
@@ -36,6 +44,12 @@ class								Board
 		int							*_checkThreeBackDiag(int pos, Board::Point color) const;
 		bool						_checkMoveInCapture(int pos, Board::Point color) const;
 
+
+		int							_checkStreakLine(bool isRow) const;
+		int							_checkStreakDiag(bool down) const;
+		int							_checkStreakBackDiag(bool down) const;
+
+		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups);
 
 		std::vector<Point>			_board;
 };

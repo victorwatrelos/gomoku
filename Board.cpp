@@ -24,6 +24,13 @@ const std::vector<Board::Point>&		Board::getBoard(void) const
 	return (const_cast<const std::vector<Board::Point>&>(this->_board));
 }
 
+Board::Point						Board::getOppColor(Point player_color)
+{
+	if (player_color == Point::WHITE)
+		return Point::BLACK;
+	return Point::WHITE;
+}
+
 void						Board::setMove(int pos, Board::Point color)
 {
 	if (pos < 0 || pos >= GRID_SIZE)
@@ -63,7 +70,13 @@ bool						Board::isWinningBoard(void) const
 
 int							Board::getIndex(int i, int j) const
 {
-	return (j * GRID_LENGTH + i);
+	int						index;
+	index = j * GRID_LENGTH + i;
+	if (index < 0)
+		index = 0;
+	else if (index >= GRID_SIZE)
+		index = GRID_SIZE - 1;
+	return (index);
 }
 
 /*
@@ -458,4 +471,234 @@ bool					Board::_checkMoveInCapture(int pos, Board::Point color) const
 		return (true);
 
 	return (false);
+}
+
+/*
+ * TEST
+ */
+
+
+int							Board::_checkStreakLine(bool isRow) const
+{
+	int						i, j, index;
+	int						streak;
+	Board::Point			curr, last;
+	int						score = 0;
+
+	i = 0;
+	last = Board::Point::EMPTY;
+	while (i < GRID_LENGTH)
+	{
+		j = 0;
+		streak = 0;
+		while (j < GRID_LENGTH)
+		{
+			if (isRow)
+				index = this->getIndex(j, i);
+			else
+				index = this->getIndex(i, j);
+			curr = this->_board[index];
+			if (curr == Board::Point::EMPTY || curr != last)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			else if (curr == last)
+				streak++;
+			if (streak == 4)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			last = curr;
+			j++;
+		}
+		i++;
+	}
+	if (streak != 0)
+		score += std::pow(4, streak);
+	return (score);
+}
+
+int							Board::_checkStreakBackDiag(bool down) const
+{
+	int						a, i, j, index;
+	int						streak;
+	Board::Point			curr, last;
+	int						score = 0;
+
+	last = Board::Point::EMPTY;
+	a = 0;
+	if (down)
+		a++;
+	while (a < GRID_LENGTH - 1)
+	{
+		i = a;
+		j = 0;
+		streak = 0;
+		while (i < GRID_LENGTH)
+		{
+			if (down)
+				index = this->getIndex(j, i);
+			else
+				index = this->getIndex(i, j);
+			curr = this->_board[index];
+			if (curr == Board::Point::EMPTY || curr != last)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			else if (curr == last)
+				streak++;
+			if (streak == 4)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			last = curr;
+			i++;
+			j++;
+		}
+		a++;
+	}
+	if (streak != 0)
+		score += std::pow(4, streak);
+	return (score);
+}
+
+int							Board::_checkStreakDiag(bool down) const
+{
+	int						a, i, j, index;
+	int						streak = 0;
+	Board::Point			curr, last;
+	int						score = 0;
+
+	last = Board::Point::EMPTY;
+	a = GRID_LENGTH - 1;
+	while (a > 0)
+	{
+		i = a;
+		j = 0;
+		if (down)
+			j++;
+		streak = 0;
+		while (i > 0)
+		{
+			if (down)
+				index = this->getIndex(j, i);
+			else
+				index = this->getIndex(i, j);
+			curr = this->_board[index];
+			if (curr == Board::Point::EMPTY || curr != last)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			else if (curr == last)
+				streak++;
+			if (streak == 4)
+			{
+				score += std::pow(4, streak);
+				streak = 0;
+			}
+			last = curr;
+			i--;
+			j++;
+		}
+		a--;
+	}
+	if (streak != 0)
+		score += std::pow(4, streak);
+	return (score);
+}
+
+int					Board::getScore()
+{
+	int				score = 0;
+
+	score += this->_checkStreakLine(true);
+	score += this->_checkStreakDiag(true);
+	score += this->_checkStreakBackDiag(true);
+	score += this->_checkStreakLine(false);
+	score += this->_checkStreakDiag(false);
+	score += this->_checkStreakBackDiag(false);
+	return score;
+}
+
+/*
+std::vector<Board*>		Board::expand(Point color)
+{
+	std::vector<Board*>	st;
+	Board				*new_board;
+
+	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
+	{
+		if (this->isMoveValid(pos, color))
+		{
+			new_board = new Board(*this);
+			new_board->setMove(pos, color);
+			st.push_back(new_board);
+		}
+	}
+	return st;
+}
+*/
+
+std::vector<Board*>		Board::expand(Point color)
+{
+	std::vector<Board*>	st;
+	std::unordered_set<int>		dups;
+	int							set = 0;
+
+	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
+	{
+		if (this->_board[pos] != PEMPTY)
+		{
+			this->_expandPoint(st, color, pos, dups);
+			set++;
+		}
+	}
+	if (set == 0)
+		this->_expandPoint(st, color, 180, dups);
+	return st;
+}
+
+void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups)
+{
+	int				i, j, index;
+	int				m, n;
+	Board			*new_board;
+
+	i = pos % GRID_LENGTH - 3;
+	j = pos / GRID_LENGTH - 3;
+	m = pos % GRID_LENGTH + 3;
+	n = pos / GRID_LENGTH + 3;
+	
+	if (i < 0)
+		i = 0;
+	if (j < 0)
+		j = 0;
+	if (m >= GRID_LENGTH)
+		m = GRID_LENGTH - 1;
+	if (n >= GRID_LENGTH)
+		n = GRID_LENGTH - 1;
+	while (i < m)
+	{
+		while (j < n)
+		{
+			index = this->getIndex(i, j);
+			if (dups.find(index) == dups.end())
+			{
+				if (this->isMoveValid(index, color))
+				{
+					new_board = new Board(*this);
+					new_board->setMove(index, color);
+					st.push_back(new_board);
+					dups.insert(index);
+				}
+			}
+			j++;
+		}
+		i++;
+	}
 }

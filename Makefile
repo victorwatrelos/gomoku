@@ -12,8 +12,8 @@ SRC= main.cpp \
 	 display/NetworkDisplay.cpp \
 	 engine/GameLoop.cpp \
 	 ai/AI.cpp \
-	 ai/State.cpp \
 	 heuristics/BadHeuristic.cpp \
+	 heuristics/SimpleHeuristic.cpp \
 	 network/Server.cpp \
 	 Board.cpp
 

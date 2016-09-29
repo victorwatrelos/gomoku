@@ -6,6 +6,7 @@
 # include "../heuristics/AbstractHeuristic.hpp"
 // to be deleted
 # include "../heuristics/BadHeuristic.hpp"
+# include "../heuristics/SimpleHeuristic.hpp"
 
 class						AIPlayer : public AbstractPlayer
 {
@@ -18,8 +19,8 @@ class						AIPlayer : public AbstractPlayer
 		int					getMove(const Board &board);
 
 	private:
+		AI					*_ai;
 		AbstractHeuristic	*_h;
-		AI					_ai;
 
 };
 
