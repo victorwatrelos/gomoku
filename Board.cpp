@@ -70,7 +70,13 @@ bool						Board::isWinningBoard(void) const
 
 int							Board::getIndex(int i, int j) const
 {
-	return (j * GRID_LENGTH + i);
+	int						index;
+	index = j * GRID_LENGTH + i;
+	if (index < 0)
+		index = 0;
+	else if (index >= GRID_SIZE)
+		index = GRID_SIZE - 1;
+	return (index);
 }
 
 /*
@@ -641,22 +647,23 @@ std::vector<Board*>		Board::expand(Point color)
 std::vector<Board*>		Board::expand(Point color)
 {
 	std::vector<Board*>	st;
+	std::unordered_set<int>		dups;
 	int							set = 0;
 
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
 		if (this->_board[pos] != PEMPTY)
 		{
-			this->_expandPoint(st, color, pos);
+			this->_expandPoint(st, color, pos, dups);
 			set++;
 		}
 	}
 	if (set == 0)
-		this->_expandPoint(st, color, 180);
+		this->_expandPoint(st, color, 180, dups);
 	return st;
 }
 
-void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int pos)
+void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups)
 {
 	int				i, j, index;
 	int				m, n;
@@ -680,11 +687,15 @@ void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int po
 		while (j < n)
 		{
 			index = this->getIndex(i, j);
-			if (this->isMoveValid(index, color))
+			if (dups.find(index) == dups.end())
 			{
-				new_board = new Board(*this);
-				new_board->setMove(index, color);
-				st.push_back(new_board);
+				if (this->isMoveValid(index, color))
+				{
+					new_board = new Board(*this);
+					new_board->setMove(index, color);
+					st.push_back(new_board);
+					dups.insert(index);
+				}
 			}
 			j++;
 		}

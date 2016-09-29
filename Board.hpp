@@ -2,6 +2,7 @@
 # define BOARD_HPP
 
 # include <vector>
+# include <unordered_set>
 # include <iostream>
 # include <cmath>
 # include "define.hpp"
@@ -48,7 +49,7 @@ class								Board
 		int							_checkStreakDiag(bool down) const;
 		int							_checkStreakBackDiag(bool down) const;
 
-		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos);
+		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups);
 
 		std::vector<Point>			_board;
 };
