@@ -24,6 +24,13 @@ const std::vector<Board::Point>&		Board::getBoard(void) const
 	return (const_cast<const std::vector<Board::Point>&>(this->_board));
 }
 
+Board::Point						Board::getOppColor(Point player_color)
+{
+	if (player_color == Point::WHITE)
+		return Point::BLACK;
+	return Point::WHITE;
+}
+
 void						Board::setMove(int pos, Board::Point color)
 {
 	if (pos < 0 || pos >= GRID_SIZE)
@@ -610,4 +617,72 @@ int					Board::getScore()
 	score += this->_checkStreakDiag(false);
 	score += this->_checkStreakBackDiag(false);
 	return score;
+}
+
+std::vector<Board*>		Board::expand(Point color)
+{
+	std::vector<Board*>	st;
+	Board				*new_board;
+
+	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
+	{
+		if (this->isMoveValid(pos, color))
+		{
+			new_board = new Board(*this);
+			new_board->setMove(pos, color);
+			st.push_back(new_board);
+		}
+	}
+	return st;
+}
+
+/*
+std::vector<Board*>		Board::expand(void)
+{
+	std::vector<Board*>	st;
+	std::vector<Board::Point>	bobo = this->_board.getBoard();
+	int							set = 0;
+
+	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
+	{
+		if (bobo[pos] != PEMPTY)
+		{
+			this->_expandPoint(st, pos);
+			set++;
+		}
+	}
+	if (set == 0)
+		this->_expandPoint(st, 180);
+	return st;
+}
+*/
+
+void				Board::_expandPoint(std::vector<Board *>st, Board::Point color, int pos)
+{
+	int				i, j;
+	int				m, n;
+	Board			*new_board;
+
+	i = pos % GRID_LENGTH - 3;
+	j = pos / GRID_LENGTH - 3;
+	m = pos % GRID_LENGTH + 3;
+	n = pos / GRID_LENGTH + 3;
+	
+	if (i < 0)
+		i = 0;
+	if (j < 0)
+		j = 0;
+	if (m >= GRID_LENGTH)
+		m = GRID_LENGTH - 1;
+	if (n >= GRID_LENGTH)
+		n = GRID_LENGTH - 1;
+	for ( ; i < m ; i++ )
+	{
+		for ( ; j < n ; j++ )
+		{
+			new_board = new Board(*this);
+			new_board->setMove(pos, color);
+			st.push_back(new_board);
+		}
+	}
 }

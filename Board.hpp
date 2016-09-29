@@ -28,6 +28,10 @@ class								Board
 
 		int							getScore();
 
+		std::vector<Board*>			expand(Point color);
+		
+		static Point				getOppColor(Point player_col);
+
 	private:
 		bool						_checkWinningLine(bool isRow) const;
 		bool						_checkWinningDiag(bool down) const;
@@ -43,6 +47,8 @@ class								Board
 		int							_checkStreakLine(bool isRow) const;
 		int							_checkStreakDiag(bool down) const;
 		int							_checkStreakBackDiag(bool down) const;
+
+		void						_expandPoint(std::vector<Board *>st, Board::Point color, int pos);
 
 		std::vector<Point>			_board;
 };
