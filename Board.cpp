@@ -306,7 +306,12 @@ int						*Board::_checkThreeLine(int pos, Board::Point color, bool isHoriz) cons
 		else if (last == color && curr == PEMPTY && space < 2)
 			space++;
 		else if (((last == PEMPTY && curr == color) || (last == color && curr == color)) && space < 2)
-			three[it++] = index;
+		{
+			if (it < 3)
+				three[it++] = index;
+			else
+				this->_resetThreeCheck(&three, &it, &space);
+		}
 		else if ((last == PEMPTY && curr == PEMPTY) || (curr != last))
 			this->_resetThreeCheck(&three, &it, &space);
 		last = curr;
@@ -352,7 +357,12 @@ int						*Board::_checkThreeBackDiag(int pos, Board::Point color) const
 		else if (last == color && curr == PEMPTY && space < 2)
 			space++;
 		else if (((last == PEMPTY && curr == color) || (last == color && curr == color)) && space < 2)
-			three[it++] = index;
+		{
+			if (it < 3)
+				three[it++] = index;
+			else
+				this->_resetThreeCheck(&three, &it, &space);
+		}
 		else if ((last == PEMPTY && curr == PEMPTY) || (curr != last))
 			this->_resetThreeCheck(&three, &it, &space);
 		last = curr;
@@ -399,7 +409,12 @@ int						*Board::_checkThreeDiag(int pos, Board::Point color) const
 		else if (last == color && curr == PEMPTY && space < 2)
 			space++;
 		else if (((last == PEMPTY && curr == color) || (last == color && curr == color)) && space < 2)
-			three[it++] = index;
+		{
+			if (it < 3)
+				three[it++] = index;
+			else
+				this->_resetThreeCheck(&three, &it, &space);
+		}
 		else if ((last == PEMPTY && curr == PEMPTY) || (curr != last))
 			this->_resetThreeCheck(&three, &it, &space);
 		last = curr;
