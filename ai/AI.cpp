@@ -29,21 +29,21 @@ AI&			AI::operator=(const AI & rhs)
  * 		MINIMAX
  */
 
-int			AI::minimax(Board *node, int depth, bool player)
+int			AI::minimax(Board *node, int depth, const Board::Point &player)
 {
 	int		val, bestValue = 0;
 	std::vector<Board*>	children;
 
 	if (depth == 0)
-		return (this->_h->eval(node));
+		return (this->_h->eval(node, player, player != this->_player_color));
 
-	if (player)
+	if (player == this->_player_color)
 	{
 		bestValue = -100000;
 		children = node->expand(this->_player_color);
 		this->nb_state += children.size();
 		for (auto child : children) {
-			val = this->minimax(child, depth - 1, false);
+			val = this->minimax(child, depth - 1, Board::getOppColor(player));
 			if (val > bestValue)
 				bestValue = val;
 		}
@@ -57,7 +57,7 @@ int			AI::minimax(Board *node, int depth, bool player)
 		children = node->expand(Board::getOppColor(this->_player_color));
 		this->nb_state += children.size();
 		for (auto child : children) {
-			val = this->minimax(child, depth - 1, true);
+			val = this->minimax(child, depth - 1, Board::getOppColor(player));
 			if (val < bestValue)
 				bestValue = val;
 		}

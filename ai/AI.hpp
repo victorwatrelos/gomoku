@@ -13,7 +13,7 @@ class						AI
 		virtual				~AI(void);
 		AI&					operator=(const AI & rhs);
 
-		int					minimax(Board *node, int depth, bool player);
+		int					minimax(Board *node, int depth, const Board::Point &player);
 
 		int					nb_state = 0;
 

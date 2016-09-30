@@ -75,7 +75,9 @@ AbstractPlayer	*GameLoop::loop(void) {
 
 	std::chrono::high_resolution_clock::time_point		start, end;
 	long long											dur;
-	
+	VHeuristic	h;
+
+	h.display = true;
 	this->_display->displayBoard(this->_board);
 	while (1)
 	{
@@ -86,6 +88,7 @@ AbstractPlayer	*GameLoop::loop(void) {
 			end = std::chrono::high_resolution_clock::now();
 			dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
 			printT(dur);
+			h.eval(&(this->_board), Board::Point::WHITE, p->getColor() != Board::Point::WHITE);
 			this->_display->displayBoard(this->_board);
 			if (this->_board.isWinningBoard())
 			{
