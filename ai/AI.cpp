@@ -39,7 +39,7 @@ int			AI::minimax(Board *node, int depth, bool player)
 
 	if (player)
 	{
-		bestValue = -100000;
+		bestValue = -1000000;
 		children = node->expand(this->_player_color);
 		this->nb_state += children.size();
 		for (auto child : children) {
@@ -53,7 +53,7 @@ int			AI::minimax(Board *node, int depth, bool player)
 	}
 	else
 	{
-		bestValue = 100000;
+		bestValue = 1000000;
 		children = node->expand(Board::getOppColor(this->_player_color));
 		this->nb_state += children.size();
 		for (auto child : children) {
@@ -78,7 +78,7 @@ int			AI::minimaxAB(Board *node, int depth, int A, int B, bool player)
 
 	if (player)
 	{
-		bestValue = -100000;
+		bestValue = -1000000;
 		children = node->expand(this->_player_color);
 		this->nb_state += children.size();
 		for (auto child : children) {
@@ -96,7 +96,7 @@ int			AI::minimaxAB(Board *node, int depth, int A, int B, bool player)
 	}
 	else
 	{
-		bestValue = 100000;
+		bestValue = 1000000;
 		children = node->expand(Board::getOppColor(this->_player_color));
 		this->nb_state += children.size();
 		for (auto child : children) {
@@ -127,7 +127,7 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 	else
 		children = node->expand(Board::getOppColor(this->_player_color));
 	this->nb_state += children.size();
-	bestValue = -100000;
+	bestValue = -1000000;
 	for (auto child : children) {
 		val = -1 * this->negamax(child, depth - 1, -1 * B, -1 * A, -1 * player);
 		if (val > bestValue)

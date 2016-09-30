@@ -678,8 +678,6 @@ std::vector<Board*>		Board::expand(Point color)
 			set++;
 		}
 	}
-//	if (set == 0)
-//		this->_expandPoint(st, color, 180, dups, 2);
 	return st;
 }
 

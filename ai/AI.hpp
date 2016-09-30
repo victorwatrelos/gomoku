@@ -22,6 +22,10 @@ class						AI
 	private:
 		AbstractHeuristic	*_h;
 		Board::Point		_player_color;
+
+		long long			_t_expansion;
+		long long			_t_eval;
+		long long			_t_vector_clear;
 };
 
 

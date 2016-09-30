@@ -56,6 +56,20 @@ int					AIPlayer::getMove(const Board &board)
 }
 */
 
+void                printTTT(unsigned long int t, int a)
+{
+	int             m, s, ms, us;
+
+	m = (t / 60000000);
+	s = (t / 1000000) % 60;
+	ms = (t / 1000) % 1000;
+	us = t % 1000;
+	if (a == 1)
+		printf("Time taken for expansion: %dm%ds%dms%dus\n", m, s, ms, us);
+	else if (a == 2)
+		printf("Time taken for minmax iter: %dm%ds%dms%dus\n", m, s, ms, us);
+}
+
 void				AIPlayer::_expandPoints(Board::Point color, int pos, std::unordered_set<int> &dups, const Board &b, int depth)
 {
 	int				i, j, index;
@@ -83,9 +97,7 @@ void				AIPlayer::_expandPoints(Board::Point color, int pos, std::unordered_set<
 			if (dups.find(index) == dups.end())
 			{
 				if (b.isMoveValid(index, color))
-				{
 					dups.insert(index);
-				}
 			}
 		}
 		i++;
@@ -116,20 +128,23 @@ void				showExpand(std::unordered_set<int> dups, const Board &board)
 	std::cout << std::endl;
 }
 
-int					AIPlayer::getMove(const Board &board)
+int						AIPlayer::getMove(const Board &board)
 {
 	Board				new_board;
 	int					best_h = -1;
 	int					best_pos = 0;
 	int					h_value;
-	std::unordered_set<int>		dups;
 	int					set = 0;
-	std::vector<Board::Point>		bobo = board.getBoard();
+	std::unordered_set<int>		dups;
+	std::vector<Board::Point>	b = board.getBoard();
+	std::chrono::high_resolution_clock::time_point		start, end;
+	long long											dur;
 
+start = std::chrono::high_resolution_clock::now();
 	this->_ai->nb_state = 0;
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
-		if (bobo[pos] != PEMPTY)
+		if (b[pos] != PEMPTY)
 		{
 			this->_expandPoints(this->_color, pos, dups, board, 2);
 			set++;
@@ -137,22 +152,28 @@ int					AIPlayer::getMove(const Board &board)
 	}
 	if (set == 0)
 		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, board, 2);
+end = std::chrono::high_resolution_clock::now();
+dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
+printTTT(dur, 1);
+
 //	showExpand(dups, board);
+start = std::chrono::high_resolution_clock::now();
 	for (auto i : dups)
 	{
 		new_board = board;
 		new_board.setMove(i, this->_color);
 //		h_value = this->_ai->minimax(&new_board, 3, true);
-		h_value = this->_ai->minimaxAB(&new_board, 2, -100000, 100000, true);
+		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, true);
 //		h_value = this->_ai->negamax(&new_board, 3, -100000, 100000, 1);
-		if (h_value < 0)
-			std::cout << "HHH IS NEG" << std::endl;
 		if (h_value > best_h)
 		{
 			best_h = h_value;
 			best_pos = i;
 		}
 	}
+end = std::chrono::high_resolution_clock::now();
+dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
+printTTT(dur, 2);
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
 	return best_pos;
 }
