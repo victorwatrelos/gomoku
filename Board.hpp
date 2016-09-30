@@ -22,6 +22,7 @@ class								Board
 		Board&						operator=(const Board &p);
 
 		const std::vector<Point>&	getBoard(void) const;
+		Board::Point				lookAt(int index) const;
 		void						setMove(int pos, Board::Point color);
 		bool						isMoveValid(int pos, Board::Point color) const;
 		bool						isWinningBoard(void) const;
@@ -49,7 +50,7 @@ class								Board
 		int							_checkStreakDiag(bool down) const;
 		int							_checkStreakBackDiag(bool down) const;
 
-		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups);
+		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth);
 
 		std::vector<Point>			_board;
 };

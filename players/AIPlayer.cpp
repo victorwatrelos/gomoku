@@ -63,23 +63,23 @@ void				AIPlayer::_expandPoints(Board::Point color, int pos, std::unordered_set<
 
 	i = pos % GRID_LENGTH - depth;
 	j = pos / GRID_LENGTH - depth;
-	m = pos % GRID_LENGTH + depth;
-	n = pos / GRID_LENGTH + depth;
+	m = pos % GRID_LENGTH + depth + 1;
+	n = pos / GRID_LENGTH + depth + 1;
 	
 	if (i < 0)
 		i = 0;
 	if (j < 0)
 		j = 0;
-	if (m >= GRID_LENGTH)
-		m = GRID_LENGTH - 1;
-	if (n >= GRID_LENGTH)
-		n = GRID_LENGTH - 1;
+	if (m > GRID_LENGTH)
+		m = GRID_LENGTH;
+	if (n > GRID_LENGTH)
+		n = GRID_LENGTH;
 
 	while (i < m)
 	{
-		while (j < n)
+		for (int jj = j ; jj < n ; jj++)
 		{
-			index = b.getIndex(i, j);
+			index = b.getIndex(i, jj);
 			if (dups.find(index) == dups.end())
 			{
 				if (b.isMoveValid(index, color))
@@ -87,10 +87,33 @@ void				AIPlayer::_expandPoints(Board::Point color, int pos, std::unordered_set<
 					dups.insert(index);
 				}
 			}
-			j++;
 		}
 		i++;
 	}
+}
+
+void				showExpand(std::unordered_set<int> dups, const Board &board)
+{
+	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
+	{
+		if (pos % GRID_LENGTH == 0)
+			std::cout << std::endl;
+		if (dups.find(pos) != dups.end())
+		{
+			if (board.lookAt(pos) != PEMPTY)
+				std::cout << "X ";
+			else
+				std::cout << "O ";
+		}
+		else
+		{
+			if (board.lookAt(pos) != PEMPTY)
+				std::cout << "E ";
+			else
+				std::cout << "_ ";
+		}
+	}
+	std::cout << std::endl;
 }
 
 int					AIPlayer::getMove(const Board &board)
@@ -108,19 +131,20 @@ int					AIPlayer::getMove(const Board &board)
 	{
 		if (bobo[pos] != PEMPTY)
 		{
-			this->_expandPoints(this->_color, pos, dups, board, 3);
+			this->_expandPoints(this->_color, pos, dups, board, 2);
 			set++;
 		}
 	}
-//	if (set == 0)
-//		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, board, 3);
+	if (set == 0)
+		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, board, 2);
+//	showExpand(dups, board);
 	for (auto i : dups)
 	{
 		new_board = board;
 		new_board.setMove(i, this->_color);
 //		h_value = this->_ai->minimax(&new_board, 3, true);
-//		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, true);
-		h_value = this->_ai->negamax(&new_board, 3, -100000, 100000, 1);
+		h_value = this->_ai->minimaxAB(&new_board, 2, -100000, 100000, true);
+//		h_value = this->_ai->negamax(&new_board, 3, -100000, 100000, 1);
 		if (h_value < 0)
 			std::cout << "HHH IS NEG" << std::endl;
 		if (h_value > best_h)
