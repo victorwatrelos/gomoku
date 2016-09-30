@@ -14,7 +14,7 @@ AIPlayer::AIPlayer(const std::string &name, const Board::Point &color)
 {
 	this->_name = name;
 	this->_color = color;
-	this->_h = new SimpleHeuristic();
+	this->_h = new VHeuristic();
 	this->_ai = new AI(this->_h, this->_color);
 }
 
