@@ -32,9 +32,15 @@ class VHeuristic : public AbstractHeuristic
 		void			_startTimer(void);
 		void			_endTimer(void);
 		void			_getLine(const std::vector<Board::Point> &b);
+		void			_getVLine(const std::vector<Board::Point> &b);
+		void			_getHLine(const std::vector<Board::Point> &b);
 		void			_addPointForLine(bool isLastEmpty);
-		void			_parsePointOfLine(const Board::Point &b);
+		void			_parsePointOfLine(const Board::Point &b, int i);
 		bool			_checkHoriPos(const std::vector<Board::Point> &b, int pos);
+		bool			_checkVertPos(const std::vector<Board::Point> &b, int pos);
+		int				_getTotPoints();
+		bool			_isWinning;
+		const std::vector<Board::Point>	*_b;
 };
 #endif
 

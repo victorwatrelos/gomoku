@@ -24,6 +24,11 @@ const std::vector<Board::Point>&		Board::getBoard(void) const
 	return (const_cast<const std::vector<Board::Point>&>(this->_board));
 }
 
+Board::Point						Board::lookAt(int index) const
+{
+	return (this->_board[index]);
+}
+
 Board::Point						Board::getOppColor(Point player_color)
 {
 	if (player_color == Point::WHITE)
@@ -669,39 +674,39 @@ std::vector<Board*>		Board::expand(Point color)
 	{
 		if (this->_board[pos] != PEMPTY)
 		{
-			this->_expandPoint(st, color, pos, dups);
+			this->_expandPoint(st, color, pos, dups, 2);
 			set++;
 		}
 	}
-	if (set == 0)
-		this->_expandPoint(st, color, 180, dups);
+//	if (set == 0)
+//		this->_expandPoint(st, color, 180, dups, 2);
 	return st;
 }
 
-void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups)
+void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth)
 {
 	int				i, j, index;
 	int				m, n;
 	Board			*new_board;
 
-	i = pos % GRID_LENGTH - 3;
-	j = pos / GRID_LENGTH - 3;
-	m = pos % GRID_LENGTH + 3;
-	n = pos / GRID_LENGTH + 3;
+	i = pos % GRID_LENGTH - depth;
+	j = pos / GRID_LENGTH - depth;
+	m = pos % GRID_LENGTH + depth + 1;
+	n = pos / GRID_LENGTH + depth + 1;
 	
 	if (i < 0)
 		i = 0;
 	if (j < 0)
 		j = 0;
-	if (m >= GRID_LENGTH)
-		m = GRID_LENGTH - 1;
-	if (n >= GRID_LENGTH)
-		n = GRID_LENGTH - 1;
+	if (m > GRID_LENGTH)
+		m = GRID_LENGTH;
+	if (n > GRID_LENGTH)
+		n = GRID_LENGTH;
 	while (i < m)
 	{
-		while (j < n)
+		for (int jj = j ; jj < n ; jj++)
 		{
-			index = this->getIndex(i, j);
+			index = this->getIndex(i, jj);
 			if (dups.find(index) == dups.end())
 			{
 				if (this->isMoveValid(index, color))
@@ -712,7 +717,6 @@ void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int po
 					dups.insert(index);
 				}
 			}
-			j++;
 		}
 		i++;
 	}
