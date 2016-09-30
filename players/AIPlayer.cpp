@@ -119,7 +119,7 @@ void				showExpand(std::unordered_set<int> dups, const Board &board)
 int					AIPlayer::getMove(const Board &board)
 {
 	Board				new_board;
-	int					best_h = -1;
+	int					best_h = -1000000;
 	int					best_pos = 0;
 	int					h_value;
 	std::unordered_set<int>		dups;
@@ -142,17 +142,19 @@ int					AIPlayer::getMove(const Board &board)
 	{
 		new_board = board;
 		new_board.setMove(i, this->_color);
-//		h_value = this->_ai->minimax(&new_board, 2, this->_color);
-		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, true);
+		h_value = this->_ai->minimax(&new_board, 2, this->_color);
+//		h_value = this->_ai->minimaxAB(&new_board, 1, -100000, 100000, true);
 //		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, 1);
-		if (h_value < 0)
-			std::cout << "HHH IS NEG" << std::endl;
+	//	if (h_value < 0)
+	//		std::cout << "HHH IS NEG" << std::endl;
 		if (h_value > best_h)
 		{
 			best_h = h_value;
 			best_pos = i;
 		}
 	}
+	std::cout << "Best hL : " << best_h << std::endl;
+	std::cout << "best pos: " << best_pos / GRID_LENGTH << ", " << best_pos % GRID_LENGTH << std::endl;
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
 	return best_pos;
 }

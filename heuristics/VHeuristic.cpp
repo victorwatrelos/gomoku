@@ -180,7 +180,7 @@ void		VHeuristic::_getHLine(const std::vector<Board::Point> &b)
 int			VHeuristic::_getTotPoints()
 {
 	if (this->_isWinning)
-		return (999999);
+		return (900000);
 	return this->_totPoints;
 }
 
@@ -225,6 +225,6 @@ int			VHeuristic::eval(Board *b, const Board::Point &color, bool neg)
 	//this->_startTimer();
 	//res = b->getScore();
 	//this->_endTimer();
-	return (this->_totPoints);
+	return (res);
 
 }
