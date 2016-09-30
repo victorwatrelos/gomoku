@@ -19,6 +19,8 @@ class						AIPlayer : public AbstractPlayer
 		int					getMove(const Board &board);
 
 	private:
+		void				_expandPoints(Board::Point color, int pos, std::unordered_set<int> &dups, const Board &b, int depth);
+
 		AI					*_ai;
 		AbstractHeuristic	*_h;
 

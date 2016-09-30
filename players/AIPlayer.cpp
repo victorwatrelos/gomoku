@@ -43,7 +43,7 @@ int					AIPlayer::getMove(const Board &board)
 		{
 			new_board = board;
 			new_board.setMove(pos, this->_color);
-			h_value = this->_ai->minimax(&new_board, 2, true);
+			h_value = this->_ai->minimax(&new_board, 1, true);
 			if (h_value > best_h)
 			{
 				best_h = h_value;
@@ -56,15 +56,15 @@ int					AIPlayer::getMove(const Board &board)
 }
 */
 
-void				expandPoints(Board::Point color, int pos, std::unordered_set<int> &dups, const Board &b)
+void				AIPlayer::_expandPoints(Board::Point color, int pos, std::unordered_set<int> &dups, const Board &b, int depth)
 {
 	int				i, j, index;
 	int				m, n;
 
-	i = pos % GRID_LENGTH - 3;
-	j = pos / GRID_LENGTH - 3;
-	m = pos % GRID_LENGTH + 3;
-	n = pos / GRID_LENGTH + 3;
+	i = pos % GRID_LENGTH - depth;
+	j = pos / GRID_LENGTH - depth;
+	m = pos % GRID_LENGTH + depth;
+	n = pos / GRID_LENGTH + depth;
 	
 	if (i < 0)
 		i = 0;
@@ -91,7 +91,6 @@ void				expandPoints(Board::Point color, int pos, std::unordered_set<int> &dups,
 		}
 		i++;
 	}
-
 }
 
 int					AIPlayer::getMove(const Board &board)
@@ -109,16 +108,21 @@ int					AIPlayer::getMove(const Board &board)
 	{
 		if (bobo[pos] != PEMPTY)
 		{
-			expandPoints(this->_color, pos, dups, board);
+			this->_expandPoints(this->_color, pos, dups, board, 3);
 			set++;
 		}
 	}
-
+//	if (set == 0)
+//		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, board, 3);
 	for (auto i : dups)
 	{
 		new_board = board;
 		new_board.setMove(i, this->_color);
-		h_value = this->_ai->minimax(&new_board, 2, true);
+//		h_value = this->_ai->minimax(&new_board, 3, true);
+//		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, true);
+		h_value = this->_ai->negamax(&new_board, 3, -100000, 100000, 1);
+		if (h_value < 0)
+			std::cout << "HHH IS NEG" << std::endl;
 		if (h_value > best_h)
 		{
 			best_h = h_value;
