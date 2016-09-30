@@ -28,7 +28,7 @@ AIPlayer&			AIPlayer::operator=(const AIPlayer & rhs)
 	this->_ai = rhs._ai;
 	return *this;
 }
-
+/*
 int					AIPlayer::getMove(const Board &board)
 {
 	Board				new_board;
@@ -49,6 +49,84 @@ int					AIPlayer::getMove(const Board &board)
 				best_h = h_value;
 				best_pos = pos;
 			}
+		}
+	}
+	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
+	return best_pos;
+}
+*/
+
+void				AIPlayer::_expandPoints(Board::Point color, int pos, std::unordered_set<int> &dups, const Board &b, int depth)
+{
+	int				i, j, index;
+	int				m, n;
+
+	i = pos % GRID_LENGTH - depth;
+	j = pos / GRID_LENGTH - depth;
+	m = pos % GRID_LENGTH + depth;
+	n = pos / GRID_LENGTH + depth;
+	
+	if (i < 0)
+		i = 0;
+	if (j < 0)
+		j = 0;
+	if (m >= GRID_LENGTH)
+		m = GRID_LENGTH - 1;
+	if (n >= GRID_LENGTH)
+		n = GRID_LENGTH - 1;
+
+	while (i < m)
+	{
+		while (j < n)
+		{
+			index = b.getIndex(i, j);
+			if (dups.find(index) == dups.end())
+			{
+				if (b.isMoveValid(index, color))
+				{
+					dups.insert(index);
+				}
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+int					AIPlayer::getMove(const Board &board)
+{
+	Board				new_board;
+	int					best_h = -1;
+	int					best_pos = 0;
+	int					h_value;
+	std::unordered_set<int>		dups;
+	int					set = 0;
+	std::vector<Board::Point>		bobo = board.getBoard();
+
+	this->_ai->nb_state = 0;
+	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
+	{
+		if (bobo[pos] != PEMPTY)
+		{
+			this->_expandPoints(this->_color, pos, dups, board, 3);
+			set++;
+		}
+	}
+//	if (set == 0)
+//		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, board, 3);
+	for (auto i : dups)
+	{
+		new_board = board;
+		new_board.setMove(i, this->_color);
+		h_value = this->_ai->minimax(&new_board, 2, this->_color);
+//		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, true);
+//		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, 1);
+		if (h_value < 0)
+			std::cout << "HHH IS NEG" << std::endl;
+		if (h_value > best_h)
+		{
+			best_h = h_value;
+			best_pos = i;
 		}
 	}
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
