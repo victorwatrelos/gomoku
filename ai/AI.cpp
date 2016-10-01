@@ -29,18 +29,35 @@ AI&			AI::operator=(const AI & rhs)
  * 		MINIMAX
  */
 
+
+#include "../display/StdOutDisplay.hpp"
 int			AI::minimax(Board *node, int depth, const Board::Point &player)
 {
 	int		val, bestValue = 0;
 	std::vector<Board*>	children;
 
+	if (node->isWinningBoard())
+	{
+		if (depth == 1)
+		{
+			StdOutDisplay	disp;
+			std::cout << "Depth: " << depth << std::endl;
+			disp.displayBoard(*node);
+			std::cout << "AWinning board, depth: " << depth << std::endl;
+		}
+
+		if (depth == DEPTH)
+			return (900000);
+		if (depth == (DEPTH - 1))
+			return (800000);
+	}
 	if (depth == 0 || node->isWinningBoard())
-		return (this->_h->eval(node, player, player != this->_player_color));
+		return (this->_h->eval(node, player, depth));
 
 	if (player == this->_player_color)
 	{
 		bestValue = -1000000;
-		children = node->expand(this->_player_color);
+		children = node->expand(Board::getOppColor(this->_player_color));
 		this->nb_state += children.size();
 		for (auto child : children) {
 			val = this->minimax(child, depth - 1, Board::getOppColor(player));
@@ -73,12 +90,24 @@ int			AI::minimaxAB(Board *node, int depth, int A, int B, bool player)
 	int		val, bestValue = 0;
 	std::vector<Board*>	children;
 	Board::Point		col;
+
+	//std::cout << "Depth: " << depth << " player: " << player << std::endl;
+	if (node->isWinningBoard())
+	{
+		if (depth == 1)
+			std::cout << "Winning board, depth: " << depth << std::endl;
+
+		if (depth == DEPTH)
+			return (900000);
+		if (depth == (DEPTH - 1))
+			return (800000);
+	}
 	if (player)
 		col = this->_player_color;
 	else
 		col = Board::getOppColor(this->_player_color);
 	if (depth == 0)
-		return (this->_h->eval(node, col, true));
+		return (this->_h->eval(node, col, depth));
 
 	if (player)
 	{

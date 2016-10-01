@@ -18,6 +18,7 @@ class						AI
 		int					negamax(Board *node, int depth, int A, int B, int player);
 
 		int					nb_state = 0;
+		static const int	DEPTH = 2;
 
 	private:
 		AbstractHeuristic	*_h;

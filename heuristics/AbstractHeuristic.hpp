@@ -6,7 +6,7 @@
 class						AbstractHeuristic
 {
 	public:
-		virtual int			eval(Board *b, const Board::Point &color, bool neg) = 0;
+		virtual int			eval(Board *b, const Board::Point &color, int depth) = 0;
 };
 
 #endif

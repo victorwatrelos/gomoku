@@ -90,8 +90,7 @@ AbstractPlayer	*GameLoop::loop(void) {
 			printT(dur);
 			h.eval(&(this->_board), p->getColor(), p->getColor() != Board::Point::WHITE);
 			this->_display->displayBoard(this->_board);
-			int toto;
-			std::cin >> toto;
+			//int toto;std::cin >> toto;
 			if (this->_board.isWinningBoard())
 			{
 				return (p);

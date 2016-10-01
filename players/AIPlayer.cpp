@@ -142,9 +142,9 @@ int					AIPlayer::getMove(const Board &board)
 	{
 		new_board = board;
 		new_board.setMove(i, this->_color);
-		h_value = this->_ai->minimax(&new_board, 2, this->_color);
-//		h_value = this->_ai->minimaxAB(&new_board, 1, -100000, 100000, true);
-//		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, 1);
+		h_value = this->_ai->minimax(&new_board, AI::DEPTH, this->_color);
+//		h_value = this->_ai->minimaxAB(&new_board, AI::DEPTH, -100000, 100000, true);
+//		h_value = this->_ai->minimaxAB(&new_board, AI::DEPTH, -100000, 100000, 1);
 	//	if (h_value < 0)
 	//		std::cout << "HHH IS NEG" << std::endl;
 		if (h_value > best_h)
