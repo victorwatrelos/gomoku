@@ -70,8 +70,8 @@ void                printT(unsigned long int t)
 	printf("Time taken for turn: %dm%ds%dms%dus\n", m, s, ms, us);
 }
 
-AbstractPlayer	*GameLoop::loop(void) {
-
+AbstractPlayer	*GameLoop::loop(void)
+{
 	std::chrono::high_resolution_clock::time_point		start, end;
 	long long											dur;
 	

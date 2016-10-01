@@ -140,8 +140,9 @@ int						AIPlayer::getMove(const Board &board)
 	std::chrono::high_resolution_clock::time_point		start, end;
 	long long											dur;
 
-start = std::chrono::high_resolution_clock::now();
 	this->_ai->nb_state = 0;
+	this->_ai->resetTimer();
+start = std::chrono::high_resolution_clock::now();
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
 		if (b[pos] != PEMPTY)
@@ -163,8 +164,8 @@ start = std::chrono::high_resolution_clock::now();
 		new_board = board;
 		new_board.setMove(i, this->_color);
 //		h_value = this->_ai->minimax(&new_board, 3, true);
-		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, true);
-//		h_value = this->_ai->negamax(&new_board, 3, -100000, 100000, 1);
+//		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, true);
+		h_value = this->_ai->negamax(&new_board, 3, -100000, 100000, 1);
 		if (h_value > best_h)
 		{
 			best_h = h_value;
@@ -175,5 +176,6 @@ end = std::chrono::high_resolution_clock::now();
 dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
 printTTT(dur, 2);
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
+	this->_ai->showTime();
 	return best_pos;
 }
