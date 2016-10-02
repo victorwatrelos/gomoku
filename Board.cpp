@@ -46,13 +46,25 @@ void						Board::setMove(int pos, Board::Point color)
 bool						Board::isMoveValid(int pos, Board::Point color) const
 {
 	if (pos < 0 || pos >= GRID_SIZE)
+	{
+		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is out of bound" << std::endl;
 		return (false);
+	}
 	else if (this->_board[pos] != Board::Point::EMPTY)
+	{
+//		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is already occupied" << std::endl;
 		return (false);
+	}
 	else if (this->_checkMoveInCapture(pos, color))
+	{
+		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is in capture" << std::endl;
 		return (false);
+	}
 	else if (this->_checkDoubleThree(pos, color))
+	{
+		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is in double free three" << std::endl;
 		return (false);
+	}
 	return (true);
 }
 
@@ -497,8 +509,9 @@ bool					Board::_checkMoveInCapture(int pos, Board::Point color) const
  * TEST
  */
 
+# define 		POL(X, Y)  ((X == Y) ? 1 : -1)
 
-int							Board::_checkStreakLine(bool isRow) const
+int							Board::_checkStreakLine(bool isRow, Board::Point color) const
 {
 	int						i, j, index;
 	int						streak;
@@ -518,29 +531,31 @@ int							Board::_checkStreakLine(bool isRow) const
 			else
 				index = this->getIndex(i, j);
 			curr = this->_board[index];
+
 			if (curr == Board::Point::EMPTY || curr != last)
 			{
-				score += std::pow(4, streak);
+				score += std::pow(4, streak) * POL(last, color);
 				streak = 0;
 			}
 			else if (curr == last)
 				streak++;
 			if (streak == 4)
 			{
-				score += std::pow(4, streak);
+				score += std::pow(4, streak * 2) * POL(curr, color);
 				streak = 0;
 			}
+
 			last = curr;
 			j++;
 		}
 		i++;
 	}
 	if (streak != 0)
-		score += std::pow(4, streak);
+		score += std::pow(4, streak) * POL(curr, color);
 	return (score);
 }
 
-int							Board::_checkStreakBackDiag(bool down) const
+int							Board::_checkStreakBackDiag(bool down, Board::Point color) const
 {
 	int						a, i, j, index;
 	int						streak;
@@ -565,14 +580,14 @@ int							Board::_checkStreakBackDiag(bool down) const
 			curr = this->_board[index];
 			if (curr == Board::Point::EMPTY || curr != last)
 			{
-				score += std::pow(4, streak);
+				score += std::pow(4, streak) * POL(last, color);
 				streak = 0;
 			}
 			else if (curr == last)
 				streak++;
 			if (streak == 4)
 			{
-				score += std::pow(4, streak);
+				score += std::pow(4, streak * 2) * POL(last, color);
 				streak = 0;
 			}
 			last = curr;
@@ -582,11 +597,11 @@ int							Board::_checkStreakBackDiag(bool down) const
 		a++;
 	}
 	if (streak != 0)
-		score += std::pow(4, streak);
+		score += std::pow(4, streak) * POL(last, color);
 	return (score);
 }
 
-int							Board::_checkStreakDiag(bool down) const
+int							Board::_checkStreakDiag(bool down, Board::Point color) const
 {
 	int						a, i, j, index;
 	int						streak = 0;
@@ -611,14 +626,14 @@ int							Board::_checkStreakDiag(bool down) const
 			curr = this->_board[index];
 			if (curr == Board::Point::EMPTY || curr != last)
 			{
-				score += std::pow(4, streak);
+				score += std::pow(4, streak) * POL(last, color);
 				streak = 0;
 			}
 			else if (curr == last)
 				streak++;
 			if (streak == 4)
 			{
-				score += std::pow(4, streak);
+				score += std::pow(4, streak * 2) * POL(last, color);
 				streak = 0;
 			}
 			last = curr;
@@ -628,20 +643,20 @@ int							Board::_checkStreakDiag(bool down) const
 		a--;
 	}
 	if (streak != 0)
-		score += std::pow(4, streak);
+		score += std::pow(4, streak) * POL(last, color);
 	return (score);
 }
 
-int					Board::getScore()
+int					Board::getScore(Board::Point color)
 {
 	int				score = 0;
 
-	score += this->_checkStreakLine(true);
-	score += this->_checkStreakDiag(true);
-	score += this->_checkStreakBackDiag(true);
-	score += this->_checkStreakLine(false);
-	score += this->_checkStreakDiag(false);
-	score += this->_checkStreakBackDiag(false);
+	score += this->_checkStreakLine(true, color);
+	score += this->_checkStreakDiag(true, color);
+	score += this->_checkStreakBackDiag(true, color);
+	score += this->_checkStreakLine(false, color);
+	score += this->_checkStreakDiag(false, color);
+	score += this->_checkStreakBackDiag(false, color);
 	return score;
 }
 
@@ -664,12 +679,56 @@ std::vector<Board*>		Board::expand(Point color)
 }
 */
 
+void				showExpand2(std::unordered_set<int> dups, const Board &board)
+{
+	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
+	{
+		if (pos % GRID_LENGTH == 0)
+			std::cout << std::endl;
+		if (dups.find(pos) != dups.end())
+		{
+			if (board.lookAt(pos) != PEMPTY)
+				std::cout << "X ";
+			else
+				std::cout << "O ";
+		}
+		else
+		{
+			if (board.lookAt(pos) == Board::Point::BLACK)
+				std::cout << "B ";
+			else if (board.lookAt(pos) == Board::Point::WHITE)
+				std::cout << "W ";
+			else
+				std::cout << "_ ";
+		}
+	}
+	std::cout << std::endl;
+}
+
+void				showBoard(const Board &board)
+{
+	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
+	{
+		if (pos % GRID_LENGTH == 0)
+			std::cout << std::endl;
+		if (board.lookAt(pos) == Board::Point::BLACK)
+			std::cout << "B ";
+		else if (board.lookAt(pos) == Board::Point::WHITE)
+			std::cout << "W ";
+		else
+			std::cout << "_ ";
+	}
+	std::cout << std::endl;
+}
+
 std::vector<Board*>		Board::expand(Point color)
 {
 	std::vector<Board*>	st;
 	std::unordered_set<int>		dups;
 	int							set = 0;
 
+	std::cout << "start expansion" << std::endl;
+//	showBoard(*this);
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
 		if (this->_board[pos] != PEMPTY)
@@ -678,6 +737,8 @@ std::vector<Board*>		Board::expand(Point color)
 			set++;
 		}
 	}
+	showExpand2(dups, *this);
+	std::cout << "expansion end" << std::endl;
 	return st;
 }
 

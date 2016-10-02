@@ -21,7 +21,8 @@ AI::~AI(void)
 
 AI&			AI::operator=(const AI & rhs)
 {
-	(void)rhs;
+	this->_h = rhs._h;
+	this->_player_color = rhs._player_color;
 	return *this;
 }
 
@@ -35,7 +36,7 @@ int			AI::minimax(Board *node, int depth, bool player)
 	std::vector<Board*>	children;
 
 	if (depth == 0)
-		return (this->_h->eval(node));
+		return (this->_h->eval(node, this->_player_color));
 
 	if (player)
 	{
@@ -74,7 +75,7 @@ int			AI::minimaxAB(Board *node, int depth, int A, int B, bool player)
 	std::vector<Board*>	children;
 
 	if (depth == 0)
-		return (this->_h->eval(node));
+		return (this->_h->eval(node, this->_player_color));
 
 	if (player)
 	{
@@ -124,7 +125,7 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 	if (depth == 0)
 	{
 		this->startTimer();
-		eval = this->_h->eval(node) * player;
+		eval = this->_h->eval(node, this->_player_color) * player;
 		this->addTime(this->_t_eval);
 		return (eval);
 	}

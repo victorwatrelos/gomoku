@@ -15,7 +15,7 @@ SimpleHeuristic&		SimpleHeuristic::operator=(const SimpleHeuristic & rhs)
 	return *this;
 }
 
-int					SimpleHeuristic::eval(Board *b)
+int						SimpleHeuristic::eval(Board *b, Board::Point color)
 {
-	return b->getScore();
+	return b->getScore(color);
 }

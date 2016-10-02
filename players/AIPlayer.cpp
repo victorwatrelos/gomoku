@@ -131,7 +131,7 @@ void				showExpand(std::unordered_set<int> dups, const Board &board)
 int						AIPlayer::getMove(const Board &board)
 {
 	Board				new_board;
-	int					best_h = -1;
+	int					best_h = -1000000;
 	int					best_pos = 0;
 	int					h_value;
 	int					set = 0;
@@ -152,7 +152,7 @@ start = std::chrono::high_resolution_clock::now();
 		}
 	}
 	if (set == 0)
-		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, board, 2);
+		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, board, 1);
 end = std::chrono::high_resolution_clock::now();
 dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
 printTTT(dur, 1);
@@ -163,9 +163,9 @@ start = std::chrono::high_resolution_clock::now();
 	{
 		new_board = board;
 		new_board.setMove(i, this->_color);
-//		h_value = this->_ai->minimax(&new_board, 3, true);
-//		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, true);
-		h_value = this->_ai->negamax(&new_board, 3, -100000, 100000, 1);
+//		h_value = this->_ai->minimax(&new_board, 3, false);
+		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, false);
+//		h_value = -1 * this->_ai->negamax(&new_board, 1, -100000, 100000, -1);
 		if (h_value > best_h)
 		{
 			best_h = h_value;

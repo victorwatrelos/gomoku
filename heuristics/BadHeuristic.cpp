@@ -15,12 +15,13 @@ BadHeuristic&		BadHeuristic::operator=(const BadHeuristic & rhs)
 	return *this;
 }
 
-int					BadHeuristic::eval(Board *b)
+int					BadHeuristic::eval(Board *b, Board::Point color)
 {
 	int				rd;
 
 	(void)b;
+	(void)color;
 	std::srand(std::time(0));
-	rd = std::rand() % GRID_SIZE;
+	rd = std::rand() % 100000;
 	return (rd);
 }

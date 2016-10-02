@@ -28,7 +28,7 @@ class								Board
 		bool						isWinningBoard(void) const;
 		int							getIndex(int i, int j) const;
 
-		int							getScore();
+		int							getScore(Board::Point color);
 
 		std::vector<Board*>			expand(Point color);
 		
@@ -46,9 +46,9 @@ class								Board
 		bool						_checkMoveInCapture(int pos, Board::Point color) const;
 
 
-		int							_checkStreakLine(bool isRow) const;
-		int							_checkStreakDiag(bool down) const;
-		int							_checkStreakBackDiag(bool down) const;
+		int							_checkStreakLine(bool isRow, Board::Point color) const;
+		int							_checkStreakDiag(bool down, Board::Point color) const;
+		int							_checkStreakBackDiag(bool down, Board::Point color) const;
 
 		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth);
 

@@ -11,7 +11,7 @@ class					SimpleHeuristic : public AbstractHeuristic
 		virtual			~SimpleHeuristic(void);
 		SimpleHeuristic&	operator=(const SimpleHeuristic & rhs);
 
-		int				eval(Board *b);
+		int				eval(Board *b, Board::Point color);
 };
 
 #endif

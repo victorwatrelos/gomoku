@@ -13,7 +13,7 @@ class					BadHeuristic : public AbstractHeuristic
 		virtual			~BadHeuristic(void);
 		BadHeuristic&	operator=(const BadHeuristic & rhs);
 
-		int				eval(Board *b);
+		int				eval(Board *b, Board::Point color);
 };
 
 #endif
