@@ -49,10 +49,12 @@ bool						Board::isMoveValid(int pos, Board::Point color) const
 		return (false);
 	else if (this->_board[pos] != Board::Point::EMPTY)
 		return (false);
+	/*
 	else if (this->_checkMoveInCapture(pos, color))
 		return (false);
 	else if (this->_checkDoubleThree(pos, color))
 		return (false);
+		*/
 	return (true);
 }
 
@@ -78,9 +80,15 @@ int							Board::getIndex(int i, int j) const
 	int						index;
 	index = j * GRID_LENGTH + i;
 	if (index < 0)
+	{
 		index = 0;
+		std::cout << "ERROR" << std::endl;
+	}
 	else if (index >= GRID_SIZE)
+	{
+		std::cout << "ERROR" << std::endl;
 		index = GRID_SIZE - 1;
+	}
 	return (index);
 }
 

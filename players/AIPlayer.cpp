@@ -137,14 +137,14 @@ int					AIPlayer::getMove(const Board &board)
 	}
 	if (set == 0)
 		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, board, 2);
-//	showExpand(dups, board);
+	showExpand(dups, board);
 	for (auto i : dups)
 	{
 		new_board = board;
 		new_board.setMove(i, this->_color);
-		h_value = this->_ai->minimax(&new_board, AI::DEPTH, this->_color);
+//		h_value = this->_ai->minimax(&new_board, AI::DEPTH, this->_color);
 //		h_value = this->_ai->minimaxAB(&new_board, AI::DEPTH, -100000, 100000, true);
-//		h_value = this->_ai->minimaxAB(&new_board, AI::DEPTH, -100000, 100000, 1);
+		h_value = -(this->_ai->negamax(&new_board, AI::DEPTH, -100000, 100000, -1));
 	//	if (h_value < 0)
 	//		std::cout << "HHH IS NEG" << std::endl;
 		if (h_value > best_h)
@@ -154,7 +154,8 @@ int					AIPlayer::getMove(const Board &board)
 		}
 	}
 	std::cout << "Best hL : " << best_h << std::endl;
-	std::cout << "best pos: " << best_pos / GRID_LENGTH << ", " << best_pos % GRID_LENGTH << std::endl;
+	std::cout << "best pos: " << best_pos % GRID_LENGTH << ", " << best_pos / GRID_LENGTH << std::endl;
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
+	static_cast<VHeuristic *>(this->_h)->displayTime();
 	return best_pos;
 }
