@@ -36,7 +36,12 @@ int			AI::minimax(Board *node, int depth, bool player)
 	std::vector<Board*>	children;
 
 	if (depth == 0)
-		return (this->_h->eval(node, this->_player_color));
+	{
+		if (player)
+			return (this->_h->eval(node, this->_player_color));
+		else
+			return (this->_h->eval(node, Board::getOppColor(this->_player_color)));
+	}
 
 	if (player)
 	{

@@ -509,7 +509,7 @@ bool					Board::_checkMoveInCapture(int pos, Board::Point color) const
  * TEST
  */
 
-# define 		POL(X, Y)  ((X == Y) ? 1 : -1)
+# define 		POL(X, Y)  ((X == Y) ? 1 : 0)
 
 int							Board::_checkStreakLine(bool isRow, Board::Point color) const
 {
@@ -534,13 +534,16 @@ int							Board::_checkStreakLine(bool isRow, Board::Point color) const
 
 			if (curr == Board::Point::EMPTY || curr != last)
 			{
+				//std::cout << "Pow: " << std::pow(4, streak) * POL(last, color) << " " << streak << " : " << score << std::endl;
 				score += std::pow(4, streak) * POL(last, color);
+				//std::cout << "score: " << score << std::endl;
 				streak = 0;
 			}
 			else if (curr == last)
 				streak++;
 			if (streak == 4)
 			{
+				//std::cout << "HERE" << std::endl;
 				score += std::pow(4, streak * 2) * POL(curr, color);
 				streak = 0;
 			}
@@ -652,11 +655,11 @@ int					Board::getScore(Board::Point color)
 	int				score = 0;
 
 	score += this->_checkStreakLine(true, color);
-	score += this->_checkStreakDiag(true, color);
-	score += this->_checkStreakBackDiag(true, color);
-	score += this->_checkStreakLine(false, color);
-	score += this->_checkStreakDiag(false, color);
-	score += this->_checkStreakBackDiag(false, color);
+	//score += this->_checkStreakDiag(true, color);
+	//score += this->_checkStreakBackDiag(true, color);
+	//score += this->_checkStreakLine(false, color);
+	//score += this->_checkStreakDiag(false, color);
+	//score += this->_checkStreakBackDiag(false, color);
 	return score;
 }
 

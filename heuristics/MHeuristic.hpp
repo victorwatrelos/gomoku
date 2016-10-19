@@ -16,8 +16,15 @@ class					MHeuristic : public AbstractHeuristic
 	private:
 		typedef struct		s_lineData
 		{
-			int				nbCons;
+			int				nbCons = 0;
+			Board::Point	color;
 		}					t_lineData;
+
+		typedef struct		s_dir {
+			int x;
+			int	y;
+		}					t_dir;	
+
 		enum class LineType : char {HORI, VERT, DIAG1, DIAG2};
 
 		LineType		_currentLine;
@@ -25,10 +32,16 @@ class					MHeuristic : public AbstractHeuristic
 		int				_totScore = 0;
 		t_lineData		_lineData;
 		Board::Point	_color;
+		Board::Point	_oppColor;
 
+		bool			_coordValid(int x, int y);
+		void			_getD1Lines(void);
+		void			_getD2Lines(void);
+		void			_browseDLine(int startX, int startY, const t_dir &dir);
 		void			_reset(void);
 		void			_resetLineData(void);
 		void			_getHLines(void);
+		void			_getVLines(void);
 		void			_getLines(void);
 		void			_analysePoint(const Board::Point &p);
 };
