@@ -1,5 +1,5 @@
 CC= clang++
-FLAGS=-Wall -Wextra -Werror -std=c++11 -g
+FLAGS=-Wall -Wextra -Werror -std=c++11 -O3
 NAME= gomoku
 
 SRC= main.cpp \

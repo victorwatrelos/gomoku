@@ -47,7 +47,7 @@ bool						Board::isMoveValid(int pos, Board::Point color) const
 {
 	if (pos < 0 || pos >= GRID_SIZE)
 	{
-		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is out of bound" << std::endl;
+//		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is out of bound" << std::endl;
 		return (false);
 	}
 	else if (this->_board[pos] != Board::Point::EMPTY)
@@ -57,12 +57,12 @@ bool						Board::isMoveValid(int pos, Board::Point color) const
 	}
 	else if (this->_checkMoveInCapture(pos, color))
 	{
-		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is in capture" << std::endl;
+//		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is in capture" << std::endl;
 		return (false);
 	}
 	else if (this->_checkDoubleThree(pos, color))
 	{
-		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is in double free three" << std::endl;
+//		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is in double free three" << std::endl;
 		return (false);
 	}
 	return (true);
@@ -727,7 +727,7 @@ std::vector<Board*>		Board::expand(Point color)
 	std::unordered_set<int>		dups;
 	int							set = 0;
 
-	std::cout << "start expansion" << std::endl;
+//	std::cout << "start expansion" << std::endl;
 //	showBoard(*this);
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
@@ -737,8 +737,8 @@ std::vector<Board*>		Board::expand(Point color)
 			set++;
 		}
 	}
-	showExpand2(dups, *this);
-	std::cout << "expansion end" << std::endl;
+//	showExpand2(dups, *this);
+//	std::cout << "expansion end" << std::endl;
 	return st;
 }
 
