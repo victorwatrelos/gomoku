@@ -22,7 +22,7 @@ int						MHeuristic::eval(Board *b, Board::Point color)
 
 	this->_b = &(b->getBoard());
 	this->_color = color;
-	this->_lineData.init(color, this->_b);
+	this->_lineData.init(color, b);
 	this->_oppColor = Board::getOppColor(color);
 	this->_getLines();
 	//std::cout << "for: " << ((color == Board::Point::BLACK) ? "Black" : "White") << std::endl;
@@ -38,11 +38,11 @@ void					MHeuristic::_getHLines()
 	{
 		if (i % GRID_LENGTH == 0 && i > 0)
 		{
-			this->_lineData.endOfSeries();
+			this->_lineData.endOfLine();
 		}
 		this->_lineData.addPoint((*this->_b)[i], i);
 	}
-	this->_lineData.endOfSeries();
+	this->_lineData.endOfLine();
 }
 
 bool		MHeuristic::coordValid(int x, int y)
@@ -65,7 +65,7 @@ void		MHeuristic::_browseDLine(int startX, int startY, const t_dir &dir)
 		x += dir.x;
 		y += dir.y;
 	}
-	this->_lineData.endOfSeries();
+	this->_lineData.endOfLine();
 }
 
 void		MHeuristic::_getD1Lines()
@@ -103,7 +103,7 @@ void					MHeuristic::_getVLines()
 			pos = y * GRID_LENGTH + x;
 			this->_lineData.addPoint((*this->_b)[pos], pos);
 		}
-		this->_lineData.endOfSeries();
+		this->_lineData.endOfLine();
 	}
 }
 
@@ -119,26 +119,51 @@ void					MHeuristic::_getLines()
 	this->_getD2Lines();
 }
 
-void					MHeuristic::LineData::init(const Board::Point &color, const std::vector<Board::Point> *grid)
+void					MHeuristic::LineData::init(const Board::Point &color, const Board *b)
 {
 	this->_playerColor = color;
 	this->_nbCons = 0;
 	this->_tot = 0;
-	this->_grid = grid;
+	this->_grid = &(b->getBoard());
+	this->_board = b;
 }
 
-void					MHeuristic::LineData::endOfSeries(void)
+std::string		MHeuristic::LineData::_getColor(const Board::Point &col)
+{
+	if (col == Board::Point::BLACK)
+		return "Black";
+	if (col == Board::Point::WHITE)
+		return "White";
+	return "Empty";
+}
+
+void					MHeuristic::LineData::_display(void)
+{
+	std::cout << "current col: " << this->_getColor(this->_currentColor) << std::endl
+		<< " player col: " << this->_getColor(this->_currentColor) << std::endl
+		<< " interSpace: " << this->_interSpace << std::endl
+		<< " last is space: " << this->_lastIsSpace << std::endl
+		<< " first is space: " << this->_startingSpace << std::endl
+		<< " ending space: " << this->_endingSpace << std::endl;
+}
+
+void					MHeuristic::LineData::_endOfSeries(void)
 {
 	int		tmpScore;
 
 	if (this->_nbCons <= 0)
 		return ;
+	if (this->_lastIsSpace)
+	{
+		this->_endingSpace = true;
+		this->_interSpace--;
+	}
+	
 	tmpScore = std::pow(4, this->_nbCons);
 	if (this->_currentColor == this->_playerColor)
 		this->_tot += tmpScore;
 	else
 		this->_tot -= tmpScore;
-		
 	this->_nbCons = 0;
 }
 
@@ -166,7 +191,10 @@ bool				MHeuristic::LineData::_hasPlace(int pos)
 
 	while (MHeuristic::coordValid(x, y))
 	{
-		if (this->_currentColor == (*this->_grid)[x + y * GRID_LENGTH] || this->_currentColor == Board::Point::EMPTY)
+		if (this->_board->isMoveValid(pos, this->_currentColor) 
+			&& (this->_currentColor == (*this->_grid)[x + y * GRID_LENGTH]
+				|| this->_currentColor == Board::Point::EMPTY)
+			)
 		{
 			nbSpace++;
 			if (nbSpace >= 5)
@@ -193,24 +221,51 @@ bool				MHeuristic::LineData::_hasPlace(int pos)
 	return false;
 }
 
+void					MHeuristic::LineData::_addSpace(void)
+{
+	if (this->_nbCons > 0)
+	{
+		if (this->_interSpace > 0)
+		{
+			this->_endOfSeries();
+			this->_startingSpace = true;
+		}
+	}
+	else
+		this->_startingSpace = true;
+	this->_lastIsSpace = true;
+}
+
+void					MHeuristic::LineData::endOfLine(void)
+{
+	this->_endOfSeries();
+}
+
+void					MHeuristic::LineData::_addPointSameColor(void)
+{
+	this->_nbCons++;
+	this->_lastIsSpace = false;
+}
+
+void					MHeuristic::LineData::_addPointOtherColor(const Board::Point &p, int pos)
+{
+	this->_endOfSeries();
+	if (this->_hasPlace(pos))
+	{
+		this->_currentColor = p;
+		this->_nbCons = 1;
+	}
+	this->_lastIsSpace = false;
+}
+
 void					MHeuristic::LineData::addPoint(const Board::Point &p, int pos)
 {
 	if (this->_currentColor == p)
-	{
-		this->_nbCons++;
-		return ;
-	}
-	if (p != Board::Point::EMPTY)
-	{
-		this->endOfSeries();
-		if (this->_hasPlace(pos))
-		{
-			this->_currentColor = p;
-			this->_nbCons = 1;
-		}
-	 } else {
-	 	 this->endOfSeries();
-	 }
+		this->_addPointSameColor();
+	else if (p != Board::Point::EMPTY)
+		this->_addPointOtherColor(p, pos);
+	else
+	 	 this->_addSpace();
 }
 
 void					MHeuristic::LineData::setDir(LineType dir)

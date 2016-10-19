@@ -29,16 +29,27 @@ class					MHeuristic : public AbstractHeuristic
 				Board::Point	_playerColor;
 				int				_tot = 0;
 				LineType		_dir;
+				int				_interSpace = 0;
+				bool			_lastIsSpace = false;
+				bool			_startingSpace = false;
+				bool			_endingSpace = false;
 				const std::vector<Board::Point> *_grid;
+				const Board		*_board;
 
 				bool			_hasPlace(int pos);
 				const MHeuristic::t_dir	_getDir(void) const;
+				void			_endOfSeries(void);
+				void			_display(void);
+				static std::string		_getColor(const Board::Point &col);
+				void					_addSpace(void);
+				void					_addPointSameColor(void);
+				void					_addPointOtherColor(const Board::Point &p, int pos);
 			public:
-				void			init(const Board::Point &color, const std::vector<Board::Point> *grid);
+				void			init(const Board::Point &color, const Board *b);
 				void			addPoint(const Board::Point &color, int pos);
-				void			endOfSeries(void);
 				int				getScore(void);
 				void			setDir(LineType dir);
+				void			endOfLine(void);
 		};
 
 		const std::vector<Board::Point>	*_b;
