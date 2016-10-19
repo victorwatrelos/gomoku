@@ -8,6 +8,8 @@
 # include "define.hpp"
 
 # define PEMPTY						(Board::Point::EMPTY)
+# define BLAST						0
+# define LAST						1
 
 class								Board
 {
@@ -34,6 +36,9 @@ class								Board
 		
 		static Point				getOppColor(Point player_col);
 
+		int							getLastMoves(int which) const;
+		void						setLastMoves(int pos);
+
 	private:
 		bool						_checkWinningLine(bool isRow) const;
 		bool						_checkWinningDiag(bool down) const;
@@ -53,6 +58,7 @@ class								Board
 		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth);
 
 		std::vector<Point>			_board;
+		int							_last_moves[2];
 };
 
 #endif

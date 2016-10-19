@@ -135,6 +135,7 @@ int						AIPlayer::getMove(const Board &board)
 	int					best_pos = 0;
 	int					h_value;
 	int					set = 0;
+	int					pos;
 	std::unordered_set<int>		dups;
 	std::vector<Board::Point>	b = board.getBoard();
 	std::chrono::high_resolution_clock::time_point		start, end;
@@ -143,9 +144,9 @@ int						AIPlayer::getMove(const Board &board)
 	this->_ai->nb_state = 0;
 	this->_ai->resetTimer();
 start = std::chrono::high_resolution_clock::now();
-	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
+	for (int i = 0 ; i < 2 ; i++)
 	{
-		if (b[pos] != PEMPTY)
+		if ((pos = board.getLastMoves(i)) != -1)
 		{
 			this->_expandPoints(this->_color, pos, dups, board, 2);
 			set++;
@@ -164,8 +165,8 @@ start = std::chrono::high_resolution_clock::now();
 		new_board = board;
 		new_board.setMove(i, this->_color);
 //		h_value = this->_ai->minimax(&new_board, 3, false);
-		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, false);
-//		h_value = -1 * this->_ai->negamax(&new_board, 1, -100000, 100000, -1);
+//		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, false);
+		h_value = -1 * this->_ai->negamax(&new_board, 3, -100000, 100000, -1);
 		if (h_value > best_h)
 		{
 			best_h = h_value;

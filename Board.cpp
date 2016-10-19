@@ -2,6 +2,8 @@
 
 Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY)
 {
+	this->_last_moves[BLAST] = -1;
+	this->_last_moves[LAST] = -1;
 }
 
 Board::Board(const Board &obj)
@@ -13,9 +15,11 @@ Board::~Board(void)
 {
 }
 
-Board    					&Board::operator=(const Board &p)
+Board    								&Board::operator=(const Board &p)
 {
 	this->_board = p.getBoard();
+	this->_last_moves[BLAST] = p.getLastMoves(BLAST);
+	this->_last_moves[LAST] = p.getLastMoves(LAST);
 	return *this;
 }
 
@@ -24,26 +28,39 @@ const std::vector<Board::Point>&		Board::getBoard(void) const
 	return (const_cast<const std::vector<Board::Point>&>(this->_board));
 }
 
-Board::Point						Board::lookAt(int index) const
+int										Board::getLastMoves(int which) const
+{
+	if (which < 0 || which > 1)
+		return (-1);
+	return (this->_last_moves[which]);
+}
+
+void									Board::setLastMoves(int pos)
+{
+	this->_last_moves[BLAST] = this->_last_moves[LAST];
+	this->_last_moves[LAST] = pos;
+}
+
+Board::Point							Board::lookAt(int index) const
 {
 	return (this->_board[index]);
 }
 
-Board::Point						Board::getOppColor(Point player_color)
+Board::Point							Board::getOppColor(Point player_color)
 {
 	if (player_color == Point::WHITE)
 		return Point::BLACK;
 	return Point::WHITE;
 }
 
-void						Board::setMove(int pos, Board::Point color)
+void									Board::setMove(int pos, Board::Point color)
 {
 	if (pos < 0 || pos >= GRID_SIZE)
 		return ;
 	this->_board[pos] = color;
 }
 
-bool						Board::isMoveValid(int pos, Board::Point color) const
+bool									Board::isMoveValid(int pos, Board::Point color) const
 {
 	if (pos < 0 || pos >= GRID_SIZE)
 	{
@@ -68,7 +85,7 @@ bool						Board::isMoveValid(int pos, Board::Point color) const
 	return (true);
 }
 
-bool						Board::isWinningBoard(void) const
+bool									Board::isWinningBoard(void) const
 {
 	if (this->_checkWinningLine(true))
 		return (true);
@@ -660,25 +677,6 @@ int					Board::getScore(Board::Point color)
 	return score;
 }
 
-/*
-std::vector<Board*>		Board::expand(Point color)
-{
-	std::vector<Board*>	st;
-	Board				*new_board;
-
-	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
-	{
-		if (this->isMoveValid(pos, color))
-		{
-			new_board = new Board(*this);
-			new_board->setMove(pos, color);
-			st.push_back(new_board);
-		}
-	}
-	return st;
-}
-*/
-
 void				showExpand2(std::unordered_set<int> dups, const Board &board)
 {
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
@@ -721,6 +719,7 @@ void				showBoard(const Board &board)
 	std::cout << std::endl;
 }
 
+/*
 std::vector<Board*>		Board::expand(Point color)
 {
 	std::vector<Board*>	st;
@@ -739,6 +738,25 @@ std::vector<Board*>		Board::expand(Point color)
 	}
 //	showExpand2(dups, *this);
 //	std::cout << "expansion end" << std::endl;
+	return st;
+}
+*/
+
+std::vector<Board*>		Board::expand(Point color)
+{
+	std::vector<Board*>	st;
+	std::unordered_set<int>		dups;
+	int							set = 0;
+	int							pos;
+
+	for (int i = 0 ; i < 2 ; i++)
+	{
+		if ((pos = this->getLastMoves(i)) != -1)
+		{
+			this->_expandPoint(st, color, pos, dups, 2);
+			set++;
+		}
+	}
 	return st;
 }
 

@@ -25,9 +25,9 @@ GameLoop	&GameLoop::operator=(const GameLoop &p) {
 
 void		GameLoop::_createPlayers(void) {
 //	this->_players[0] = new NetworkPlayer("Black", Board::Point::BLACK, this->_server);
-//	this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
+	this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
 	this->_players[0] = new AIPlayer("Black", Board::Point::BLACK);
-	this->_players[1] = new AIPlayer("White", Board::Point::WHITE);
+//	this->_players[1] = new AIPlayer("White", Board::Point::WHITE);
 }
 
 void		GameLoop::_initServer(void) {
@@ -47,6 +47,7 @@ void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
 		if (this->_board.isMoveValid(pos, player.getColor()))
 		{
 			this->_board.setMove(pos, player.getColor());
+			this->_board.setLastMoves(pos);
 			return ;
 		}
 		std::cout << "Move invalid" << std::endl;
@@ -68,7 +69,7 @@ void                printT(unsigned long int t)
 	s = (t / 1000000) % 60;
 	ms = (t / 1000) % 1000;
 	us = t % 1000;
-	printf("Time taken for turn: %dm%ds%dms%dus\n", m, s, ms, us);
+	printf("Time taken for turn: %dm%ds%dms%dus\n\n", m, s, ms, us);
 }
 
 AbstractPlayer	*GameLoop::loop(void)
