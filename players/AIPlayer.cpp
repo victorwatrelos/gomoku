@@ -14,7 +14,7 @@ AIPlayer::AIPlayer(const std::string &name, const Board::Point &color)
 {
 	this->_name = name;
 	this->_color = color;
-	this->_h = new SimpleHeuristic();
+	this->_h = new MHeuristic();
 	this->_ai = new AI(this->_h, this->_color);
 }
 
@@ -164,8 +164,8 @@ start = std::chrono::high_resolution_clock::now();
 		new_board = board;
 		new_board.setMove(i, this->_color);
 //		h_value = this->_ai->minimax(&new_board, 3, false);
-		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, false);
-//		h_value = -1 * this->_ai->negamax(&new_board, 1, -100000, 100000, -1);
+//		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, false);
+		h_value = -1 * this->_ai->negamax(&new_board, 3, -100000, 100000, -1);
 		if (h_value > best_h)
 		{
 			best_h = h_value;
