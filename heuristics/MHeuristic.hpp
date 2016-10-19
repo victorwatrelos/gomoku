@@ -13,7 +13,14 @@ class					MHeuristic : public AbstractHeuristic
 		MHeuristic&	operator=(const MHeuristic & rhs);
 
 		int				eval(Board *b, Board::Point color);
+		static bool		coordValid(int x, int y);
+		typedef struct		s_dir {
+			int x;
+			int	y;
+		}					t_dir;
 	private:
+		enum class LineType : char {HORI, VERT, DIAG1, DIAG2};
+
 		class				LineData
 		{
 			private:
@@ -21,27 +28,24 @@ class					MHeuristic : public AbstractHeuristic
 				Board::Point	_currentColor;
 				Board::Point	_playerColor;
 				int				_tot = 0;
+				LineType		_dir;
+				const std::vector<Board::Point> *_grid;
+
+				bool			_hasPlace(int pos);
+				const MHeuristic::t_dir	_getDir(void) const;
 			public:
-				void			init(const Board::Point &color);
-				void			addPoint(const Board::Point &color);
+				void			init(const Board::Point &color, const std::vector<Board::Point> *grid);
+				void			addPoint(const Board::Point &color, int pos);
 				void			endOfSeries(void);
 				int				getScore(void);
+				void			setDir(LineType dir);
 		};
 
-		typedef struct		s_dir {
-			int x;
-			int	y;
-		}					t_dir;	
-
-		enum class LineType : char {HORI, VERT, DIAG1, DIAG2};
-
-		LineType		_currentLine;
 		const std::vector<Board::Point>	*_b;
 		LineData		_lineData;
 		Board::Point	_color;
 		Board::Point	_oppColor;
 
-		bool			_coordValid(int x, int y);
 		void			_getD1Lines(void);
 		void			_getD2Lines(void);
 		void			_browseDLine(int startX, int startY, const t_dir &dir);

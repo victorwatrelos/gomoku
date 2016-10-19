@@ -22,7 +22,7 @@ int						MHeuristic::eval(Board *b, Board::Point color)
 
 	this->_b = &(b->getBoard());
 	this->_color = color;
-	this->_lineData.init(color);
+	this->_lineData.init(color, this->_b);
 	this->_oppColor = Board::getOppColor(color);
 	this->_getLines();
 	//std::cout << "for: " << ((color == Board::Point::BLACK) ? "Black" : "White") << std::endl;
@@ -40,12 +40,12 @@ void					MHeuristic::_getHLines()
 		{
 			this->_lineData.endOfSeries();
 		}
-		this->_lineData.addPoint((*this->_b)[i]);
+		this->_lineData.addPoint((*this->_b)[i], i);
 	}
 	this->_lineData.endOfSeries();
 }
 
-bool		MHeuristic::_coordValid(int x, int y)
+bool		MHeuristic::coordValid(int x, int y)
 {
 	if (x < 0 || x >= GRID_LENGTH || y < 0 || y > GRID_LENGTH)
 		return (false);
@@ -58,10 +58,10 @@ void		MHeuristic::_browseDLine(int startX, int startY, const t_dir &dir)
 
 	x = startX;
 	y = startY;
-	while (this->_coordValid(x, y))
+	while (this->coordValid(x, y))
 	{
 		pos = x + y * GRID_LENGTH;
-		this->_lineData.addPoint((*this->_b)[pos]);
+		this->_lineData.addPoint((*this->_b)[pos], pos);
 		x += dir.x;
 		y += dir.y;
 	}
@@ -101,7 +101,7 @@ void					MHeuristic::_getVLines()
 		for (int y = 0; y < GRID_LENGTH; y++)
 		{
 			pos = y * GRID_LENGTH + x;
-			this->_lineData.addPoint((*this->_b)[pos]);
+			this->_lineData.addPoint((*this->_b)[pos], pos);
 		}
 		this->_lineData.endOfSeries();
 	}
@@ -109,21 +109,22 @@ void					MHeuristic::_getVLines()
 
 void					MHeuristic::_getLines()
 {
-	this->_currentLine = LineType::HORI;
+	this->_lineData.setDir(LineType::HORI);
 	this->_getHLines();
-	this->_currentLine = LineType::VERT;
+	this->_lineData.setDir(LineType::VERT);
 	this->_getVLines();
-	this->_currentLine = LineType::DIAG1;
+	this->_lineData.setDir(LineType::DIAG1);
 	this->_getD1Lines();
-	this->_currentLine = LineType::DIAG2;
+	this->_lineData.setDir(LineType::DIAG2);
 	this->_getD2Lines();
 }
 
-void					MHeuristic::LineData::init(const Board::Point &color)
+void					MHeuristic::LineData::init(const Board::Point &color, const std::vector<Board::Point> *grid)
 {
 	this->_playerColor = color;
 	this->_nbCons = 0;
 	this->_tot = 0;
+	this->_grid = grid;
 }
 
 void					MHeuristic::LineData::endOfSeries(void)
@@ -141,7 +142,58 @@ void					MHeuristic::LineData::endOfSeries(void)
 	this->_nbCons = 0;
 }
 
-void					MHeuristic::LineData::addPoint(const Board::Point &p)
+const MHeuristic::t_dir			MHeuristic::LineData::_getDir(void) const
+{
+	switch (this->_dir)
+	{
+		case LineType::HORI:
+			return {1, 0};
+		case LineType::VERT:
+			return {0, 1};
+		case LineType::DIAG1:
+			return {-1, 1};
+		case LineType::DIAG2:
+			return {-1, -1};
+	}
+}
+
+bool				MHeuristic::LineData::_hasPlace(int pos)
+{
+	const MHeuristic::t_dir		&dir = this->_getDir();
+	int		x = pos % GRID_LENGTH;
+	int		y = pos / GRID_LENGTH;
+	int		nbSpace = 0;
+
+	while (MHeuristic::coordValid(x, y))
+	{
+		if (this->_currentColor == (*this->_grid)[x + y * GRID_LENGTH] || this->_currentColor == Board::Point::EMPTY)
+		{
+			nbSpace++;
+			if (nbSpace >= 5)
+				return (true);
+			x -= dir.x;
+			y -= dir.y;
+		}
+		else
+			break;
+	}
+	while (MHeuristic::coordValid(x, y))
+	{
+		if (this->_currentColor == (*this->_grid)[x + y * GRID_LENGTH] || this->_currentColor == Board::Point::EMPTY)
+		{
+			nbSpace++;
+			if (nbSpace >= 5)
+				return (true);
+			x += dir.x;
+			y += dir.y;
+		}
+		else
+			break;
+	}
+	return false;
+}
+
+void					MHeuristic::LineData::addPoint(const Board::Point &p, int pos)
 {
 	if (this->_currentColor == p)
 	{
@@ -151,11 +203,19 @@ void					MHeuristic::LineData::addPoint(const Board::Point &p)
 	if (p != Board::Point::EMPTY)
 	{
 		this->endOfSeries();
-		this->_currentColor = p;
-		this->_nbCons = 1;
+		if (this->_hasPlace(pos))
+		{
+			this->_currentColor = p;
+			this->_nbCons = 1;
+		}
 	 } else {
 	 	 this->endOfSeries();
 	 }
+}
+
+void					MHeuristic::LineData::setDir(LineType dir)
+{
+	this->_dir = dir;
 }
 
 int						MHeuristic::LineData::getScore(void)
