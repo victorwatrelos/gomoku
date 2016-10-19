@@ -88,8 +88,8 @@ AbstractPlayer	*GameLoop::loop(void)
 			end = std::chrono::high_resolution_clock::now();
 			dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
 			printT(dur);
-			std::cout << "For color: " << ((p->getColor() == Board::Point::BLACK) ? "Black" : "White") << std::endl;
-	//		h.eval(&(this->_board), p->getColor());
+			//std::cout << "For color: " << ((p->getColor() == Board::Point::BLACK) ? "Black" : "White") << std::endl;
+			//h.eval(&(this->_board), p->getColor());
 			this->_display->displayBoard(this->_board);
 			//int toto;std::cin >> toto;
 			if (this->_board.isWinningBoard())
