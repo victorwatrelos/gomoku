@@ -16,44 +16,22 @@ MHeuristic&		MHeuristic::operator=(const MHeuristic & rhs)
 	return *this;
 }
 
+#include "../display/StdOutDisplay.hpp"
+
 int						MHeuristic::eval(Board *b, Board::Point color)
 {
-	this->_reset();
+	//StdOutDisplay		t;
+
 	this->_b = &(b->getBoard());
 	this->_color = color;
+	this->_lineData.init(color);
 	this->_oppColor = Board::getOppColor(color);
 	this->_getLines();
-	//std::cout << "My score: " << this->_totScore << " b: " << b->getScore(color) << std::endl;
-	this->_resetLineData();
-	return this->_totScore;
+	//std::cout << "for: " << ((color == Board::Point::BLACK) ? "Black" : "White") << std::endl;
+	//t.displayBoard(*b);
+	//std::cout << "My score: " << this->_lineData.getScore() << " b: " << b->getScore(color) << std::endl;
+	return this->_lineData.getScore();
 	//return b->getScore(color);
-}
-
-void					MHeuristic::_reset()
-{
-	this->_totScore = 0;
-	this->_resetLineData();
-}
-
-void					MHeuristic::_resetLineData()
-{
-	if (this->_lineData.nbCons <= 0)
-		return ;
-	//std::cout << "nb cons: " << this->_lineData.nbCons << std::endl;
-	this->_totScore += std::pow(4, this->_lineData.nbCons);
-	bzero(&(this->_lineData), sizeof(t_lineData));
-}
-
-void					MHeuristic::_analysePoint(const Board::Point &p)
-{
-	if (p == this->_color)
-	{
-		//std::cout << "Color match" << std::endl;
-		this->_lineData.nbCons++;
-		return ;
-	}
-	this->_resetLineData();
-
 }
 
 void					MHeuristic::_getHLines()
@@ -62,10 +40,11 @@ void					MHeuristic::_getHLines()
 	{
 		if (i % GRID_LENGTH == 0 && i > 0)
 		{
-			this->_resetLineData();
+			this->_lineData.endOfSeries();
 		}
-		this->_analysePoint((*this->_b)[i]);
+		this->_lineData.addPoint((*this->_b)[i]);
 	}
+	this->_lineData.endOfSeries();
 }
 
 bool		MHeuristic::_coordValid(int x, int y)
@@ -84,11 +63,11 @@ void		MHeuristic::_browseDLine(int startX, int startY, const t_dir &dir)
 	while (this->_coordValid(x, y))
 	{
 		pos = x + y * GRID_LENGTH;
-		this->_analysePoint((*this->_b)[pos]);
+		this->_lineData.addPoint((*this->_b)[pos]);
 		x += dir.x;
 		y += dir.y;
 	}
-	this->_resetLineData();
+	this->_lineData.endOfSeries();
 }
 
 void		MHeuristic::_getD1Lines()
@@ -124,9 +103,9 @@ void					MHeuristic::_getVLines()
 		for (int y = 0; y < GRID_LENGTH; y++)
 		{
 			pos = y * GRID_LENGTH + x;
-			this->_analysePoint((*this->_b)[pos]);
+			this->_lineData.addPoint((*this->_b)[pos]);
 		}
-		this->_resetLineData();
+		this->_lineData.endOfSeries();
 	}
 }
 
@@ -140,4 +119,48 @@ void					MHeuristic::_getLines()
 	this->_getD1Lines();
 	this->_currentLine = LineType::DIAG2;
 	this->_getD2Lines();
+}
+
+void					MHeuristic::LineData::init(const Board::Point &color)
+{
+	this->_playerColor = color;
+	this->_nbCons = 0;
+	this->_tot = 0;
+}
+
+void					MHeuristic::LineData::endOfSeries(void)
+{
+	int		tmpScore;
+
+	if (this->_nbCons <= 0)
+		return ;
+	tmpScore = std::pow(4, this->_nbCons);
+	if (this->_currentColor == this->_playerColor)
+		this->_tot += tmpScore;
+	else
+		this->_tot -= tmpScore;
+		
+	this->_nbCons = 0;
+}
+
+void					MHeuristic::LineData::addPoint(const Board::Point &p)
+{
+	if (this->_currentColor == p)
+	{
+		this->_nbCons++;
+		return ;
+	}
+	if (p != Board::Point::EMPTY)
+	{
+		this->endOfSeries();
+		this->_currentColor = p;
+		this->_nbCons = 1;
+	 } else {
+	 	 this->endOfSeries();
+	 }
+}
+
+int						MHeuristic::LineData::getScore(void)
+{
+	return this->_tot;
 }

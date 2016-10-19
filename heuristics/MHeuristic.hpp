@@ -14,11 +14,19 @@ class					MHeuristic : public AbstractHeuristic
 
 		int				eval(Board *b, Board::Point color);
 	private:
-		typedef struct		s_lineData
+		class				LineData
 		{
-			int				nbCons = 0;
-			Board::Point	color;
-		}					t_lineData;
+			private:
+				int				_nbCons = 0;
+				Board::Point	_currentColor;
+				Board::Point	_playerColor;
+				int				_tot = 0;
+			public:
+				void			init(const Board::Point &color);
+				void			addPoint(const Board::Point &color);
+				void			endOfSeries(void);
+				int				getScore(void);
+		};
 
 		typedef struct		s_dir {
 			int x;
@@ -29,8 +37,7 @@ class					MHeuristic : public AbstractHeuristic
 
 		LineType		_currentLine;
 		const std::vector<Board::Point>	*_b;
-		int				_totScore = 0;
-		t_lineData		_lineData;
+		LineData		_lineData;
 		Board::Point	_color;
 		Board::Point	_oppColor;
 
@@ -38,12 +45,9 @@ class					MHeuristic : public AbstractHeuristic
 		void			_getD1Lines(void);
 		void			_getD2Lines(void);
 		void			_browseDLine(int startX, int startY, const t_dir &dir);
-		void			_reset(void);
-		void			_resetLineData(void);
 		void			_getHLines(void);
 		void			_getVLines(void);
 		void			_getLines(void);
-		void			_analysePoint(const Board::Point &p);
 };
 
 #endif
