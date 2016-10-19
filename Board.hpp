@@ -8,8 +8,6 @@
 # include "define.hpp"
 
 # define PEMPTY						(Board::Point::EMPTY)
-# define BLAST						0
-# define LAST						1
 
 class								Board
 {
@@ -49,6 +47,7 @@ class								Board
 		int							*_checkThreeDiag(int pos, Board::Point color) const;
 		int							*_checkThreeBackDiag(int pos, Board::Point color) const;
 		bool						_checkMoveInCapture(int pos, Board::Point color) const;
+		bool						_checkCapture(Board::Point color, Board::Point opp, int i, int j, int modI, int modJ) const;
 
 
 		int							_checkStreakLine(bool isRow, Board::Point color) const;
