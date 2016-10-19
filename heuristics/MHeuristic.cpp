@@ -16,8 +16,6 @@ MHeuristic&		MHeuristic::operator=(const MHeuristic & rhs)
 	return *this;
 }
 
-#include "../display/StdOutDisplay.hpp"
-
 int						MHeuristic::eval(Board *b, Board::Point color)
 {
 	//StdOutDisplay		t;
