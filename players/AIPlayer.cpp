@@ -166,7 +166,7 @@ start = std::chrono::high_resolution_clock::now();
 		new_board.setMove(i, this->_color);
 //		h_value = this->_ai->minimax(&new_board, 3, false);
 //		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, false);
-		h_value = -1 * this->_ai->negamax(&new_board, 3, -100000, 100000, -1);
+		h_value = -1 * this->_ai->negamax(&new_board, 3, -1'000'000, 1'000'000, -1);
 		if (h_value > best_h)
 		{
 			best_h = h_value;

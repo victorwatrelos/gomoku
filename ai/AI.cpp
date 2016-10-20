@@ -130,7 +130,7 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 	if (node->isWinningBoard())
 	{
 		if (player < 0)
-			return -200'000;
+			return -100'000;
 		else
 			return 100'000;
 	}
