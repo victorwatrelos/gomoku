@@ -1,6 +1,10 @@
 #ifndef AI_HPP
 # define AI_HPP
 
+# include <sys/time.h>
+# include <boost/cstdint.hpp>
+# include <boost/random.hpp>
+# include <unordered_map>
 # include "../Board.hpp"
 # include "../heuristics/AbstractHeuristic.hpp"
 
@@ -30,8 +34,16 @@ class						AI
 		void				showTime();
 
 	private:
+		void				_initBaseHashTable(void);
+		void				_updateHistory(Board *node, int depth);
+		uint64_t			_hashBoard(Board *node) const;
+
 		AbstractHeuristic	*_h;
 		Board::Point		_player_color;
+
+		uint64_t			_baseHashTable[GRID_SIZE][2];
+		std::unordered_map<uint64_t, int>	_historyTable;
+
 
 		long long			_t_expansion;
 		long long			_t_eval;

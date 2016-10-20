@@ -13,6 +13,7 @@ AI::AI(const AI & rhs)
 
 AI::AI(AbstractHeuristic *h, Board::Point &color) : _h(h), _player_color(color)
 {
+	this->_initBaseHashTable();
 }
 
 AI::~AI(void)
@@ -24,6 +25,23 @@ AI&			AI::operator=(const AI & rhs)
 	this->_h = rhs._h;
 	this->_player_color = rhs._player_color;
 	return *this;
+}
+
+void		AI::_initBaseHashTable()
+{
+	struct timeval									tv;
+	gettimeofday(&tv, NULL);
+	boost::mt19937									randGen(tv.tv_usec);
+	boost::uniform_int<uint64_t>					uInt64Dist(0, std::numeric_limits<uint64_t>::max());
+	boost::variate_generator<boost::mt19937&, boost::uniform_int<uint64_t> >	getRand(randGen, uInt64Dist);
+
+	for (int i = 0 ; i < 361; i++)
+	{
+		for (int j = 0 ; j < 2 ; j++)
+		{
+			this->_baseHashTable[i][j] = getRand();
+		}
+	}
 }
 
 /*
@@ -116,6 +134,30 @@ int			AI::minimaxAB(Board *node, int depth, int A, int B, bool player)
 	return (bestValue);
 }
 
+uint64_t		AI::_hashBoard(Board *node) const
+{
+	int			j;
+	Board::Point	p;
+	uint64_t	h = 0;
+
+	for (int i = 0 ; i < GRID_SIZE ; i++)
+	{
+		if ((p = node->lookAt(i)) != Board::Point::EMPTY)
+		{
+			j = ((p == Board::Point::BLACK) ? 0 : 1);
+			h = h ^ this->_baseHashTable[i][j];
+		}
+	}
+	return (h);
+}
+
+void			AI::_updateHistory(Board *node, int depth)
+{
+	uint64_t	hash = this->_hashBoard(node);
+
+	this->_historyTable[hash] = this->_historyTable[hash] + depth * depth;
+}
+
 int				AI::negamax(Board *node, int depth, int A, int B, int player)
 {
 	int		val, bestValue = 0;
@@ -148,7 +190,10 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 		if (val > A)
 			A = val;
 		if (A >= B)
+		{
+			this->_updateHistory(node, depth);
 			break;
+		}
 	}
 
 	this->startTimer();
