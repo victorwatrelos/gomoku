@@ -756,7 +756,7 @@ std::vector<Board*>		Board::expand(Point color)
 	{
 		if ((pos = this->getLastMoves(i)) != -1)
 		{
-			this->_expandPoint(st, color, pos, dups, 2);
+			this->_expandPoint(st, color, pos, dups, 2);//Change to aiplayer too
 			set++;
 		}
 	}

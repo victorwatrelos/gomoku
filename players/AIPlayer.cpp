@@ -148,7 +148,7 @@ start = std::chrono::high_resolution_clock::now();
 	{
 		if ((pos = board.getLastMoves(i)) != -1)
 		{
-			this->_expandPoints(this->_color, pos, dups, board, 2);
+			this->_expandPoints(this->_color, pos, dups, board, 2);//change to board too
 			set++;
 		}
 	}

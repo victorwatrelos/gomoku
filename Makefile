@@ -15,6 +15,10 @@ SRC= main.cpp \
 	 heuristics/BadHeuristic.cpp \
 	 heuristics/SimpleHeuristic.cpp \
 	 heuristics/MHeuristic.cpp \
+	 utilities/BrowseBoard.cpp \
+	 utilities/AbstractLineData.cpp \
+	 utilities/LineData.cpp \
+	 utilities/BoardUtilities.cpp \
 	 network/Server.cpp \
 	 Board.cpp
 
