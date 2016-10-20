@@ -117,6 +117,8 @@ int							Board::getIndex(int i, int j) const
  *		CHECK FOR WINNING BOARD FUNCTIONS
  */
 
+#define GET_COL(last)		((last == Board::Point::EMPTY) ? "empty" : (last == Board::Point::BLACK) ? "black" : "white")
+
 bool						Board::_checkWinningLine(bool isRow) const
 {
 	int						i, j, index;
@@ -140,9 +142,9 @@ bool						Board::_checkWinningLine(bool isRow) const
 			{
 				if (streak) {
 					if (isRow)
-						std::cout << "H   streak: " << streak + 1 << std::endl;
+						std::cout << "H   streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
 					else
-						std::cout << "V   streak: " << streak + 1 << std::endl;
+						std::cout << "V   streak: " << streak + 1 << " col: " << GET_COL(last) <<  std::endl;
 				}
 				streak = 0;
 			}
@@ -164,7 +166,6 @@ bool						Board::_checkWinningBackDiag(bool down) const
 	int						streak;
 	Board::Point			curr, last;
 
-	last = Board::Point::EMPTY;
 	a = 0;
 	if (down)
 		a++;
@@ -173,6 +174,7 @@ bool						Board::_checkWinningBackDiag(bool down) const
 		i = a;
 		j = 0;
 		streak = 0;
+		last = Board::Point::EMPTY;
 		while (i < GRID_LENGTH)
 		{
 			if (down)
@@ -184,16 +186,22 @@ bool						Board::_checkWinningBackDiag(bool down) const
 			{
 				if (streak) {
 					if (down)
-						std::cout << "D\\d streak: " << streak + 1 << std::endl;
+						std::cout << "D\\d streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
 					else
-						std::cout << "D\\u streak: " << streak + 1 << std::endl;
+						std::cout << "D\\u streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
 				}
 				streak = 0;
 			}
 			else if (curr == last)
 				streak++;
 			if (streak == 4)
+			{
+				if (down)
+					std::cout << "win for D\\d streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
+				else
+					std::cout << "win for D\\u streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
 				return (true);
+			}
 			last = curr;
 			i++;
 			j++;
@@ -202,14 +210,17 @@ bool						Board::_checkWinningBackDiag(bool down) const
 	}
 	return (false);
 }
-
+/*
+int							get_streak(Board::Point last, Board::Point curr)
+{
+}
+*/
 bool						Board::_checkWinningDiag(bool down) const
 {
 	int						a, i, j, mod, index;
 	int						streak = 0;
 	Board::Point			curr, last;
 
-	last = Board::Point::EMPTY;
 	a = GRID_LENGTH - 1;
 	while (a > 0)
 	{
@@ -221,7 +232,8 @@ bool						Board::_checkWinningDiag(bool down) const
 			i += mod;
 		}
 		streak = 0;
-		while (i > 0)
+		last = Board::Point::EMPTY;
+		while (i > 0 && j < GRID_LENGTH)
 		{
 			index = this->getIndex(i, j);
 			curr = this->_board[index];
@@ -229,16 +241,26 @@ bool						Board::_checkWinningDiag(bool down) const
 			{
 				if (streak) {
 					if (down)
-						std::cout << "D/d streak: " << streak + 1 << std::endl;
+						std::cout << "D/d streak: " << streak + 1 << " col: " << GET_COL(last) <<  std::endl;
 					else
-						std::cout << "D/u streak: " << streak + 1 << std::endl;
+						std::cout << "D/u streak: " << streak + 1 << " col: " << GET_COL(last) <<  std::endl;
 				}
 				streak = 0;
 			}
 			else if (curr == last)
+			{
+				std::cout << "++ curr: " << GET_COL(curr) << " last: " << GET_COL(last);
+				std::cout << "   i: " << i << " j: " << j << std::endl;
 				streak++;
+			}
 			if (streak == 4)
+			{
+				if (down)
+					std::cout << "win for D/d streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
+				else
+					std::cout << "win for D/u streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
 				return (true);
+			}
 			last = curr;
 			i--;
 			j++;
