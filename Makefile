@@ -20,6 +20,7 @@ SRC= main.cpp \
 OBJ= $(SRC:.cpp=.o)
 
 LIB=
+INC=-I $(HOME)/.brew/include/
 
 FRWK= 
 .PHONY: clean fclean re all

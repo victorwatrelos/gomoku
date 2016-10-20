@@ -1,9 +1,7 @@
 #include "Board.hpp"
 
-Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY)
+Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY), _lastMoves(3)
 {
-	this->_last_moves[0] = -1;
-	this->_last_moves[1] = -1;
 }
 
 Board::Board(const Board &obj)
@@ -18,8 +16,7 @@ Board::~Board(void)
 Board    								&Board::operator=(const Board &p)
 {
 	this->_board = p.getBoard();
-	this->_last_moves[0] = p.getLastMoves(0);
-	this->_last_moves[1] = p.getLastMoves(1);
+	this->_lastMoves = p.getLastMoves();
 	return *this;
 }
 
@@ -28,17 +25,14 @@ const std::vector<Board::Point>&		Board::getBoard(void) const
 	return (const_cast<const std::vector<Board::Point>&>(this->_board));
 }
 
-int										Board::getLastMoves(int which) const
+boost::circular_buffer<int>				Board::getLastMoves() const
 {
-	if (which < 0 || which > 1)
-		return (-1);
-	return (this->_last_moves[which]);
+	return (this->_lastMoves);
 }
 
 void									Board::setLastMoves(int pos)
 {
-	this->_last_moves[0] = this->_last_moves[1];
-	this->_last_moves[1] = pos;
+	this->_lastMoves.push_back(pos);
 }
 
 Board::Point							Board::lookAt(int index) const
@@ -64,22 +58,22 @@ bool									Board::isMoveValid(int pos, Board::Point color) const
 {
 	if (pos < 0 || pos >= GRID_SIZE)
 	{
-		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is out of bound" << std::endl;
+//		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is out of bound" << std::endl;
 		return (false);
 	}
 	else if (this->_board[pos] != Board::Point::EMPTY)
 	{
-		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is already occupied" << std::endl;
+//		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is already occupied" << std::endl;
 		return (false);
 	}
 	else if (this->_checkMoveInCapture(pos, color))
 	{
-		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is in capture" << std::endl;
+//		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is in capture" << std::endl;
 		return (false);
 	}
 	else if (this->_checkDoubleThree(pos, color))
 	{
-		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is in double free three" << std::endl;
+//		std::cout << ((color == Board::Point::WHITE) ? "W " : "B ") << "pos: " << pos << " is in double free three" << std::endl;
 		return (false);
 	}
 	return (true);
@@ -728,15 +722,11 @@ std::vector<Board*>		Board::expand(Point color)
 	std::vector<Board*>	st;
 	std::unordered_set<int>		dups;
 	int							set = 0;
-	int							pos;
 
-	for (int i = 0 ; i < 2 ; i++)
+	for (auto pos : this->_lastMoves)
 	{
-		if ((pos = this->getLastMoves(i)) != -1)
-		{
-			this->_expandPoint(st, color, pos, dups, 2);
-			set++;
-		}
+		this->_expandPoint(st, color, pos, dups, 2);
+		set++;
 	}
 	return st;
 }
