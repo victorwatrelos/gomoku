@@ -117,7 +117,14 @@ int							Board::getIndex(int i, int j) const
  *		CHECK FOR WINNING BOARD FUNCTIONS
  */
 
-#define GET_COL(last)		((last == Board::Point::EMPTY) ? "empty" : (last == Board::Point::BLACK) ? "black" : "white")
+int							Board::_getStreak(Board::Point last, Board::Point curr, int streak) const
+{
+	if (curr == Board::Point::EMPTY || curr != last)
+		return (0);
+	else if (curr == last)
+		return (streak + 1);
+	return (streak);
+}
 
 bool						Board::_checkWinningLine(bool isRow) const
 {
@@ -138,19 +145,7 @@ bool						Board::_checkWinningLine(bool isRow) const
 			else
 				index = this->getIndex(i, j);
 			curr = this->_board[index];
-			if (curr == Board::Point::EMPTY || curr != last)
-			{
-				if (streak) {
-					if (isRow)
-						std::cout << "H   streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
-					else
-						std::cout << "V   streak: " << streak + 1 << " col: " << GET_COL(last) <<  std::endl;
-				}
-				streak = 0;
-			}
-			else if (curr == last)
-				streak++;
-			if (streak == 4)
+			if ((streak = this->_getStreak(last, curr, streak)) == 4)
 				return (true);
 			last = curr;
 			j++;
@@ -182,26 +177,8 @@ bool						Board::_checkWinningBackDiag(bool down) const
 			else
 				index = this->getIndex(i, j);
 			curr = this->_board[index];
-			if (curr == Board::Point::EMPTY || curr != last)
-			{
-				if (streak) {
-					if (down)
-						std::cout << "D\\d streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
-					else
-						std::cout << "D\\u streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
-				}
-				streak = 0;
-			}
-			else if (curr == last)
-				streak++;
-			if (streak == 4)
-			{
-				if (down)
-					std::cout << "win for D\\d streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
-				else
-					std::cout << "win for D\\u streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
+			if ((streak = this->_getStreak(last, curr, streak)) == 4)
 				return (true);
-			}
 			last = curr;
 			i++;
 			j++;
@@ -210,11 +187,7 @@ bool						Board::_checkWinningBackDiag(bool down) const
 	}
 	return (false);
 }
-/*
-int							get_streak(Board::Point last, Board::Point curr)
-{
-}
-*/
+
 bool						Board::_checkWinningDiag(bool down) const
 {
 	int						a, i, j, mod, index;
@@ -237,30 +210,8 @@ bool						Board::_checkWinningDiag(bool down) const
 		{
 			index = this->getIndex(i, j);
 			curr = this->_board[index];
-			if (curr == Board::Point::EMPTY || curr != last)
-			{
-				if (streak) {
-					if (down)
-						std::cout << "D/d streak: " << streak + 1 << " col: " << GET_COL(last) <<  std::endl;
-					else
-						std::cout << "D/u streak: " << streak + 1 << " col: " << GET_COL(last) <<  std::endl;
-				}
-				streak = 0;
-			}
-			else if (curr == last)
-			{
-				std::cout << "++ curr: " << GET_COL(curr) << " last: " << GET_COL(last);
-				std::cout << "   i: " << i << " j: " << j << std::endl;
-				streak++;
-			}
-			if (streak == 4)
-			{
-				if (down)
-					std::cout << "win for D/d streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
-				else
-					std::cout << "win for D/u streak: " << streak + 1 << " col: " << GET_COL(last) << std::endl;
+			if ((streak = this->_getStreak(last, curr, streak)) == 4)
 				return (true);
-			}
 			last = curr;
 			i--;
 			j++;

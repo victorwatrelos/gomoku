@@ -38,6 +38,7 @@ class								Board
 		void						setLastMoves(int pos);
 
 	private:
+		int							_getStreak(Board::Point last, Board::Point curr, int streak) const;
 		bool						_checkWinningLine(bool isRow) const;
 		bool						_checkWinningDiag(bool down) const;
 		bool						_checkWinningBackDiag(bool down) const;
