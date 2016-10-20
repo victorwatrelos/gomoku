@@ -16,8 +16,8 @@ class				AbstractLineData
 		AbstractLineData(const AbstractLineData &obj);
 		AbstractLineData &operator=(const AbstractLineData &p);
 		virtual ~AbstractLineData(void);
-		void			init(const Board::Point &color, const Board *b);
-		void			addPoint(const Board::Point &color, int pos);
+		virtual void			init(const Board::Point &color, const Board *b);
+		virtual void			addPoint(const Board::Point &color, int pos);
 		int				getScore(void);
 		void			setDir(LineType dir);
 		void			endOfLine(void);
@@ -28,6 +28,8 @@ class				AbstractLineData
 		int				_tot = 0;
 		LineType		_dir;
 		int				_interSpace = 0;
+		int				_posInter;
+		int				_pos;
 		bool			_lastIsSpace = false;
 		bool			_startingSpace = false;
 		bool			_endingSpace = false;

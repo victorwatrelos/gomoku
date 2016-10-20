@@ -16,7 +16,6 @@ BrowseBoard::BrowseBoard(const BrowseBoard & rhs)
 }
 
 BrowseBoard::~BrowseBoard(void) {
-	delete this->_lineData;
 }
 
 BrowseBoard&		BrowseBoard::operator=(const BrowseBoard & rhs)
@@ -31,6 +30,7 @@ int						BrowseBoard::browse(const Board &b, Board::Point color)
 {
 	//StdOutDisplay		t;
 
+	//std::cout << "Line data addr in browse board: " << this->_lineData << std::endl;
 	this->_b = &(b.getBoard());
 	this->_color = color;
 	this->_lineData->init(color, &b);

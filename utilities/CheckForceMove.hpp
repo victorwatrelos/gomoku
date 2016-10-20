@@ -12,15 +12,14 @@ class				CheckForceMove : public AbstractLineData
 		CheckForceMove(const CheckForceMove &obj);
 		CheckForceMove &operator=(const CheckForceMove &p);
 		virtual ~CheckForceMove(void);
-		int				getForcedMove(void);
-		void			init(const Board::Point &color, const Board *b);
-		void			addPoint(const Board::Point &color, int pos);
+		const std::unordered_set<int>	&getForcedMove(void);
+		virtual void			init(const Board::Point &color, const Board *b);
 	protected:
 		void		_endOfSeries(void);
 	private:
 		std::unordered_set<int>	_lstMove;
-		int						_forcedMove;
-		int						_pos;
+		void					_insertMoveIfValid(int pos);
+		int						_removeNPos(int mult);
 };
 
 #endif

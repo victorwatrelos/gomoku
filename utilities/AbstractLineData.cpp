@@ -30,6 +30,7 @@ void					AbstractLineData::_display(void)
 	std::cout << "current col: " << this->_getColor(this->_currentColor) << std::endl
 		<< " player col: " << this->_getColor(this->_currentColor) << std::endl
 		<< " interSpace: " << this->_interSpace << std::endl
+		<< " inter pos: " << this->_posInter << std::endl
 		<< " last is space: " << this->_lastIsSpace << std::endl
 		<< " first is space: " << this->_startingSpace << std::endl
 		<< " ending space: " << this->_endingSpace << std::endl
@@ -57,7 +58,7 @@ const AbstractLineData::t_dir			AbstractLineData::_getDir(void) const
 		case LineType::DIAG1:
 			return {-1, 1};
 		case LineType::DIAG2:
-			return {-1, -1};
+			return {1, 1};
 	}
 }
 
@@ -117,12 +118,17 @@ void					AbstractLineData::_addSpace(void)
 	{
 		if (this->_interSpace > 0)
 		{
+			if (this->_lastIsSpace)
+				this->_interSpace--;
 			this->_endingSpace = true;
 			this->_endOfSeries();
 			this->_startingSpace = true;
 		}
 		else
+		{
 			this->_interSpace++;
+			this->_posInter = this->_pos;
+		}
 	}
 	else
 		this->_startingSpace = true;
@@ -143,11 +149,14 @@ void					AbstractLineData::_addPointOtherColor(const Board::Point &p, int pos)
 	{
 		this->_nbCons = 1;
 	}
+	if (this->_lastIsSpace)
+		this->_startingSpace = true;
 	this->_lastIsSpace = false;
 }
 
 void					AbstractLineData::addPoint(const Board::Point &p, int pos)
 {
+	this->_pos = pos;
 	if (this->_nbCons > 0 && this->_currentColor == p)
 		this->_addPointSameColor();
 	else if (p != Board::Point::EMPTY)

@@ -26,8 +26,8 @@ class						AIPlayer : public AbstractPlayer
 
 		AI					*_ai;
 		AbstractHeuristic	*_h;
-		BrowseBoard			_browseBoard;
 		CheckForceMove		*_lineData;
+		BrowseBoard			_browseBoard;
 
 };
 

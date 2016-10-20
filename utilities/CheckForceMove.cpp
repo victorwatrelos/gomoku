@@ -9,32 +9,72 @@ CheckForceMove::~CheckForceMove(void)
 
 void			CheckForceMove::init(const Board::Point &color, const Board *b)
 {
-	this->_forcedMove = -1;
+	this->_lstMove.clear();
 	AbstractLineData::init(color, b);
 }
 
-void					CheckForceMove::addPoint(const Board::Point &color, int pos)
+const std::unordered_set<int>	&CheckForceMove::getForcedMove(void)
 {
-	this->_pos = pos;
-	AbstractLineData::addPoint(color, pos);
+	return this->_lstMove;
 }
 
-int						CheckForceMove::getForcedMove(void)
+void					CheckForceMove::_insertMoveIfValid(int pos)
 {
-	return this->_forcedMove;
+	if (this->_board->isMoveValid(pos, this->_playerColor))
+	{
+		this->_lstMove.insert(pos);
+	} else {
+		std::cout << "invalid move: " << pos % GRID_LENGTH << "," << pos / GRID_LENGTH << ": " << pos << std::endl;
+	}
+}
+
+int						CheckForceMove::_removeNPos(int mult)
+{
+	int	x = this->_pos % GRID_LENGTH;
+	int y = this->_pos / GRID_LENGTH;
+	auto dir = this->_getDir();
+
+	x -= dir.x * mult;
+	y -= dir.y * mult;
+	return x + y * GRID_LENGTH;
 }
 
 void					CheckForceMove::_endOfSeries(void)
 {
+	if (BoardUtilities::coordValid(this->_pos)
+			&& (*this->_grid)[this->_pos] == Board::Point::EMPTY)
+	{
+		this->_endingSpace = true;
+	}
 	if (this->_nbCons == 4)
 	{
-		if (this->_startingSpace && !this->_endingSpace && this->_interSpace == 0)
+		std::cout << "4--------" << std::endl;
+		this->_display();
+		if (this->_startingSpace)
 		{
-			this->_forcedMove = this->_pos - 5;
+			if (!this->_endingSpace)
+				this->_insertMoveIfValid(this->_removeNPos(5));
+			else
+				this->_insertMoveIfValid(this->_removeNPos(6));
 		}
-		if (this->_endingSpace && !this->_startingSpace && this->_interSpace == 0)
+		if (this->_endingSpace && this->_interSpace == 0)
 		{
-			this->_forcedMove = this->_pos - 1;
+			this->_insertMoveIfValid(this->_removeNPos(1));
+		}
+	} else if (this->_nbCons == 3 && this->_startingSpace && this->_endingSpace)
+	{
+		this->_display();
+		if (this->_interSpace > 0)
+		{
+			this->_insertMoveIfValid(this->_posInter);
+		}
+		else
+		{
+			this->_insertMoveIfValid(this->_removeNPos(5));
+			this->_insertMoveIfValid(this->_removeNPos(1));
 		}
 	}
+	this->_startingSpace = false;
+	this->_endingSpace = false;
+	this->_nbCons = 0;
 }

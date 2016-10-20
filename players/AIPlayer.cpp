@@ -1,8 +1,7 @@
 #include "AIPlayer.hpp"
 
-AIPlayer::AIPlayer(void) {
-	this->_lineData = new CheckForceMove();
-	this->_browseBoard = BrowseBoard(this->_lineData);
+AIPlayer::AIPlayer(void) 
+	: _lineData(new CheckForceMove()), _browseBoard(this->_lineData) {
 	this->_name = "AIPlayer";
 	this->_color = PEMPTY;
 }
@@ -13,11 +12,15 @@ AIPlayer::AIPlayer(const AIPlayer & rhs)
 }
 
 AIPlayer::AIPlayer(const std::string &name, const Board::Point &color)
+	: _lineData(new CheckForceMove()), _browseBoard(this->_lineData)
 {
 	this->_name = name;
 	this->_color = color;
+	std::cout << "MHEur" << std::endl;
 	this->_h = new MHeuristic();
+	std::cout << "AI" << std::endl;
 	this->_ai = new AI(this->_h, this->_color);
+	std::cout << "end AI" << std::endl;
 }
 
 AIPlayer::~AIPlayer(void) {}
@@ -133,14 +136,20 @@ void				showExpand(std::unordered_set<int> dups, const Board &board)
 void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 {
 	int					set = 0;
-	int					forcedMove;
 
+	std::cout << "start browse" << std::endl;
 	this->_browseBoard.browse(b, this->_color);
-	if ((forcedMove = this->_lineData->getForcedMove()) >= 0)
+	std::cout << "end browse" << std::endl;
+	std::cout << "Addr: " << this->_lineData << std::endl;
+	if ((dups = this->_lineData->getForcedMove()).size() > 0)
 	{
-		dups.insert(forcedMove);
+		std::cout << "Forced move: " << dups.size() << std::endl;
+		for (auto i = dups.begin(); i != dups.end(); ++i) {
+			std::cout << *i % GRID_LENGTH << "," << *i / GRID_LENGTH << std::endl;
+		}
 		return ;
 	}
+	std::cout << "out" << std::endl;
 	for (auto move : b.getLastMoves())
 	{
 		this->_expandPoints(this->_color, move, dups, b, 2);
@@ -169,6 +178,8 @@ start = std::chrono::high_resolution_clock::now();
 	this->_fillNextMoves(dups, board);
 	if (dups.size() == 1)
 	{
+		std::cout << "FORCED MOVE BITCH" << std::endl;
+		std::cout << "In: " << *(dups.begin()) % GRID_LENGTH << ", " << *(dups.begin()) / GRID_LENGTH << std::endl;
 		return *(dups.begin());
 	}
 
@@ -184,7 +195,7 @@ start = std::chrono::high_resolution_clock::now();
 		new_board.setMove(i, this->_color);
 //		h_value = this->_ai->minimax(&new_board, 3, false);
 //		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, false);
-		h_value = -1 * this->_ai->negamax(&new_board, 3, -1'000'000, 1'000'000, -1);
+		h_value = -1 * this->_ai->negamax(&new_board, 2, -1'000'000, 1'000'000, -1);
 		if (h_value > best_h)
 		{
 			best_h = h_value;

@@ -32,10 +32,9 @@ void					LineData::_endOfSeries(void)
 	}
 
 	if (this->_currentColor == this->_playerColor)
-		this->_tot += tmpScore / 2;
+		this->_tot += tmpScore;
 	else
 		this->_tot -= tmpScore;
-	this->_lastIsSpace = false;
 	this->_startingSpace = false;
 	this->_endingSpace = false;
 	this->_nbCons = 0;
