@@ -14,7 +14,7 @@ MHeuristic::~MHeuristic(void) {
 
 int						MHeuristic::eval(Board *b, Board::Point color)
 {
-	return this->browse(b, color);
+	return this->browse(*b, color);
 }
 
 MHeuristic    &MHeuristic::operator=(const MHeuristic &p) {

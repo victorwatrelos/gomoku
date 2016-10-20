@@ -4,6 +4,7 @@
 # include "../ai/AI.hpp"
 # include "AbstractPlayer.hpp"
 # include "../heuristics/AbstractHeuristic.hpp"
+# include "../utilities/CheckForceMove.hpp"
 // to be deleted
 # include "../heuristics/BadHeuristic.hpp"
 # include "../heuristics/SimpleHeuristic.hpp"
@@ -21,9 +22,12 @@ class						AIPlayer : public AbstractPlayer
 
 	private:
 		void				_expandPoints(Board::Point color, int pos, std::unordered_set<int> &dups, const Board &b, int depth);
+		void				_fillNextMoves(std::unordered_set<int> &dups, const Board &b);
 
 		AI					*_ai;
 		AbstractHeuristic	*_h;
+		BrowseBoard			_browseBoard;
+		CheckForceMove		*_lineData;
 
 };
 

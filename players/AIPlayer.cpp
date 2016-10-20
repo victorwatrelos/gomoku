@@ -1,6 +1,8 @@
 #include "AIPlayer.hpp"
 
 AIPlayer::AIPlayer(void) {
+	this->_lineData = new CheckForceMove();
+	this->_browseBoard = BrowseBoard(this->_lineData);
 	this->_name = "AIPlayer";
 	this->_color = PEMPTY;
 }
@@ -128,14 +130,32 @@ void				showExpand(std::unordered_set<int> dups, const Board &board)
 	std::cout << std::endl;
 }
 
+void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
+{
+	int					set = 0;
+	int					forcedMove;
+
+	this->_browseBoard.browse(b, this->_color);
+	if ((forcedMove = this->_lineData->getForcedMove()) >= 0)
+	{
+		dups.insert(forcedMove);
+		return ;
+	}
+	for (auto move : b.getLastMoves())
+	{
+		this->_expandPoints(this->_color, move, dups, b, 2);
+		set++;
+	}
+	if (set == 0)
+		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, b, 1);
+}
+
 int						AIPlayer::getMove(const Board &board)
 {
 	Board				new_board;
 	int					best_h = -1000000;
 	int					best_pos = 0;
 	int					h_value;
-	int					set = 0;
-	int					pos;
 	std::unordered_set<int>		dups;
 	std::vector<Board::Point>	b = board.getBoard();
 	std::chrono::high_resolution_clock::time_point		start, end;
@@ -143,17 +163,15 @@ int						AIPlayer::getMove(const Board &board)
 
 	this->_ai->nb_state = 0;
 	this->_ai->resetTimer();
+
 start = std::chrono::high_resolution_clock::now();
-	for (int i = 0 ; i < 2 ; i++)
+
+	this->_fillNextMoves(dups, board);
+	if (dups.size() == 1)
 	{
-		if ((pos = board.getLastMoves(i)) != -1)
-		{
-			this->_expandPoints(this->_color, pos, dups, board, 2);//change to board too
-			set++;
-		}
+		return *(dups.begin());
 	}
-	if (set == 0)
-		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, board, 1);
+
 end = std::chrono::high_resolution_clock::now();
 dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
 printTTT(dur, 1);

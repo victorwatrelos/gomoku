@@ -10,28 +10,25 @@ LineData::~LineData(void)
 void					LineData::_endOfSeries(void)
 {
 	int		tmpScore;
+	int		nbSpace = 0;
 
 	if (this->_nbCons <= 0)
 		return ;
 	//this->_display();
 
-	if (this->_nbCons == 4
-			&& (this->_startingSpace || this->_endingSpace))
-	{
-		tmpScore = 100'000;
-	}
-	else if (this->_nbCons == 4 &&
-			(this->_startingSpace || this->_endingSpace || this->_interSpace))
-	{
-		tmpScore = 100'000;
-	}
-	else if (this->_nbCons >= 5)
+	if (this->_nbCons >= 5)
 	{
 		tmpScore = 100'000;
 	}
 	else
 	{
-		tmpScore = std::pow(5, this->_nbCons);
+		tmpScore = std::pow(4, this->_nbCons);
+		if (this->_startingSpace)
+			nbSpace++;
+		if (this->_endingSpace)
+			nbSpace++;
+
+		tmpScore += std::pow(4, nbSpace);
 	}
 
 	if (this->_currentColor == this->_playerColor)

@@ -5,12 +5,19 @@ BrowseBoard::BrowseBoard(void)
 	this->_lineData = new LineData();
 }
 
+BrowseBoard::BrowseBoard(AbstractLineData *lineData) 
+{
+	this->_lineData = lineData;
+}
+
 BrowseBoard::BrowseBoard(const BrowseBoard & rhs)
 {
 	*this = rhs;
 }
 
-BrowseBoard::~BrowseBoard(void) {}
+BrowseBoard::~BrowseBoard(void) {
+	delete this->_lineData;
+}
 
 BrowseBoard&		BrowseBoard::operator=(const BrowseBoard & rhs)
 {
@@ -20,13 +27,13 @@ BrowseBoard&		BrowseBoard::operator=(const BrowseBoard & rhs)
 
 //# include "../display/StdOutDisplay.hpp"
 
-int						BrowseBoard::browse(Board *b, Board::Point color)
+int						BrowseBoard::browse(const Board &b, Board::Point color)
 {
 	//StdOutDisplay		t;
 
-	this->_b = &(b->getBoard());
+	this->_b = &(b.getBoard());
 	this->_color = color;
-	this->_lineData->init(color, b);
+	this->_lineData->init(color, &b);
 	this->_oppColor = Board::getOppColor(color);
 	this->_getLines();
 	//std::cout << "for: " << ((color == Board::Point::BLACK) ? "Black" : "White") << std::endl;

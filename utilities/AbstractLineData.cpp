@@ -46,43 +46,6 @@ void					AbstractLineData::endOfLine(void)
 
 }
 
-void					AbstractLineData::_endOfSeries(void)
-{
-	int		tmpScore;
-
-	if (this->_nbCons <= 0)
-		return ;
-	//this->_display();
-
-	if (this->_nbCons == 4
-			&& (this->_startingSpace || this->_endingSpace))
-	{
-		tmpScore = 100'000;
-	}
-	else if (this->_nbCons == 4 &&
-			(this->_startingSpace || this->_endingSpace || this->_interSpace))
-	{
-		tmpScore = 100'000;
-	}
-	else if (this->_nbCons >= 5)
-	{
-		tmpScore = 100'000;
-	}
-	else
-	{
-		tmpScore = std::pow(5, this->_nbCons);
-	}
-
-	if (this->_currentColor == this->_playerColor)
-		this->_tot += tmpScore / 2;
-	else
-		this->_tot -= tmpScore;
-	this->_lastIsSpace = false;
-	this->_startingSpace = false;
-	this->_endingSpace = false;
-	this->_nbCons = 0;
-}
-
 const AbstractLineData::t_dir			AbstractLineData::_getDir(void) const
 {
 	switch (this->_dir)
@@ -175,9 +138,9 @@ void					AbstractLineData::_addPointSameColor(void)
 void					AbstractLineData::_addPointOtherColor(const Board::Point &p, int pos)
 {
 	this->_endOfSeries();
+	this->_currentColor = p;
 	if (this->_hasPlace(pos))
 	{
-		this->_currentColor = p;
 		this->_nbCons = 1;
 	}
 	this->_lastIsSpace = false;
@@ -185,7 +148,7 @@ void					AbstractLineData::_addPointOtherColor(const Board::Point &p, int pos)
 
 void					AbstractLineData::addPoint(const Board::Point &p, int pos)
 {
-	if (this->_currentColor == p)
+	if (this->_nbCons > 0 && this->_currentColor == p)
 		this->_addPointSameColor();
 	else if (p != Board::Point::EMPTY)
 		this->_addPointOtherColor(p, pos);

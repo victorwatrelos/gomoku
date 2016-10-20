@@ -10,11 +10,12 @@ class					BrowseBoard
 {
 	public:
 						BrowseBoard(void);
+						BrowseBoard(AbstractLineData *lineData);
 						BrowseBoard(const BrowseBoard & rhs);
 		virtual			~BrowseBoard(void);
 		BrowseBoard&	operator=(const BrowseBoard & rhs);
 
-		int				browse(Board *b, Board::Point color);
+		int				browse(const Board &b, Board::Point color);
 		static bool		coordValid(int x, int y);
 	private:
 

@@ -8,11 +8,6 @@
 class				LineData : public AbstractLineData
 {
 	public:
-		enum class LineType : char {HORI, VERT, DIAG1, DIAG2};
-		typedef struct		s_dir {
-			int x;
-			int	y;
-		}					t_dir;
 		LineData(void);
 		LineData(const LineData &obj);
 		LineData &operator=(const LineData &p);
