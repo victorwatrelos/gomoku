@@ -27,9 +27,9 @@ int						MHeuristic::eval(Board *b, Board::Point color)
 	this->_lineData.init(color, b);
 	this->_oppColor = Board::getOppColor(color);
 	this->_getLines();
-//	std::cout << "for: " << ((color == Board::Point::BLACK) ? "Black" : "White") << std::endl;
-//	t.displayBoard(*b);
-//	std::cout << "My score: " << this->_lineData.getScore() << " b: " << b->getScore(color) << std::endl;
+	std::cout << "for: " << ((color == Board::Point::BLACK) ? "Black" : "White") << std::endl;
+	t.displayBoard(*b);
+	std::cout << "My score: " << this->_lineData.getScore() << " b: " << b->getScore(color) << std::endl;
 	return this->_lineData.getScore();
 	//return b->getScore(color);
 }
@@ -146,7 +146,8 @@ void					MHeuristic::LineData::_display(void)
 		<< " interSpace: " << this->_interSpace << std::endl
 		<< " last is space: " << this->_lastIsSpace << std::endl
 		<< " first is space: " << this->_startingSpace << std::endl
-		<< " ending space: " << this->_endingSpace << std::endl;
+		<< " ending space: " << this->_endingSpace << std::endl
+		<< " nb cons: " << this->_nbCons << std::endl;
 }
 
 void					MHeuristic::LineData::endOfLine(void)
@@ -163,20 +164,34 @@ void					MHeuristic::LineData::_endOfSeries(void)
 {
 	int		tmpScore;
 
-	//this->_display();
+	std::cout << "End from end" << std::endl;
 	if (this->_nbCons <= 0)
 		return ;
-	if (this->_lastIsSpace)
+	this->_display();
+
+	if (this->_nbCons == 3 && this->_startingSpace && this->_endingSpace)
 	{
-		this->_endingSpace = true;
-		this->_interSpace--;
+		tmpScore = std::pow(4, 6);
 	}
-	
-	tmpScore = std::pow(4, this->_nbCons);
+	else if (this->_nbCons == 4 && this->_startingSpace && this->_endingSpace)
+	{
+		if (this->_currentColor == this->_playerColor)
+			tmpScore = 100'000;
+		else
+			tmpScore = -200'000;
+	}
+	else
+	{
+		tmpScore = std::pow(4, this->_nbCons);
+	}
+
 	if (this->_currentColor == this->_playerColor)
 		this->_tot += tmpScore;
 	else
 		this->_tot -= tmpScore;
+	this->_lastIsSpace = false;
+	this->_startingSpace = false;
+	this->_endingSpace = false;
 	this->_nbCons = 0;
 }
 
@@ -246,20 +261,21 @@ bool				MHeuristic::LineData::_hasPlace(int pos)
 
 void					MHeuristic::LineData::_addSpace(void)
 {
-	/*
 	if (this->_nbCons > 0)
 	{
 		if (this->_interSpace > 0)
 		{
+			this->_endingSpace = true;
+			std::cout << "End from space" << std::endl;
 			this->_endOfSeries();
 			this->_startingSpace = true;
 		}
+		else
+			this->_interSpace++;
 	}
 	else
 		this->_startingSpace = true;
 	this->_lastIsSpace = true;
-		*/
-	this->_endOfSeries();
 }
 
 void					MHeuristic::LineData::_addPointSameColor(void)

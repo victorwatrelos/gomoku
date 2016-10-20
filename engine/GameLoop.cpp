@@ -25,9 +25,9 @@ GameLoop	&GameLoop::operator=(const GameLoop &p) {
 
 void		GameLoop::_createPlayers(void) {
 	this->_players[0] = new NetworkPlayer("Black", Board::Point::BLACK, this->_server);
-//	this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
+	this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
 //	this->_players[0] = new AIPlayer("Black", Board::Point::BLACK);
-	this->_players[1] = new AIPlayer("White", Board::Point::WHITE);
+//	this->_players[1] = new AIPlayer("White", Board::Point::WHITE);
 }
 
 void		GameLoop::_initServer(void) {
@@ -88,8 +88,8 @@ AbstractPlayer	*GameLoop::loop(void)
 			end = std::chrono::high_resolution_clock::now();
 			dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
 			printT(dur);
-			//std::cout << "For color: " << ((p->getColor() == Board::Point::BLACK) ? "Black" : "White") << std::endl;
-			//h.eval(&(this->_board), p->getColor());
+			std::cout << "For color: " << ((p->getColor() == Board::Point::BLACK) ? "Black" : "White") << std::endl;
+			h.eval(&(this->_board), p->getColor());
 			this->_display->displayBoard(this->_board);
 			//int toto;std::cin >> toto;
 			if (this->_board.isWinningBoard())
