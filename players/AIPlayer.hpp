@@ -8,6 +8,8 @@
 # include "../heuristics/BadHeuristic.hpp"
 # include "../heuristics/SimpleHeuristic.hpp"
 
+# define INITIAL_DEPTH 3
+
 class						AIPlayer : public AbstractPlayer
 {
 	public:

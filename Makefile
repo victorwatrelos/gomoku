@@ -1,5 +1,5 @@
 CC= clang++
-FLAGS=-Wall -Wextra -std=c++11 -O3
+FLAGS=-Wall -Wextra -std=c++11 -g
 NAME= gomoku
 
 SRC= main.cpp \
@@ -21,6 +21,7 @@ OBJ= $(SRC:.cpp=.o)
 
 LIB=
 INC=-I $(HOME)/.brew/include/
+INC=-I /usr/local/Cellar/boost/1.61.0/include/
 
 FRWK= 
 .PHONY: clean fclean re all

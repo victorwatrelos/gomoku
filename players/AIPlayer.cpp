@@ -16,6 +16,7 @@ AIPlayer::AIPlayer(const std::string &name, const Board::Point &color)
 	this->_color = color;
 	this->_h = new SimpleHeuristic();
 	this->_ai = new AI(this->_h, this->_color);
+	this->_ai->setInitialDepth(INITIAL_DEPTH);
 }
 
 AIPlayer::~AIPlayer(void) {}
@@ -152,7 +153,7 @@ start = std::chrono::high_resolution_clock::now();
 		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, board, 1);
 end = std::chrono::high_resolution_clock::now();
 dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
-printTTT(dur, 1);
+//printTTT(dur, 1);
 
 //	showExpand(dups, board);
 start = std::chrono::high_resolution_clock::now();
@@ -162,7 +163,7 @@ start = std::chrono::high_resolution_clock::now();
 		new_board.setMove(i, this->_color);
 //		h_value = this->_ai->minimax(&new_board, 3, false);
 //		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, false);
-		h_value = -1 * this->_ai->negamax(&new_board, 3, -100000, 100000, -1);
+		h_value = -1 * this->_ai->negamax(&new_board, INITIAL_DEPTH, -100000, 100000, -1);
 		if (h_value > best_h)
 		{
 			best_h = h_value;
@@ -171,8 +172,8 @@ start = std::chrono::high_resolution_clock::now();
 	}
 end = std::chrono::high_resolution_clock::now();
 dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
-printTTT(dur, 2);
+//printTTT(dur, 2);
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
-	this->_ai->showTime();
+//	this->_ai->showTime();
 	return best_pos;
 }

@@ -19,6 +19,10 @@ class						AI
 		virtual				~AI(void);
 		AI&					operator=(const AI & rhs);
 
+		void				setInitialDepth(int depth);
+
+		bool				hashComp(Board *a, Board *b);
+
 		int					minimax(Board *node, int depth, bool player);
 		int					minimaxAB(Board *node, int depth, int A, int B, bool player);
 		int					negamax(Board *node, int depth, int A, int B, int player);
@@ -40,6 +44,7 @@ class						AI
 
 		AbstractHeuristic	*_h;
 		Board::Point		_player_color;
+		int					_initial_depth;
 
 		uint64_t			_baseHashTable[GRID_SIZE][2];
 		std::unordered_map<uint64_t, int>	_historyTable;

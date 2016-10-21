@@ -37,6 +37,9 @@ void									Board::setLastMoves(int pos)
 
 Board::Point							Board::lookAt(int index) const
 {
+	if (index < 0 || index >= GRID_SIZE)
+		std::cout << std::endl << "fgsdfjhsjdfghjdk" << index << std::endl;
+	return PEMPTY;
 	return (this->_board[index]);
 }
 

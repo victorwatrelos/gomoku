@@ -27,6 +27,11 @@ AI&			AI::operator=(const AI & rhs)
 	return *this;
 }
 
+void			AI::setInitialDepth(int depth)
+{
+	this->_initial_depth = depth;
+}
+
 void		AI::_initBaseHashTable()
 {
 	struct timeval									tv;
@@ -35,7 +40,7 @@ void		AI::_initBaseHashTable()
 	boost::uniform_int<uint64_t>					uInt64Dist(0, std::numeric_limits<uint64_t>::max());
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<uint64_t> >	getRand(randGen, uInt64Dist);
 
-	for (int i = 0 ; i < 361; i++)
+	for (int i = 0 ; i < GRID_SIZE; i++)
 	{
 		for (int j = 0 ; j < 2 ; j++)
 		{
@@ -43,6 +48,43 @@ void		AI::_initBaseHashTable()
 		}
 	}
 }
+
+uint64_t		AI::_hashBoard(Board *node) const
+{
+	int			j;
+	Board::Point	p;
+	uint64_t	h = 0;
+
+	for (int i = 0 ; i < GRID_SIZE ; i++)
+	{
+		if ((p = node->lookAt(i)) != Board::Point::EMPTY)
+		{
+			j = ((p == Board::Point::BLACK) ? 0 : 1);
+			h = h ^ this->_baseHashTable[i][j];
+		}
+	}
+	return (h);
+}
+
+void			AI::_updateHistory(Board *node, int depth)
+{
+	uint64_t	hash = this->_hashBoard(node);
+
+	if (this->_historyTable.find(hash) == this->_historyTable.end())
+		this->_historyTable[hash] = 0;
+	this->_historyTable[hash] = this->_historyTable[hash] + depth * depth;
+}
+
+bool			AI::hashComp(Board *a, Board*b)
+{   
+	auto ita = this->_historyTable.find(this->_hashBoard(a));
+	auto itb = this->_historyTable.find(this->_hashBoard(b));
+	if (ita != this->_historyTable.end() && itb != this->_historyTable.end())
+		return (ita->second > itb->second);
+	else if (ita != this->_historyTable.end())
+		return (false);
+	return (true);
+}   
 
 /*
  * 		MINIMAX
@@ -134,30 +176,6 @@ int			AI::minimaxAB(Board *node, int depth, int A, int B, bool player)
 	return (bestValue);
 }
 
-uint64_t		AI::_hashBoard(Board *node) const
-{
-	int			j;
-	Board::Point	p;
-	uint64_t	h = 0;
-
-	for (int i = 0 ; i < GRID_SIZE ; i++)
-	{
-		if ((p = node->lookAt(i)) != Board::Point::EMPTY)
-		{
-			j = ((p == Board::Point::BLACK) ? 0 : 1);
-			h = h ^ this->_baseHashTable[i][j];
-		}
-	}
-	return (h);
-}
-
-void			AI::_updateHistory(Board *node, int depth)
-{
-	uint64_t	hash = this->_hashBoard(node);
-
-	this->_historyTable[hash] = this->_historyTable[hash] + depth * depth;
-}
-
 int				AI::negamax(Board *node, int depth, int A, int B, int player)
 {
 	int		val, bestValue = 0;
@@ -169,6 +187,7 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 		this->startTimer();
 		eval = this->_h->eval(node, this->_player_color) * player;
 		this->addTime(this->_t_eval);
+		this->_updateHistory(node, depth);
 		return (eval);
 	}
 
@@ -179,6 +198,9 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 	else
 		children = node->expand(Board::getOppColor(this->_player_color));
 
+//	std::sort(children.begin(), children.end(), *this); with operator()
+
+	std::sort(children.begin(), children.end(), [this](Board *a, Board *b) {return hashComp(a, b); });
 	this->addTime(this->_t_expansion);
 	this->nb_state += children.size();
 
