@@ -137,10 +137,13 @@ void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 {
 	int					set = 0;
 
-	std::cout << "start browse" << std::endl;
+	std::cout << "Browse" << std::endl;
+	auto start = std::chrono::high_resolution_clock::now();
 	this->_browseBoard.browse(b, this->_color);
-	std::cout << "end browse" << std::endl;
-	std::cout << "Addr: " << this->_lineData << std::endl;
+	auto end = std::chrono::high_resolution_clock::now();
+	auto dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
+	std::cout << "Time for browse" << std::endl;
+	printTTT(dur, 1);
 	if ((dups = this->_lineData->getForcedMove()).size() > 0)
 	{
 		std::cout << "Forced move: " << dups.size() << std::endl;
@@ -149,7 +152,6 @@ void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 		}
 		return ;
 	}
-	std::cout << "out" << std::endl;
 	for (auto move : b.getLastMoves())
 	{
 		this->_expandPoints(this->_color, move, dups, b, 2);
@@ -177,11 +179,7 @@ start = std::chrono::high_resolution_clock::now();
 
 	this->_fillNextMoves(dups, board);
 	if (dups.size() == 1)
-	{
-		std::cout << "FORCED MOVE BITCH" << std::endl;
-		std::cout << "In: " << *(dups.begin()) % GRID_LENGTH << ", " << *(dups.begin()) / GRID_LENGTH << std::endl;
 		return *(dups.begin());
-	}
 
 end = std::chrono::high_resolution_clock::now();
 dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
@@ -195,7 +193,7 @@ start = std::chrono::high_resolution_clock::now();
 		new_board.setMove(i, this->_color);
 //		h_value = this->_ai->minimax(&new_board, 3, false);
 //		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, false);
-		h_value = -1 * this->_ai->negamax(&new_board, 2, -1'000'000, 1'000'000, -1);
+		h_value = -1 * this->_ai->negamax(&new_board, AI::DEPTH, -1'000'000, 1'000'000, -1);
 		if (h_value > best_h)
 		{
 			best_h = h_value;

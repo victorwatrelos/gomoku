@@ -23,8 +23,6 @@ void					CheckForceMove::_insertMoveIfValid(int pos)
 	if (this->_board->isMoveValid(pos, this->_playerColor))
 	{
 		this->_lstMove.insert(pos);
-	} else {
-		std::cout << "invalid move: " << pos % GRID_LENGTH << "," << pos / GRID_LENGTH << ": " << pos << std::endl;
 	}
 }
 
@@ -48,22 +46,23 @@ void					CheckForceMove::_endOfSeries(void)
 	}
 	if (this->_nbCons == 4)
 	{
-		std::cout << "4--------" << std::endl;
-		this->_display();
-		if (this->_startingSpace)
+		if (this->_interSpace > 0)
+		{
+			this->_insertMoveIfValid(this->_posInter);
+		}
+		else if (this->_startingSpace)
 		{
 			if (!this->_endingSpace)
 				this->_insertMoveIfValid(this->_removeNPos(5));
 			else
 				this->_insertMoveIfValid(this->_removeNPos(6));
 		}
-		if (this->_endingSpace && this->_interSpace == 0)
+		else if (this->_endingSpace && this->_interSpace == 0)
 		{
 			this->_insertMoveIfValid(this->_removeNPos(1));
 		}
 	} else if (this->_nbCons == 3 && this->_startingSpace && this->_endingSpace)
 	{
-		this->_display();
 		if (this->_interSpace > 0)
 		{
 			this->_insertMoveIfValid(this->_posInter);

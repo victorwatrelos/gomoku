@@ -1,6 +1,7 @@
 #include "AI.hpp"
 
 AI::AI(void)
+	: _lineData(new CheckForceMove()), _browseBoard(this->_lineData)
 {
 	this->_h = nullptr;
 	this->_player_color = PEMPTY;
@@ -11,7 +12,8 @@ AI::AI(const AI & rhs)
 	*this = rhs;
 }
 
-AI::AI(AbstractHeuristic *h, Board::Point &color) : _h(h), _player_color(color)
+AI::AI(AbstractHeuristic *h, Board::Point &color)
+	: _h(h), _player_color(color), _lineData(new CheckForceMove()), _browseBoard(this->_lineData)
 {
 }
 
@@ -121,6 +123,32 @@ int			AI::minimaxAB(Board *node, int depth, int A, int B, bool player)
 	return (bestValue);
 }
 
+const std::vector<Board *>		AI::_expandNode(Board *node, int player, int depth)
+{
+	std::unordered_set<int>		dups;
+	std::vector<Board *>		lstBoard;
+	Board						*tmpBoard;
+
+	this->_browseBoard.browse(*node, this->_player_color);
+	if ((dups = this->_lineData->getForcedMove()).size() > 0)
+	{
+		for (auto i : dups)
+		{
+			tmpBoard = new Board(*node);
+			if (player > 0)
+				tmpBoard->setMove(i, this->_player_color);
+			else
+				tmpBoard->setMove(i, Board::getOppColor(this->_player_color));
+			lstBoard.push_back(tmpBoard);
+		}
+		return lstBoard;
+	}
+	if (player > 0)
+		return node->expand(this->_player_color);
+	else
+		return node->expand(Board::getOppColor(this->_player_color));
+}
+
 int				AI::negamax(Board *node, int depth, int A, int B, int player)
 {
 	int		val, bestValue = 0;
@@ -151,10 +179,13 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 
 	this->startTimer();
 
+	/*
 	if (player == 1)
 		children = node->expand(this->_player_color);
 	else
 		children = node->expand(Board::getOppColor(this->_player_color));
+		*/
+	children = this->_expandNode(node, player, depth);
 
 	this->addTime(this->_t_expansion);
 	this->nb_state += children.size();

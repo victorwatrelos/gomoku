@@ -3,6 +3,8 @@
 
 # include "../Board.hpp"
 # include "../heuristics/AbstractHeuristic.hpp"
+# include "../utilities/CheckForceMove.hpp"
+# include "../utilities/BrowseBoard.hpp"
 
 # define TIMEP				std::chrono::high_resolution_clock::time_point	
 
@@ -28,8 +30,11 @@ class						AI
 		long long			getInt(TIMEP start, TIMEP end);
 		void				printTime(long long dur, std::string str);
 		void				showTime();
+		static const int	DEPTH = 3;
 
 	private:
+		const std::vector<Board *>	_expandNode(Board *node, int player, int depth);
+
 		AbstractHeuristic	*_h;
 		Board::Point		_player_color;
 
@@ -37,6 +42,8 @@ class						AI
 		long long			_t_eval;
 		long long			_t_vector_clear;
 		TIMEP				_timer;
+		CheckForceMove		*_lineData;
+		BrowseBoard			_browseBoard;
 };
 
 #endif
