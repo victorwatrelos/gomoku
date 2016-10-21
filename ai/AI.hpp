@@ -21,7 +21,7 @@ class						AI
 
 		void				setInitialDepth(int depth);
 
-		bool				hashComp(Board *a, Board *b);
+		bool				hashComp(const Board *a, const Board *b);
 
 		int					minimax(Board *node, int depth, bool player);
 		int					minimaxAB(Board *node, int depth, int A, int B, bool player);
@@ -40,7 +40,7 @@ class						AI
 	private:
 		void				_initBaseHashTable(void);
 		void				_updateHistory(Board *node, int depth);
-		uint64_t			_hashBoard(Board *node) const;
+		uint64_t			_hashBoard(const Board *node) const;
 
 		AbstractHeuristic	*_h;
 		Board::Point		_player_color;

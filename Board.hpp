@@ -7,6 +7,7 @@
 # include <iostream>
 # include <cmath>
 # include "define.hpp"
+# include "HashUtilities.hpp"
 
 # define PEMPTY						(Board::Point::EMPTY)
 
@@ -29,6 +30,7 @@ class								Board
 		bool						isWinningBoard(void) const;
 		int							getIndex(int i, int j) const;
 
+		uint64_t					getHash() const;
 		int							getScore(Board::Point color);
 
 		std::vector<Board*>			expand(Point color);
@@ -58,8 +60,11 @@ class								Board
 
 		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth);
 
+		void						_addMoveToHash(int index, Board::Point color);
+
 		std::vector<Point>			_board;
 		boost::circular_buffer<int>	_lastMoves;
+		uint64_t					_hash;
 };
 
 #endif

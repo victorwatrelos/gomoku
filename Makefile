@@ -15,7 +15,8 @@ SRC= main.cpp \
 	 heuristics/BadHeuristic.cpp \
 	 heuristics/SimpleHeuristic.cpp \
 	 network/Server.cpp \
-	 Board.cpp
+	 Board.cpp \
+	 HashUtilities.cpp
 
 OBJ= $(SRC:.cpp=.o)
 
