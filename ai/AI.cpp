@@ -28,6 +28,33 @@ AI&			AI::operator=(const AI & rhs)
 	return *this;
 }
 
+void			AI::setInitialDepth(int depth)
+{
+	this->_initial_depth = depth;
+}
+
+
+void			AI::_updateHistory(Board *node, int depth)
+{
+	uint64_t	hash = node->getHash();
+
+	if (this->_historyTable.find(hash) == this->_historyTable.end())
+		this->_historyTable[hash] = 0;
+	this->_historyTable[hash] = this->_historyTable[hash] + std::pow(this->_initial_depth - depth, 2);
+}
+
+bool			AI::hashComp(const Board *a, const Board *b)
+{
+	auto ita = this->_historyTable.find(a->getHash());
+	auto itb = this->_historyTable.find(b->getHash());
+
+	if (ita != this->_historyTable.end() && itb != this->_historyTable.end())
+		return (ita->second > itb->second);
+	else if (ita != this->_historyTable.end())
+		return (true);
+	return (false);
+}   
+
 /*
  * 		MINIMAX
  */
@@ -176,12 +203,14 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 			eval = this->_h->eval(node, this->_player_color) * player;
 		}
 		this->addTime(this->_t_eval);
+		this->_updateHistory(node, depth);
 		return (eval);
 	}
 
 	//this->startTimer();
 	children = this->_expandNode(node, player, depth);
 	//this->addTime(this->_t_expansion);
+	std::sort(children.begin(), children.end(), [this](Board *a, Board *b) {return this->hashComp(a, b); });
 	this->nb_state += children.size();
 
 	bestValue = -1000000;
@@ -192,7 +221,10 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 		if (val > A)
 			A = val;
 		if (A >= B)
+		{
+			this->_updateHistory(node, depth);
 			break;
+		}
 	}
 
 	//this->startTimer();

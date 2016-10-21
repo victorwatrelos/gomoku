@@ -20,13 +20,14 @@ SRC= main.cpp \
 	 utilities/LineData.cpp \
 	 utilities/BoardUtilities.cpp \
 	 utilities/CheckForceMove.cpp \
+	 utilities/HashUtilities.cpp \
 	 network/Server.cpp \
 	 Board.cpp
 
 OBJ= $(SRC:.cpp=.o)
 
 LIB=
-INC=-I $(HOME)/.brew/include/
+INC=-isystem $(HOME)/.brew/include/
 
 FRWK= 
 .PHONY: clean fclean re all

@@ -1,6 +1,6 @@
 #include "Board.hpp"
 
-Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY), _lastMoves(20)
+Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY), _lastMoves(3), _hash(0)
 {
 }
 
@@ -17,12 +17,18 @@ Board    								&Board::operator=(const Board &p)
 {
 	this->_board = p.getBoard();
 	this->_lastMoves = p.getLastMoves();
+	this->_hash = p.getHash();
 	return *this;
 }
 
 const std::vector<Board::Point>&		Board::getBoard(void) const
 {
 	return (const_cast<const std::vector<Board::Point>&>(this->_board));
+}
+
+uint64_t								Board::getHash() const
+{
+	return (this->_hash);
 }
 
 boost::circular_buffer<int>				Board::getLastMoves() const
@@ -52,6 +58,7 @@ void									Board::setMove(int pos, Board::Point color)
 	if (pos < 0 || pos >= GRID_SIZE)
 		return ;
 	this->_board[pos] = color;
+	this->_addMoveToHash(pos, color);
 }
 
 bool									Board::isMoveValid(int pos, Board::Point color) const
@@ -105,6 +112,12 @@ int							Board::getIndex(int i, int j) const
 	else if (index >= GRID_SIZE)
 		index = GRID_SIZE - 1;
 	return (index);
+}
+
+void						Board::_addMoveToHash(int index, Board::Point color)
+{
+	int col = ((color == Board::Point::BLACK) ? 0 : 1);
+	this->_hash = this->_hash ^ HashUtilities::getBaseHashTableEntry(index, col);
 }
 
 /*

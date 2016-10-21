@@ -1,6 +1,10 @@
 #ifndef AI_HPP
 # define AI_HPP
 
+# include <sys/time.h>
+# include <boost/cstdint.hpp>
+# include <boost/random.hpp>
+# include <unordered_map>
 # include "../Board.hpp"
 # include "../heuristics/AbstractHeuristic.hpp"
 # include "../utilities/CheckForceMove.hpp"
@@ -17,6 +21,10 @@ class						AI
 		virtual				~AI(void);
 		AI&					operator=(const AI & rhs);
 
+		void				setInitialDepth(int depth);
+
+		bool				hashComp(const Board *a, const Board *b);
+
 		int					minimax(Board *node, int depth, bool player);
 		int					minimaxAB(Board *node, int depth, int A, int B, bool player);
 		int					negamax(Board *node, int depth, int A, int B, int player);
@@ -30,13 +38,20 @@ class						AI
 		long long			getInt(TIMEP start, TIMEP end);
 		void				printTime(long long dur, std::string str);
 		void				showTime();
-		static const int	DEPTH = 3;
 
 	private:
 		const std::vector<Board *>	_expandNode(Board *node, int player, int depth);
+		void				_initBaseHashTable(void);
+		void				_updateHistory(Board *node, int depth);
+		uint64_t			_hashBoard(const Board *node) const;
 
 		AbstractHeuristic	*_h;
 		Board::Point		_player_color;
+		int					_initial_depth;
+
+		uint64_t			_baseHashTable[GRID_SIZE][2];
+		std::unordered_map<uint64_t, int>	_historyTable;
+
 
 		long long			_t_expansion;
 		long long			_t_eval;

@@ -21,6 +21,7 @@ AIPlayer::AIPlayer(const std::string &name, const Board::Point &color)
 	std::cout << "AI" << std::endl;
 	this->_ai = new AI(this->_h, this->_color);
 	std::cout << "end AI" << std::endl;
+	this->_ai->setInitialDepth(INITIAL_DEPTH);
 }
 
 AIPlayer::~AIPlayer(void) {}
@@ -144,11 +145,11 @@ void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 		*/
 	for (auto move : b.getLastMoves())
 	{
-		this->_expandPoints(this->_color, move, dups, b, 1);
+		this->_expandPoints(this->_color, move, dups, b, 2);
 		set++;
 	}
 	if (set == 0)
-		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, b, 1);
+		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, b, 1);//TODO set move fixe
 }
 
 int						AIPlayer::getMove(const Board &board)
@@ -159,41 +160,23 @@ int						AIPlayer::getMove(const Board &board)
 	int					h_value;
 	std::unordered_set<int>		dups;
 	std::vector<Board::Point>	b = board.getBoard();
-//	std::chrono::high_resolution_clock::time_point		start, end;
-//	long long											dur;
 
-	//start = std::chrono::high_resolution_clock::now();
 	this->_ai->nb_state = 0;
-	//this->_ai->resetTimer();
-
-//start = std::chrono::high_resolution_clock::now();
-
 	this->_fillNextMoves(dups, board);
-	showExpand(dups, board);
+	//showExpand(dups, board);
 	if (dups.size() == 1)
 		return *(dups.begin());
-
-//end = std::chrono::high_resolution_clock::now();
-//dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
-//printTTT(dur, 1);
-
 	for (auto i : dups)
 	{
 		new_board = board;
 		new_board.setMove(i, this->_color);
-//		h_value = this->_ai->minimax(&new_board, 3, false);
-//		h_value = this->_ai->minimaxAB(&new_board, 3, -100000, 100000, false);
-		h_value = -1 * this->_ai->negamax(&new_board, AI::DEPTH, -1'000'000, 1'000'000, -1);
+		h_value = -1 * this->_ai->negamax(&new_board, INITIAL_DEPTH, -1'000'000, 1'000'000, -1);
 		if (h_value > best_h)
 		{
 			best_h = h_value;
 			best_pos = i;
 		}
 	}
-	//end = std::chrono::high_resolution_clock::now();
-	//dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
-	//printTTT(dur, 2);
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
-	//this->_ai->showTime();
 	return best_pos;
 }
