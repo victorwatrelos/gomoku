@@ -20,8 +20,7 @@ SRC= main.cpp \
 OBJ= $(SRC:.cpp=.o)
 
 LIB=
-INC=-I $(HOME)/.brew/include/
-INC=-I /usr/local/Cellar/boost/1.61.0/include/
+INC=-isystem $(HOME)/.brew/include/
 
 FRWK= 
 .PHONY: clean fclean re all

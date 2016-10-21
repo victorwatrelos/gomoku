@@ -198,7 +198,7 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 	else
 		children = node->expand(Board::getOppColor(this->_player_color));
 
-//	std::sort(children.begin(), children.end(), *this); with operator()
+//	std::sort(children.begin(), children.end(), *this);// with operator()
 
 	std::sort(children.begin(), children.end(), [this](Board *a, Board *b) {return hashComp(a, b); });
 	this->addTime(this->_t_expansion);
