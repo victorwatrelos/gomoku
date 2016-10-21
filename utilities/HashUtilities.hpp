@@ -4,7 +4,7 @@
 # include <sys/time.h>
 # include <boost/cstdint.hpp>
 # include <boost/random.hpp>
-# include "../Board.hpp"
+# include "../define.hpp"
 
 namespace HashUtilities
 {
