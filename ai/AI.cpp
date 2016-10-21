@@ -129,6 +129,7 @@ const std::vector<Board *>		AI::_expandNode(Board *node, int player, int depth)
 	std::vector<Board *>		lstBoard;
 	Board						*tmpBoard;
 
+	/*
 	this->_browseBoard.browse(*node, this->_player_color);
 	if ((dups = this->_lineData->getForcedMove()).size() > 0)
 	{
@@ -143,6 +144,7 @@ const std::vector<Board *>		AI::_expandNode(Board *node, int player, int depth)
 		}
 		return lstBoard;
 	}
+	*/
 	if (player > 0)
 		return node->expand(this->_player_color);
 	else
@@ -177,17 +179,9 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 		return (eval);
 	}
 
-	this->startTimer();
-
-	/*
-	if (player == 1)
-		children = node->expand(this->_player_color);
-	else
-		children = node->expand(Board::getOppColor(this->_player_color));
-		*/
+	//this->startTimer();
 	children = this->_expandNode(node, player, depth);
-
-	this->addTime(this->_t_expansion);
+	//this->addTime(this->_t_expansion);
 	this->nb_state += children.size();
 
 	bestValue = -1000000;
@@ -201,11 +195,11 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 			break;
 	}
 
-	this->startTimer();
+	//this->startTimer();
 	for (auto &i : children)
 		delete i;
 	children.clear();
-	this->addTime(this->_t_vector_clear);
+	//this->addTime(this->_t_vector_clear);
 	return (bestValue);
 }
 

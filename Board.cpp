@@ -1,6 +1,6 @@
 #include "Board.hpp"
 
-Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY), _lastMoves(3)
+Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY), _lastMoves(20)
 {
 }
 
@@ -728,7 +728,7 @@ std::vector<Board*>		Board::expand(Point color)
 
 	for (auto pos : this->_lastMoves)
 	{
-		this->_expandPoint(st, color, pos, dups, 2);
+		this->_expandPoint(st, color, pos, dups, 1);
 		set++;
 	}
 	return st;

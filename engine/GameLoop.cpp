@@ -25,9 +25,9 @@ GameLoop	&GameLoop::operator=(const GameLoop &p) {
 
 void		GameLoop::_createPlayers(void) {
 	this->_players[0] = new NetworkPlayer("Black", Board::Point::BLACK, this->_server);
-//	this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
+	this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
 //	this->_players[0] = new AIPlayer("Black", Board::Point::BLACK);
-	this->_players[1] = new AIPlayer("White", Board::Point::WHITE);
+//	this->_players[1] = new AIPlayer("White", Board::Point::WHITE);
 }
 
 void		GameLoop::_initServer(void) {
@@ -40,10 +40,15 @@ void		GameLoop::_initDisplay(void) {
 
 void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
 	int	pos;
+	std::chrono::high_resolution_clock::time_point		start, end;
 
 	while (1)
 	{
+		
+		start = std::chrono::high_resolution_clock::now();
 		pos = player.getMove(this->_board);
+		end = std::chrono::high_resolution_clock::now();
+		player.addTime(std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count());
 		if (this->_board.isMoveValid(pos, player.getColor()))
 		{
 			this->_board.setMove(pos, player.getColor());
@@ -74,26 +79,21 @@ void                printT(unsigned long int t)
 
 AbstractPlayer	*GameLoop::loop(void)
 {
-	std::chrono::high_resolution_clock::time_point		start, end;
-	long long											dur;
-	MHeuristic											h;
+	MHeuristic		h;
 	
 	this->_display->displayBoard(this->_board);
 	while (1)
 	{
 		for (auto p : this->_players)
 		{
-			start = std::chrono::high_resolution_clock::now();
 			this->_getPlayerMove(*p);
-			end = std::chrono::high_resolution_clock::now();
-			dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
-			printT(dur);
-			std::cout << "For color: " << ((p->getColor() == Board::Point::BLACK) ? "Black" : "White") << std::endl;
-			h.eval(&(this->_board), p->getColor());
 			this->_display->displayBoard(this->_board);
-			//int toto;std::cin >> toto;
 			if (this->_board.isWinningBoard())
 			{
+				for (auto p : this->_players)
+				{
+					p->dispAverage();
+				}
 				return (p);
 			}
 		}

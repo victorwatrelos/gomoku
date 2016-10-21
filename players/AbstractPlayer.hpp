@@ -15,9 +15,15 @@ class AbstractPlayer
 		virtual int			getMove(const Board & board) = 0;
 		const std::string	&getName(void) const;
 		const Board::Point	&getColor(void) const;
+		void				addTime(long long t);
+		void				dispAverage(void);
 	protected:
 		std::string		_name;
 		Board::Point	_color;
+	private:
+		void			_dispTime(long long);
+		int				_totGetMove = 0;
+		long long		_totTime = 0;
 };
 
 #endif

@@ -137,24 +137,14 @@ void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 {
 	int					set = 0;
 
-	std::cout << "Browse" << std::endl;
-	auto start = std::chrono::high_resolution_clock::now();
+	/*
 	this->_browseBoard.browse(b, this->_color);
-	auto end = std::chrono::high_resolution_clock::now();
-	auto dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
-	std::cout << "Time for browse" << std::endl;
-	printTTT(dur, 1);
-	if ((dups = this->_lineData->getForcedMove()).size() > 0)
-	{
-		std::cout << "Forced move: " << dups.size() << std::endl;
-		for (auto i = dups.begin(); i != dups.end(); ++i) {
-			std::cout << *i % GRID_LENGTH << "," << *i / GRID_LENGTH << std::endl;
-		}
+	if ((dups = this->_lineData->getForcedMove()).size() == 1)
 		return ;
-	}
+		*/
 	for (auto move : b.getLastMoves())
 	{
-		this->_expandPoints(this->_color, move, dups, b, 2);
+		this->_expandPoints(this->_color, move, dups, b, 1);
 		set++;
 	}
 	if (set == 0)
@@ -169,24 +159,24 @@ int						AIPlayer::getMove(const Board &board)
 	int					h_value;
 	std::unordered_set<int>		dups;
 	std::vector<Board::Point>	b = board.getBoard();
-	std::chrono::high_resolution_clock::time_point		start, end;
-	long long											dur;
+//	std::chrono::high_resolution_clock::time_point		start, end;
+//	long long											dur;
 
+	//start = std::chrono::high_resolution_clock::now();
 	this->_ai->nb_state = 0;
-	this->_ai->resetTimer();
+	//this->_ai->resetTimer();
 
-start = std::chrono::high_resolution_clock::now();
+//start = std::chrono::high_resolution_clock::now();
 
 	this->_fillNextMoves(dups, board);
+	showExpand(dups, board);
 	if (dups.size() == 1)
 		return *(dups.begin());
 
-end = std::chrono::high_resolution_clock::now();
-dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
-printTTT(dur, 1);
+//end = std::chrono::high_resolution_clock::now();
+//dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
+//printTTT(dur, 1);
 
-//	showExpand(dups, board);
-start = std::chrono::high_resolution_clock::now();
 	for (auto i : dups)
 	{
 		new_board = board;
@@ -200,10 +190,10 @@ start = std::chrono::high_resolution_clock::now();
 			best_pos = i;
 		}
 	}
-end = std::chrono::high_resolution_clock::now();
-dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
-printTTT(dur, 2);
+	//end = std::chrono::high_resolution_clock::now();
+	//dur = std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
+	//printTTT(dur, 2);
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
-	this->_ai->showTime();
+	//this->_ai->showTime();
 	return best_pos;
 }
