@@ -154,6 +154,7 @@ const std::vector<Board *>		AI::_expandNode(Board *node, int player, int depth)
 {
 	std::unordered_set<int>		dups;
 	std::vector<Board *>		lstBoard;
+	std::vector<Board *>		tmpLstBoard;
 	Board						*tmpBoard;
 
 	/*
@@ -169,39 +170,38 @@ const std::vector<Board *>		AI::_expandNode(Board *node, int player, int depth)
 				tmpBoard->setMove(i, Board::getOppColor(this->_player_color));
 			lstBoard.push_back(tmpBoard);
 		}
-		return lstBoard;
 	}
 	*/
-	if (player > 0)
-		return node->expand(this->_player_color);
+	if (player == 1)
+		tmpLstBoard = node->expand(this->_player_color);
 	else
-		return node->expand(Board::getOppColor(this->_player_color));
+		tmpLstBoard = node->expand(Board::getOppColor(this->_player_color));
+	//lstBoard.insert(lstBoard.end(), tmpLstBoard.begin(), tmpLstBoard.end());
+	return tmpLstBoard;
 }
 
+#include "../display/StdOutDisplay.hpp"
 int				AI::negamax(Board *node, int depth, int A, int B, int player)
 {
 	int		val, bestValue = 0;
 	int		eval;
 	std::vector<Board*>	children;
 
+	/*
 	if (node->isWinningBoard())
 	{
-		if (player < 0)
-			return -100'000;
-		else
-			return 100'000;
+		StdOutDisplay	d;
+		//return std::pow(4, 5);
+		//d.displayBoard(*node);
+		//std::cout << "player: " << player << std::endl;
+		//std::cout << "HERE BITCH CONNARD " << 100'000 * (depth + 1) << std::endl;
+		return (100'000 * (depth + 1) * player);
 	}
+	*/
 	if (depth == 0)
 	{
 		this->startTimer();
-		if (player > 0)
-		{
-			eval = this->_h->eval(node, this->_player_color) * player;
-		}
-		else
-		{
-			eval = this->_h->eval(node, this->_player_color) * player;
-		}
+		eval = this->_h->eval(node, this->_player_color) * player;
 		this->addTime(this->_t_eval);
 		this->_updateHistory(node, depth);
 		return (eval);
@@ -213,7 +213,7 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 	std::sort(children.begin(), children.end(), [this](Board *a, Board *b) {return this->hashComp(a, b); });
 	this->nb_state += children.size();
 
-	bestValue = -1000000;
+	bestValue = -1'000'000;
 	for (auto child : children) {
 		val = -1 * this->negamax(child, depth - 1, -1 * B, -1 * A, -1 * player);
 		if (val > bestValue)

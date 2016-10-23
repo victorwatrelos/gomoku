@@ -20,6 +20,7 @@ class								Board
 
 									Board(void);
 									Board(const Board &p);
+									Board(const std::vector<Point> &grid);
 		virtual						~Board(void);
 		Board&						operator=(const Board &p);
 

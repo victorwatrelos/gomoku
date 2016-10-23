@@ -138,11 +138,10 @@ void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 {
 	int					set = 0;
 
-	/*
-	this->_browseBoard.browse(b, this->_color);
-	if ((dups = this->_lineData->getForcedMove()).size() == 1)
-		return ;
-		*/
+	//this->_browseBoard.browse(b, this->_color);
+	//if ((dups = this->_lineData->getForcedMove()).size() > 0)
+	//	return ;
+	//dups = this->_lineData->getForcedMove();
 	for (auto move : b.getLastMoves())
 	{
 		this->_expandPoints(this->_color, move, dups, b, 2);
@@ -155,7 +154,7 @@ void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 int						AIPlayer::getMove(const Board &board)
 {
 	Board				new_board;
-	int					best_h = -1000000;
+	int					best_h = -1'000'000;
 	int					best_pos = 0;
 	int					h_value;
 	std::unordered_set<int>		dups;
@@ -163,9 +162,9 @@ int						AIPlayer::getMove(const Board &board)
 
 	this->_ai->nb_state = 0;
 	this->_fillNextMoves(dups, board);
-	//showExpand(dups, board);
-	if (dups.size() == 1)
-		return *(dups.begin());
+	showExpand(dups, board);
+//	if (dups.size() == 1)
+//		return *(dups.begin());
 	for (auto i : dups)
 	{
 		new_board = board;
@@ -177,6 +176,7 @@ int						AIPlayer::getMove(const Board &board)
 			best_pos = i;
 		}
 	}
+	std::cout << "best h = " << best_h << std::endl;
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
 	return best_pos;
 }

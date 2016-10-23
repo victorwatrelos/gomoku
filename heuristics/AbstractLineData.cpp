@@ -46,6 +46,7 @@ void					AbstractLineData::endOfLine(void)
 
 }
 
+/*
 void					AbstractLineData::_endOfSeries(void)
 {
 	int		tmpScore;
@@ -82,6 +83,7 @@ void					AbstractLineData::_endOfSeries(void)
 	this->_endingSpace = false;
 	this->_nbCons = 0;
 }
+*/
 
 const AbstractLineData::t_dir			AbstractLineData::_getDir(void) const
 {
