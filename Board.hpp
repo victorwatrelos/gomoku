@@ -31,6 +31,9 @@ class								Board
 		bool						isWinningBoard(void) const;
 		int							getIndex(int i, int j) const;
 
+		int							getBlackCapturedStone(void) const;
+		int							getWhiteCapturedStone(void) const;
+
 		uint64_t					getHash() const;
 		int							getScore(Board::Point color);
 
@@ -57,6 +60,8 @@ class								Board
 		/**
 		 * Board function
 		 */
+		int							_getWhiteCapturedStone(void);
+		int							_getBlackCapturedStone(void);
 		int							_getStreak(Board::Point last, Board::Point curr, int streak) const;
 		bool						_checkWinningLine(bool isRow) const;
 		bool						_checkWinningDiag(bool down) const;

@@ -222,7 +222,7 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 			A = val;
 		if (A >= B)
 		{
-			this->_updateHistory(node, depth);
+			this->_updateHistory(child, depth);
 			break;
 		}
 	}

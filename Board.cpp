@@ -133,43 +133,6 @@ void									Board::_deletePosCheckCapture(int *tmpPos, bool *toDelete, const Bo
 	}
 }
 
-static void	dispTmpAccrued(int *tmpAcc)
-{
-	for (int i = 0;i < 8; i++)
-	{
-		std::cout << "tmpacc[ " << i << "]" << tmpAcc[i] << std::endl;
-	}
-}
-
-static void	dispTmpPos(int *tmpPos)
-{
-	bool		found = false;
-
-	for (int i = 0; i < 8; i++)
-	{
-		std::cout << "Tmppos[" << i << "]:" << tmpPos[i] << std::endl;
-	}
-	for (int i = 0; i < GRID_SIZE; i++)
-	{
-		if (i && i % GRID_LENGTH == 0)
-			std::cout << std::endl;
-		found = false;
-		for (int x = 0; x < 8; x++)
-		{
-			if (tmpPos[x] == i)
-			{
-				found = true;
-				std::cout << "O";
-				break ;
-			}
-		}
-		if (!found)
-			std::cout << "_";
-		std::cout << " ";
-	}
-	std::cout << std::endl;
-}
-
 void									Board::_checkCapture(int pos, const Board::Point &color)
 {
 	int			tmpPos[8];
@@ -179,21 +142,13 @@ void									Board::_checkCapture(int pos, const Board::Point &color)
 
 	bzero(toDelete, sizeof(bool) * 8);
 	this->_initTmpPosCheckCapture(tmpPos, pos);
-	std::cout << "Start: " << std::endl;
-	dispTmpPos(tmpPos);
 	for (int i = 0; i < 2; i++)
 	{
 
 		this->_updatePosCheckCapture(tmpPos);
 		this->_processPosCheckCapture(tmpPos, tmpAccrued, oppColor);
-		std::cout << "loop " << i <<  std::endl;
-		dispTmpPos(tmpPos);
-		dispTmpAccrued(tmpAccrued);
 	}
 	this->_updatePosCheckCapture(tmpPos);
-	std::cout << "Last" << std::endl;
-	dispTmpPos(tmpPos);
-	dispTmpAccrued(tmpAccrued);
 	this->_checkLastStoneCheckCapture(tmpPos, tmpAccrued, toDelete, color);
 	this->_initTmpPosCheckCapture(tmpPos, pos);
 	for (int i = 0; i < 2; i++)
@@ -203,6 +158,15 @@ void									Board::_checkCapture(int pos, const Board::Point &color)
 	}
 }
 
+int										Board::getWhiteCapturedStone(void) const
+{
+	return this->_whiteStoneCaptured;
+}
+
+int										Board::getBlackCapturedStone(void) const
+{
+	return this->_blackStoneCaptured;
+}
 void									Board::setMove(int pos, Board::Point color)
 {
 	if (pos < 0 || pos >= GRID_SIZE)

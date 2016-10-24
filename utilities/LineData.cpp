@@ -7,6 +7,32 @@ LineData::~LineData(void)
 {
 }
 
+int						LineData::_getStoneScore(void)
+{
+	int		tmpNbStone;
+	int		whiteStoneScore = 0;
+	int		blackStoneScore = 0;
+
+	if ((tmpNbStone = this->_board->getWhiteCapturedStone()) > 0)
+	{
+		if (tmpNbStone >= 10)
+			whiteStoneScore = 100'000;
+		else
+			whiteStoneScore = std::pow(4, tmpNbStone / 2);
+	}
+	if ((tmpNbStone = this->_board->getBlackCapturedStone()) > 0)
+	{
+		if (tmpNbStone >= 10)
+			blackStoneScore = 100'000;
+		else
+			blackStoneScore = std::pow(4, tmpNbStone / 2);
+	}
+	if (this->_playerColor == Board::Point::WHITE)
+		return whiteStoneScore - blackStoneScore;
+	else
+		return blackStoneScore - whiteStoneScore;
+}
+
 void					LineData::_endOfSeries(void)
 {
 	int		tmpScore;
@@ -47,6 +73,7 @@ void					LineData::_endOfSeries(void)
 		this->_tot += tmpScore;
 	else
 		this->_tot -= tmpScore;
+	this->_tot += this->_getStoneScore();
 	this->_startingSpace = false;
 	this->_endingSpace = false;
 	this->_nbCons = 0;
