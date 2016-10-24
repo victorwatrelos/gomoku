@@ -24,24 +24,14 @@ void					LineData::_endOfSeries(void)
 	else
 	{
 		tmpScore = std::pow(4, this->_nbCons);
-	/*
 		if (this->_nbCons >= 3)
 		{
-			/*
-			if (this->_nbCons == 3 && this->_startingSpace && this->_endingSpace)
-			{
-				nbSpace += 2;
-			}
-			*/
-
-			/*
 			if (this->_startingSpace)
 				nbSpace++;
 			if (this->_endingSpace)
 				nbSpace++;
-			if (this->_interSpace > 0)
-				nbSpace--;
-			tmpScore += std::pow(4, nbSpace);
+			if (this->_interSpace == 0)
+				tmpScore += std::pow(4, nbSpace);
 		}
 		else
 		{
@@ -50,8 +40,6 @@ void					LineData::_endOfSeries(void)
 				tmpScore -= 16;
 			}
 		}
-
-	*/
 	}
 
 	//std::cout << "tmp score: " << tmpScore << std::endl;

@@ -1,6 +1,6 @@
 #include "Board.hpp"
 
-Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY), _lastMoves(10), _hash(0)
+Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY), _lastMoves(3), _hash(0)
 {
 }
 

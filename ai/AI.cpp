@@ -187,17 +187,15 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 	int		eval;
 	std::vector<Board*>	children;
 
-	/*
 	if (node->isWinningBoard())
 	{
-		StdOutDisplay	d;
+	//	StdOutDisplay	d;
 		//return std::pow(4, 5);
 		//d.displayBoard(*node);
 		//std::cout << "player: " << player << std::endl;
 		//std::cout << "HERE BITCH CONNARD " << 100'000 * (depth + 1) << std::endl;
 		return (100'000 * (depth + 1) * player);
 	}
-	*/
 	if (depth == 0)
 	{
 		this->startTimer();

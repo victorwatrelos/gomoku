@@ -50,6 +50,7 @@ typedef struct		s_test_struct {
 	std::string		desc = "";
 	Board::Point	color;
 	int				res;
+	int				calcRes = 0;
 	bool			success = false;
 	bool			runned = false;
 }					t_test_struct;
@@ -64,13 +65,14 @@ void				test_board(t_test_struct &t)
 	res = h.eval(b, t.color);
 	t.success = res == t.res;
 	t.runned = true;
+	t.calcRes = res;
 
 	if (!t.success)
 	{
 		std::cout << "Trying " << t.desc << ":" << std::endl;
 		std::cout << "Failure" << std::endl;
 		d.displayBoard(*b);
-	std::cout << "Expected: " << t.res << " eval: " << res << std::endl;
+		std::cout << "Expected: " << t.res << " eval: " << res << std::endl;
 	}
 }
 
@@ -97,13 +99,14 @@ void		displaySorted(std::vector<t_test_struct> t)
 	std::sort(t.begin(), t.end(), 
 			    [](const t_test_struct & a, const t_test_struct & b) -> bool
 				{ 
-				    return a.res > b.res; 
+				    return a.calcRes > b.calcRes; 
 				});
 	for (auto f : t)
 	{
 		if (f.res == MAGIC)
 			continue ;
-		std::cout << f.res << ":" << std::endl;
+
+		std::cout << "expected: " << f.res << " calculated: " << f.calcRes << std::endl;
 		d.displayBoard(*getBoard(f.filename));
 		std::cout << "------------------" << std::endl;
 	}
@@ -121,18 +124,18 @@ int main(int argc, char **argv)
 		{"boards/test_4_stone", "Test with 4 DIAG2 stone", Board::Point::BLACK, 320},
 		{"boards/test_4_stone_blocked", "Test with 4 DIAG2 stone blocked on each border", Board::Point::BLACK, 16},
 		{"boards/test_4_stone_blocked_wall", "Test with 4 DIAG2 stone blocked on each border", Board::Point::BLACK, 24},
-		{"boards/test_4_stone_with_hole", "Test with 4 DIAG2 stone with hole in the middle", Board::Point::BLACK, 304},
+		{"boards/test_4_stone_with_hole", "Test with 4 DIAG2 stone with hole in the middle", Board::Point::BLACK, 300},
 		{"boards/test_3_stone", "Test with 3 DIAG1 stone", Board::Point::BLACK, 116},
 		{"boards/test_3_stone_one_blocked", "Test with 3 DIAG1 stone", Board::Point::BLACK, 88},
 		{"boards/test_3_stone_two_blocked", "Test with 3 DIAG1 stone", Board::Point::BLACK, 4},
-		{"boards/test_3_stone_with_hole", "Test with 3 DIAG1 stone", Board::Point::BLACK, 104},
+		{"boards/test_3_stone_with_hole", "Test with 3 DIAG1 stone", Board::Point::BLACK, 100},
 		{"boards/test_2_stone", "Test with 2 H stone", Board::Point::BLACK, 40},
 		{"boards/test_2_stone_space", "Test with 2 H stone with hole", Board::Point::BLACK, 24},
 		{"boards/test_1_stone", "Test with 1 H stone", Board::Point::BLACK, 16},
-		{"boards/toto", "TOTO", Board::Point::BLACK, 16},
+		{"boards/toto", "TOTO", Board::Point::BLACK, 32},
 		{"", "", Board::Point::EMPTY, MAGIC, false},
 	});
-	if (argc > 1)
+	if (argc == 2)
 	{
 		i = std::stoi(argv[1]);
 		test_board(test[i]);
@@ -146,6 +149,7 @@ int main(int argc, char **argv)
 		}
 	}
 	displaySuccess(test);
-//	displaySorted(test);
+	if (argc > 2)
+		displaySorted(test);
 	return 0;
 }
