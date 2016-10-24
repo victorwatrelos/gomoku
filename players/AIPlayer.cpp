@@ -160,7 +160,7 @@ int						AIPlayer::getMove(const Board &board)
 
 	this->_ai->nb_state = 0;
 	this->_fillNextMoves(dups, board);
-	showExpand(dups, board);
+//	showExpand(dups, board);
 //	if (dups.size() == 1)
 //		return *(dups.begin());
 	for (auto i : dups)
@@ -174,7 +174,9 @@ int						AIPlayer::getMove(const Board &board)
 			best_pos = i;
 		}
 	}
-	std::cout << "best h = " << best_h << std::endl;
+//	std::cout << "best h = " << best_h << std::endl;
+	std::cout << "history size : " << this->_ai->getHistorySize() << std::endl;
+	std::cout << "TT size : " << this->_ai->getTTSize() << std::endl;
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
 	return best_pos;
 }
