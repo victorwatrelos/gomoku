@@ -57,12 +57,159 @@ Board::Point							Board::getOppColor(Point player_color)
 	return Point::WHITE;
 }
 
+void									Board::_addNCheckCapture(int &tmpPos, int n)
+{
+	if (tmpPos < 0)
+		return;
+	tmpPos += n;
+	if (tmpPos >= GRID_SIZE)
+		tmpPos = -1;
+	//std::cout << "tmppos: " << tmpPos << "(" << tmpPos % GRID_LENGTH << "," << tmpPos / GRID_LENGTH << ")" << std::endl;
+}
+
+void									Board::_updatePosCheckCapture(int *tmpPos)
+{
+	this->_addNCheckCapture(tmpPos[DirIndex::HRIGHT], 1);
+	if (tmpPos[DirIndex::HRIGHT] % GRID_LENGTH == 0)
+	{
+		tmpPos[DirIndex::HRIGHT] = -1;
+	}
+	this->_addNCheckCapture(tmpPos[DirIndex::HLEFT], -1);
+	if (tmpPos[DirIndex::HLEFT] % GRID_LENGTH == (GRID_LENGTH - 1))
+	{
+		tmpPos[DirIndex::HLEFT] = -1;
+	}
+	this->_addNCheckCapture(tmpPos[DirIndex::VUP], -GRID_LENGTH);
+	this->_addNCheckCapture(tmpPos[DirIndex::VDOWN], GRID_LENGTH);
+	this->_addNCheckCapture(tmpPos[DirIndex::DIAG1UP], -(GRID_LENGTH + 1));
+	this->_addNCheckCapture(tmpPos[DirIndex::DIAG1DOWN], GRID_LENGTH + 1);
+	this->_addNCheckCapture(tmpPos[DirIndex::DIAG2UP], -(GRID_LENGTH - 1));
+	this->_addNCheckCapture(tmpPos[DirIndex::DIAG2DOWN], (GRID_LENGTH - 1));
+}
+
+void									Board::_processPosCheckCapture(int *tmpPos, int *tmpAccrued, const Point &oppColor)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		if (tmpPos[i] < 0)
+			continue ;
+		if (this->_board[tmpPos[i]] == oppColor)
+			tmpAccrued[i]++;
+	}
+}
+
+void									Board::_initTmpPosCheckCapture(int *tmpPos, int pos)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		tmpPos[i] = pos;
+	}
+}
+
+void									Board::_checkLastStoneCheckCapture(int *tmpPos, int *tmpAccrued, bool *toDelete, const Point &color)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		if (tmpAccrued[i] != 2)
+			continue ;
+		if (this->_board[tmpPos[i]] == color)
+			toDelete[i] = true;
+	}
+}
+
+void									Board::_deletePosCheckCapture(int *tmpPos, bool *toDelete, const Board::Point &colorCurrentStone)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		if (toDelete[i])
+		{
+			this->_board[tmpPos[i]] = Board::Point::EMPTY;
+			this->_addMoveToHash(tmpPos[i], colorCurrentStone);
+			if (colorCurrentStone == Board::Point::WHITE)
+				this->_whiteStoneCaptured++;
+			else
+				this->_blackStoneCaptured++;
+		}
+	}
+}
+
+static void	dispTmpAccrued(int *tmpAcc)
+{
+	for (int i = 0;i < 8; i++)
+	{
+		std::cout << "tmpacc[ " << i << "]" << tmpAcc[i] << std::endl;
+	}
+}
+
+static void	dispTmpPos(int *tmpPos)
+{
+	bool		found = false;
+
+	for (int i = 0; i < 8; i++)
+	{
+		std::cout << "Tmppos[" << i << "]:" << tmpPos[i] << std::endl;
+	}
+	for (int i = 0; i < GRID_SIZE; i++)
+	{
+		if (i && i % GRID_LENGTH == 0)
+			std::cout << std::endl;
+		found = false;
+		for (int x = 0; x < 8; x++)
+		{
+			if (tmpPos[x] == i)
+			{
+				found = true;
+				std::cout << "O";
+				break ;
+			}
+		}
+		if (!found)
+			std::cout << "_";
+		std::cout << " ";
+	}
+	std::cout << std::endl;
+}
+
+void									Board::_checkCapture(int pos, const Board::Point &color)
+{
+	int			tmpPos[8];
+	int			tmpAccrued[8] = {};
+	bool		toDelete[8] = {};
+	const Point	oppColor = Board::getOppColor(color);
+
+	bzero(toDelete, sizeof(bool) * 8);
+	this->_initTmpPosCheckCapture(tmpPos, pos);
+	std::cout << "Start: " << std::endl;
+	dispTmpPos(tmpPos);
+	for (int i = 0; i < 2; i++)
+	{
+
+		this->_updatePosCheckCapture(tmpPos);
+		this->_processPosCheckCapture(tmpPos, tmpAccrued, oppColor);
+		std::cout << "loop " << i <<  std::endl;
+		dispTmpPos(tmpPos);
+		dispTmpAccrued(tmpAccrued);
+	}
+	this->_updatePosCheckCapture(tmpPos);
+	std::cout << "Last" << std::endl;
+	dispTmpPos(tmpPos);
+	dispTmpAccrued(tmpAccrued);
+	this->_checkLastStoneCheckCapture(tmpPos, tmpAccrued, toDelete, color);
+	this->_initTmpPosCheckCapture(tmpPos, pos);
+	for (int i = 0; i < 2; i++)
+	{
+		this->_updatePosCheckCapture(tmpPos);
+		this->_deletePosCheckCapture(tmpPos, toDelete, oppColor);
+	}
+}
+
 void									Board::setMove(int pos, Board::Point color)
 {
 	if (pos < 0 || pos >= GRID_SIZE)
 		return ;
 	this->_board[pos] = color;
 	this->_addMoveToHash(pos, color);
+	this->_checkCapture(pos, color);
 }
 
 bool									Board::isMoveValid(int pos, Board::Point color) const
@@ -104,6 +251,16 @@ bool									Board::isWinningBoard(void) const
 		return (true);
 	if (this->_checkWinningBackDiag(false))
 		return (true);
+	if (this->_blackStoneCaptured >= 10)
+	{
+		std::cout << "Black stone are all captured" << std::endl;
+		return (true);
+	}
+	if (this->_whiteStoneCaptured >= 10)
+	{
+		std::cout << "White stone are all captured" << std::endl;
+		return (true);
+	}
 	return (false);
 }
 
