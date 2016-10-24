@@ -27,13 +27,15 @@ std::string		AbstractLineData::_getColor(const Board::Point &col)
 
 void					AbstractLineData::_display(void)
 {
-	std::cout << "current col: " << this->_getColor(this->_currentColor) << std::endl
-		<< " player col: " << this->_getColor(this->_currentColor) << std::endl
-		<< " interSpace: " << this->_interSpace << std::endl
-		<< " inter pos: " << this->_posInter << std::endl
-		<< " last is space: " << this->_lastIsSpace << std::endl
-		<< " first is space: " << this->_startingSpace << std::endl
-		<< " ending space: " << this->_endingSpace << std::endl
+	std::cout << "current col: " << this->_getColor(this->_currentColor) <<  " -- "
+		<< " player col: " << this->_getColor(this->_currentColor) <<   " -- "
+		<< " interSpace: " << this->_interSpace << " -- "
+		<< " inter pos: " << this->_posInter
+		<< "(" << this->_posInter % GRID_LENGTH << "," << this->_posInter / GRID_LENGTH << ")"
+		<< " -- "
+		<< " last is space: " << this->_lastIsSpace <<   " -- "
+		<< " first is space: " << this->_startingSpace <<   " -- "
+		<< " ending space: " << this->_endingSpace <<   " -- "
 		<< " nb cons: " << this->_nbCons << std::endl;
 }
 

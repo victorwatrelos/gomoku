@@ -4,6 +4,10 @@ Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY), _lastMoves(3), _has
 {
 }
 
+Board::Board(const std::vector<Point> &grid) : _board(grid), _lastMoves(3), _hash(0)
+{
+}
+
 Board::Board(const Board &obj)
 {
 	*this = obj;
@@ -656,11 +660,11 @@ int					Board::getScore(Board::Point color)
 	int				score = 0;
 
 	score += this->_checkStreakLine(true, color);
-	//score += this->_checkStreakDiag(true, color);
-	//score += this->_checkStreakBackDiag(true, color);
-	//score += this->_checkStreakLine(false, color);
-	//score += this->_checkStreakDiag(false, color);
-	//score += this->_checkStreakBackDiag(false, color);
+	score += this->_checkStreakDiag(true, color);
+	score += this->_checkStreakBackDiag(true, color);
+	score += this->_checkStreakLine(false, color);
+	score += this->_checkStreakDiag(false, color);
+	score += this->_checkStreakBackDiag(false, color);
 	return score;
 }
 
@@ -741,7 +745,7 @@ std::vector<Board*>		Board::expand(Point color)
 
 	for (auto pos : this->_lastMoves)
 	{
-		this->_expandPoint(st, color, pos, dups, 1);
+		this->_expandPoint(st, color, pos, dups, 2);
 		set++;
 	}
 	return st;
