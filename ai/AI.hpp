@@ -19,6 +19,7 @@ namespace			TTUtility
 	typedef struct		s_ttEntry
 	{
 		int				value;
+		int				pos;
 		int				depth;
 		Flag			flag;
 		int				age;
@@ -35,6 +36,12 @@ class						AI
 		virtual				~AI(void);
 		AI&					operator=(const AI & rhs);
 
+		typedef struct		s_bestNode
+		{
+			int				pos;
+			int				value;
+		}					t_bestNode;
+
 		void				setInitialDepth(int depth);
 
 		bool				hashComp(const Board *a, const Board *b);
@@ -42,6 +49,8 @@ class						AI
 		int					minimax(Board *node, int depth, bool player);
 		int					minimaxAB(Board *node, int depth, int A, int B, bool player);
 		int					negamax(Board *node, int depth, int A, int B, int player);
+		t_bestNode			negamaxID(Board *node, int pos, int depth, int A, int B, int player);
+		int					ID(Board *node, int depth);
 
 		int					nb_state = 0;
 
@@ -78,6 +87,7 @@ class						AI
 		TIMEP				_timer;
 		CheckForceMove		*_lineData;
 		BrowseBoard			_browseBoard;
+
 };
 
 #endif

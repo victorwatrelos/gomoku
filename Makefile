@@ -28,6 +28,7 @@ OBJ= $(SRC:.cpp=.o)
 
 LIB=
 INC=-isystem $(HOME)/.brew/include/
+#INC=-isystem /usr/local/include/
 
 FRWK= 
 .PHONY: clean fclean re all

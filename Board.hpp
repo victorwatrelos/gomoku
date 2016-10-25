@@ -34,7 +34,7 @@ class								Board
 		uint64_t					getHash() const;
 		int							getScore(Board::Point color);
 
-		std::vector<Board*>			expand(Point color);
+		std::vector<int>			expand(Point color);
 		
 		static Point				getOppColor(Point player_col);
 
@@ -59,7 +59,7 @@ class								Board
 		int							_checkStreakDiag(bool down, Board::Point color) const;
 		int							_checkStreakBackDiag(bool down, Board::Point color) const;
 
-		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth);
+		void						_expandPoint(std::vector<int> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth);
 
 		void						_addMoveToHash(int index, Board::Point color);
 

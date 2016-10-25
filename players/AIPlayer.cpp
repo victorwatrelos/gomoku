@@ -159,6 +159,7 @@ int						AIPlayer::getMove(const Board &board)
 	std::vector<Board::Point>	b = board.getBoard();
 
 	this->_ai->nb_state = 0;
+/*
 	this->_fillNextMoves(dups, board);
 //	showExpand(dups, board);
 //	if (dups.size() == 1)
@@ -175,6 +176,10 @@ int						AIPlayer::getMove(const Board &board)
 		}
 	}
 //	std::cout << "best h = " << best_h << std::endl;
+	*/
+
+	new_board = board;
+	best_pos = this->_ai->ID(&new_board, INITIAL_DEPTH);
 	std::cout << "history size : " << this->_ai->getHistorySize() << std::endl;
 	std::cout << "TT size : " << this->_ai->getTTSize() << std::endl;
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;

@@ -737,9 +737,9 @@ std::vector<Board*>		Board::expand(Point color)
 }
 */
 
-std::vector<Board*>		Board::expand(Point color)
+std::vector<int>		Board::expand(Point color)
 {
-	std::vector<Board*>	st;
+	std::vector<int>			st;
 	std::unordered_set<int>		dups;
 	int							set = 0;
 
@@ -751,7 +751,7 @@ std::vector<Board*>		Board::expand(Point color)
 	return st;
 }
 
-void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth)
+void				Board::_expandPoint(std::vector<int> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth)
 {
 	int				i, j, index;
 	int				m, n;
@@ -779,9 +779,7 @@ void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int po
 			{
 				if (this->isMoveValid(index, color))
 				{
-					new_board = new Board(*this);
-					new_board->setMove(index, color);
-					st.push_back(new_board);
+					st.push_back(index);
 					dups.insert(index);
 				}
 			}
