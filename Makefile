@@ -23,6 +23,7 @@ SRC= main.cpp \
 	 utilities/BoardUtilities.cpp \
 	 utilities/CheckForceMove.cpp \
 	 utilities/HashUtilities.cpp \
+	 utilities/Parser.cpp \
 	 network/Server.cpp \
 	 Board.cpp
 

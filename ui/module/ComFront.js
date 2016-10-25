@@ -2,6 +2,7 @@ var io;
 var m_client = null;
 var	m_backState = false;
 var	m_board = "";
+var	tmp_board = {'type': null};
 
 
 module.exports.init = function(server, comBack, gomokuManager) {
@@ -10,14 +11,19 @@ io.on('connection', function(client) {
 	m_client = client;
 	console.log('Front websocket client connected');
 	m_client.emit('data', {'type': 'connected', 'data': {'connected': true}});
-	m_client.emit('data', {'type': 'ask_new_game', 'data': null});
+	if (!(gomokuManager.isRunning()))
+		m_client.emit('data', {'type': 'ask_new_game', 'data': null});
 
 	client.on('node-data', function(data) {
-		if (data.type === "new_game")
-		{
-			gomokuManager.launchGomoku();
-			m_client.emit('data', {'type': 'new_game_started', 'data': null});
-		}
+		switch (data.type) {
+			case "new_game":
+				gomokuManager.launchGomoku();
+				m_client.emit('data', {'type': 'new_game_started', 'data': null});
+				break;
+			case "ask_board":
+				m_client.emit('data', tmp_board);
+				break;
+		};
 	});
 	client.on('data', function(data) {
 		comBack.sendData(data);
@@ -29,6 +35,10 @@ io.on('connection', function(client) {
 }
 
 module.exports.sendData = function(data) {
+	if (data.type == "board")
+	{
+		tmp_board = data;
+	}
 	if (m_client == null) {
 		setTimeout(module.exports.sendData, 500);
 	} else {

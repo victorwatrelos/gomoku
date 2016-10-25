@@ -9,6 +9,11 @@ module.exports.setComBack = function(comBack)
 	m_comBack = comBack;
 }
 
+module.exports.isRunning = function()
+{
+	return stateGomoku;
+}
+
 module.exports.launchGomoku = function()
 {
 	if (stateGomoku)

@@ -26,6 +26,7 @@ SocketModule = (function() {
 				DisplayModule.dispWinner(data.data.player);
 				break;
 			case "ask_new_game":
+				console.log("ask new game");
 				DisplayModule.dispNewGame(true);
 				break ;
 			case "board":
@@ -35,7 +36,7 @@ SocketModule = (function() {
 				}
 				DisplayModule.dispNbStone(data.data.blackStone, data.data.whiteStone);
 				break;
-		}
+		};
 	});
 	return {
 		sendMove: function(pos, color) {
@@ -45,6 +46,10 @@ SocketModule = (function() {
 		},
 		sendNewGame: function() {
 			var data = {'type': 'new_game', 'data': null};
+			socket.emit('node-data', data);
+		},
+		askBoard: function() {
+			var data = {'type': 'ask_board', 'data': null};
 			socket.emit('node-data', data);
 		}
 	}

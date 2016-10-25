@@ -1,6 +1,17 @@
 #include "GameLoop.hpp"
 
-GameLoop::GameLoop(void) {
+GameLoop::GameLoop(void) :
+	_p1(Parser::PlayerType::AI), _p2(Parser::PlayerType::HUMAN)
+{
+	this->_initServer();
+	this->_createPlayers();
+	this->_initDisplay();
+
+}
+
+GameLoop::GameLoop(Parser::PlayerType p1, Parser::PlayerType p2) :
+	_p1(p1), _p2(p2)
+{
 	this->_initServer();
 	this->_createPlayers();
 	this->_initDisplay();
@@ -24,10 +35,14 @@ GameLoop	&GameLoop::operator=(const GameLoop &p) {
 }
 
 void		GameLoop::_createPlayers(void) {
-//	this->_players[0] = new NetworkPlayer("Black", Board::Point::BLACK, this->_server);
-	this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
-	this->_players[0] = new AIPlayer("Black", Board::Point::BLACK);
-//	this->_players[1] = new AIPlayer("White", Board::Point::WHITE);
+	if (this->_p1 == Parser::PlayerType::AI)
+		this->_players[0] = new AIPlayer("Black", Board::Point::BLACK);
+	else
+		this->_players[0] = new NetworkPlayer("Black", Board::Point::BLACK, this->_server);
+	if (this->_p2 == Parser::PlayerType::AI)
+		this->_players[1] = new AIPlayer("White", Board::Point::WHITE);
+	else
+		this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
 }
 
 void		GameLoop::_initServer(void) {

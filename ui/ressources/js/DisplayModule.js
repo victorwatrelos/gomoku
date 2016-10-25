@@ -42,7 +42,7 @@ DisplayModule = (function() {
 		},
 		dispNbStone: function(black_stone, white_stone) {
 			$('#nb_black_stone').text(black_stone);
-			$('#nb_black_stone').text(white_stone);
+			$('#nb_white_stone').text(white_stone);
 		},
 		dispNewGame: function(state) {
 			if (state)
