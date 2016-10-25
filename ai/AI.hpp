@@ -49,7 +49,7 @@ class						AI
 		int					minimax(Board *node, int depth, bool player);
 		int					minimaxAB(Board *node, int depth, int A, int B, bool player);
 		int					negamax(Board *node, int depth, int A, int B, int player);
-		t_bestNode			negamaxID(Board *node, int pos, int depth, int A, int B, int player);
+		t_bestNode			negamaxID(Board *node, int depth, int A, int B, int player);
 		int					ID(Board *node, int depth);
 
 		int					nb_state = 0;

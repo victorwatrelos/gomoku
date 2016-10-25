@@ -16,8 +16,8 @@ AIPlayer::AIPlayer(const std::string &name, const Board::Point &color)
 {
 	this->_name = name;
 	this->_color = color;
-//	this->_h = new MHeuristic();
-	this->_h = new SimpleHeuristic();
+	this->_h = new MHeuristic();
+//	this->_h = new SimpleHeuristic();
 	this->_ai = new AI(this->_h, this->_color);
 	this->_ai->setInitialDepth(INITIAL_DEPTH);
 }
@@ -152,11 +152,11 @@ void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 int						AIPlayer::getMove(const Board &board)
 {
 	Board				new_board;
-	int					best_h = -1'000'000;
+//	int					best_h = -1'000'000;
 	int					best_pos = 0;
-	int					h_value;
-	std::unordered_set<int>		dups;
-	std::vector<Board::Point>	b = board.getBoard();
+//	int					h_value;
+//	std::unordered_set<int>		dups;
+//	std::vector<Board::Point>	b = board.getBoard();
 
 	this->_ai->nb_state = 0;
 /*
@@ -180,8 +180,12 @@ int						AIPlayer::getMove(const Board &board)
 
 	new_board = board;
 	best_pos = this->_ai->ID(&new_board, INITIAL_DEPTH);
+	if (board.isFirstMove())
+		best_pos = GRID_SIZE / 2;
 	std::cout << "history size : " << this->_ai->getHistorySize() << std::endl;
 	std::cout << "TT size : " << this->_ai->getTTSize() << std::endl;
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
+//	int stop;
+//	std::cin >> stop;
 	return best_pos;
 }
