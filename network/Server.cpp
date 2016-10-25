@@ -176,6 +176,7 @@ nlohmann::json	Server::_getMsg(size_t) {
 	char			*p_res;
 	size_t			size = 1024;
 	std::string		res = "";
+	int				reTry = 0;
 
 	p_res = new char[size + 1]();
 	while (42)
@@ -186,15 +187,18 @@ nlohmann::json	Server::_getMsg(size_t) {
 			this->_lostCo = true;
 			throw new SocketException;
 		}
-		std::cout << "p_res: " << p_res << std::endl;
 		res += p_res;
 		try {
 			auto tmp = nlohmann::json::parse(res);
-			std::cout << "Complete!" << res << std::endl;
 			this->_nbTry = 0;
 			return tmp;
 		} catch (std::invalid_argument e) {
-			std::cout << "Incomplete" << e.what() << std::endl;
+			if (reTry > 100)
+			{
+				std::cerr << "Failure: " << e.what() << std::endl;
+				exit(1);
+			}
+			reTry++;
 		}
 	}
 }
