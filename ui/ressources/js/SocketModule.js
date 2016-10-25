@@ -8,7 +8,6 @@ SocketModule = (function() {
 		DisplayModule.setBackCo(false);
 	});
 	socket.on('data', function(data) {
-		console.log(data);
 		switch (data.type) {
 			case "new_game_started":
 				DisplayModule.dispNewGame(false);
@@ -26,7 +25,6 @@ SocketModule = (function() {
 				DisplayModule.dispWinner(data.data.player);
 				break;
 			case "ask_new_game":
-				console.log("ask new game");
 				DisplayModule.dispNewGame(true);
 				break ;
 			case "board":
@@ -50,6 +48,10 @@ SocketModule = (function() {
 		},
 		askBoard: function() {
 			var data = {'type': 'ask_board', 'data': null};
+			socket.emit('node-data', data);
+		},
+		sendForceRestart: function() {
+			var data = {'type': 'force_restart', 'data': null};
 			socket.emit('node-data', data);
 		}
 	}

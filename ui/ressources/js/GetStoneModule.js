@@ -12,7 +12,6 @@ GetStoneModule = (function () {
 			} else {
 				imgEl = document.getElementById("white_stone");
 			}
-			console.log(coord);
 			return new fabric.Image(imgEl, {
 				width: stoneSize,
 				height: stoneSize,

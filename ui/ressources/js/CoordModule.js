@@ -18,7 +18,6 @@ CoordModule = (function () {
 					 coordY -= xStart;
 		var x = Math.round(coordX / step);
 		var y = Math.round(coordY / step);
-		console.log("x: " + x + " y: " + y);
 		return x + y * GRID_LENGTH;
 	}
   }

@@ -21,6 +21,9 @@ EventLoop = (function() {
 				$('#winner_div').closeModal();
 				$('#ask_new_game').openModal({dismissible:false});
 			});
+			$('#restart_game').click(function() {
+				SocketModule.sendForceRestart();
+			});
 		}
 	}
 })();

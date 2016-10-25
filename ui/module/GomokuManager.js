@@ -14,6 +14,13 @@ module.exports.isRunning = function()
 	return stateGomoku;
 }
 
+module.exports.kill = function()
+{
+	if (!stateGomoku)
+		return ;
+	gomoku.kill('SIGINT');
+}
+
 module.exports.launchGomoku = function(config)
 {
 	if (stateGomoku)
@@ -21,9 +28,6 @@ module.exports.launchGomoku = function(config)
 		return;
 	}
 	stateGomoku = true;
-	console.log(config);
-	console.log('p1:' + config.p1);
-	console.log('p2:' + config.p2);
 	gomoku = spawn('./gomoku', ['p1:' + config.p1, 'p2:' + config.p2]);
 	m_comBack.connect();
 	gomoku.on('close', (code) => {

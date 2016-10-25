@@ -3,13 +3,11 @@ DisplayModule = (function() {
 	var backCo = false;	
 	var	disp = true;
 	function	dispLoader() {
-		console.log("dispLoader");
 		if (backCo)
 		{
 			if (loader.css('display') != 'none')
 			{
 				disp = false;
-				console.log("set none");
 				loader.css('display', 'none');
 			}
 		}
@@ -18,7 +16,6 @@ DisplayModule = (function() {
 			if (!disp && loader.css('display') != 'block')
 			{
 				disp = true;
-				console.log("set block");
 				loader.css('display', 'block');
 			}
 		}

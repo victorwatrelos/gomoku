@@ -95,6 +95,7 @@ void                printT(unsigned long int t)
 AbstractPlayer	*GameLoop::loop(void)
 {
 	MHeuristic		h;
+	int				nbTurn = 0;
 	
 	this->_display->displayBoard(this->_board);
 	while (1)
@@ -111,6 +112,7 @@ AbstractPlayer	*GameLoop::loop(void)
 				}
 				return (p);
 			}
+			nbTurn++;
 		}
 	}
 }

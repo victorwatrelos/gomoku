@@ -39,7 +39,7 @@ all:$(NAME_BIN) $(NAME_NODE)
 	cp $(NAME_BIN) $(NODE_FOLDER)
 
 $(NAME_NODE):
-	(cd ui && npm install && bower install)
+	(cd ui && npm install && bower install && touch gomoku_stdout.log && touch gomoku_stderr.log)
 
 $(NAME_BIN): $(OBJ)
 		$(CC) -o $(NAME_BIN) $(OBJ) $(LIB) $(FRWK) $(INC) $(FLAGS)

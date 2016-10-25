@@ -23,6 +23,10 @@ io.on('connection', function(client) {
 			case "ask_board":
 				m_client.emit('data', tmp_board);
 				break;
+			case "force_restart":
+				gomokuManager.kill();
+				m_client.emit('data', {'type': 'ask_new_game', 'data': null});
+				break;
 		};
 	});
 	client.on('data', function(data) {
