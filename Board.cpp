@@ -21,6 +21,7 @@ Board    								&Board::operator=(const Board &p)
 {
 	this->_board = p.getBoard();
 	this->_lastMoves = p.getLastMoves();
+	this->_lastMove = p.getLastMove();
 	this->_hash = p.getHash();
 	return *this;
 }
@@ -43,6 +44,20 @@ boost::circular_buffer<int>				Board::getLastMoves() const
 void									Board::setLastMoves(int pos)
 {
 	this->_lastMoves.push_back(pos);
+	this->_lastMove = pos;
+}
+
+int										Board::getLastMove() const
+{
+//	return this->_lastMoves.back();
+	return this->_lastMove;
+}
+
+bool									Board::isFirstMove() const
+{
+	if (this->_lastMoves.empty())
+		return true;
+	return false;
 }
 
 Board::Point							Board::lookAt(int index) const
@@ -63,6 +78,7 @@ void									Board::setMove(int pos, Board::Point color)
 		return ;
 	this->_board[pos] = color;
 	this->_addMoveToHash(pos, color);
+	this->setLastMoves(pos);
 }
 
 bool									Board::isMoveValid(int pos, Board::Point color) const
@@ -748,6 +764,11 @@ std::vector<Board*>		Board::expand(Point color)
 		this->_expandPoint(st, color, pos, dups, 2);
 		set++;
 	}
+	if (set == 0)
+		this->_expandPoint(st, color, GRID_SIZE / 2, dups, 2);
+//	showExpand2(dups, *this);
+	if (st.empty())
+		std::cout << "IS EMPTY!!!!!" << std::endl;
 	return st;
 }
 

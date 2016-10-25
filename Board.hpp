@@ -40,6 +40,8 @@ class								Board
 
 		boost::circular_buffer<int>	getLastMoves() const;
 		void						setLastMoves(int pos);
+		int							getLastMove() const; 
+		bool						isFirstMove() const;
 
 	private:
 		int							_getStreak(Board::Point last, Board::Point curr, int streak) const;
@@ -66,6 +68,7 @@ class								Board
 		std::vector<Point>			_board;
 		boost::circular_buffer<int>	_lastMoves;
 		uint64_t					_hash;
+		int							_lastMove;
 };
 
 #endif
