@@ -33,9 +33,13 @@ LIB=
 INC=-isystem $(HOME)/.brew/include/
 
 FRWK= 
-.PHONY: clean fclean re all
+.PHONY: clean fclean re all test
 .SILENT:
+
 all:$(NAME_BIN) $(NAME_NODE)
+
+test:
+	(cd test && make && ./gomoku_test)
 
 $(NAME_NODE):
 	(cd ui && npm install && bower install && touch gomoku_stdout.log && touch gomoku_stderr.log)
