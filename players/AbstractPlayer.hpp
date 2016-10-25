@@ -3,6 +3,7 @@
 
 # include <string>
 # include "../Board.hpp"
+# include <sstream>
 
 class AbstractPlayer
 {
@@ -17,13 +18,16 @@ class AbstractPlayer
 		const Board::Point	&getColor(void) const;
 		void				addTime(long long t);
 		void				dispAverage(void);
+		std::string			getAverage(void);
+		std::string			getLastTime(void);
 	protected:
 		std::string		_name;
 		Board::Point	_color;
 	private:
-		void			_dispTime(long long);
+		std::string		_getStrTime(long long);
 		int				_totGetMove = 0;
 		long long		_totTime = 0;
+		std::vector<long long>	_times;
 };
 
 #endif

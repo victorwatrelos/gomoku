@@ -22,7 +22,7 @@
 
 		</div>
 		<div class="container">
-			<div class="row">
+			<div class="row enough_space">
 				<div class="col s3">
 					<div class="section">
 						<h5>Gomoku</h5>
@@ -39,30 +39,50 @@
 					</div>
 				</div>
 				<div class="col s4">
-					<p id="disp_turn_of" class="big">
-						Turn of <span id="player_turn"></span> player,
-						<span id="waiting_action">please play</span>
-					</p>
-					<div id="disp_turn_back">
-						<div class="preloader-wrapper small active">
-							<div class="spinner-layer spinner-green-only">
-								<div class="circle-clipper left">
-									<div class="circle"></div>
-								</div><div class="gap-patch">
-									<div class="circle"></div>
-								</div><div
-				class="circle-clipper
-				right">
-									<div
-		class="circle"></div>
+					<div class="section">
+						<h5 id="disp_turn_of">
+							Turn of <span id="player_turn"></span> player,
+							<span id="waiting_action">please play</span>
+						</h5>
+						<div id="disp_turn_back">
+							<div class="preloader-wrapper small active">
+								<div class="spinner-layer spinner-green-only">
+									<div class="circle-clipper left">
+										<div class="circle"></div>
+									</div><div class="gap-patch">
+										<div class="circle"></div>
+									</div><div
+					class="circle-clipper
+					right">
+										<div
+			class="circle"></div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="col s2">
-					<h5>Controle</h5>
-					<a id="restart_game" class="waves-effect waves-light btn">Restart game</a>
+					<div class="section">
+						<h5>Controle</h5>
+						<a id="restart_game" class="waves-effect waves-light btn">Restart game</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col s3">
+					<h5>Information</h5>
+					<p>
+						Turn <span id="nb_turn">1</span>
+					</p>
+				</div>
+				<div class="col s4">
+					<h5>Time</h5>
+					<p>
+					Black take <span id="black_duration"></span><br/>
+					White take <span id="white_duration"></span>
+					</p>
 				</div>
 			</div>
 			<div class="row">
@@ -71,12 +91,13 @@
 					 <div class="modal-content">
 						 <h4>The winner is <span id="player_name"></span></h4>
 						 <p>
-							Maybe some statistics?
+							Average time for black: <span id="black_average"></span></br>
+							Average time for white: <span id="white_average"></span></br>
 						 </p>
 					 </div>
 					 <div class="modal-footer">
 						 <a href="#!" id="winner_modal_btn" class="modal-action 
-						 waves-effect waves-green btn-flat">New game</a>
+							waves-effect waves-green btn-flat">New game</a>
 					 </div>
 				 </div>
 				 <div id="ask_new_game" class="modal">

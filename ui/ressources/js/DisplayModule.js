@@ -57,6 +57,17 @@ DisplayModule = (function() {
 				$('#disp_turn_back').css('display', 'none');
 				$('#disp_turn_of').css('display', 'block');
 			}
+		},
+		dispLoopStat: function(data) {
+			$('#nb_turn').text(data.turn_nb);
+			if (data.time.color == 0)
+				$('#black_duration').text(data.time.duration);
+			if (data.time.color == 1)
+				$('#white_duration').text(data.time.duration);
+		},
+		dispFinalStat: function(data) {
+			$('#black_average').text(data.average_time_black);
+			$('#white_average').text(data.average_time_white);
 		}
 	}
 })();

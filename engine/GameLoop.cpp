@@ -78,6 +78,7 @@ void			GameLoop::launchGame(void) {
 	auto p = this->loop();
 
 	std::cout << "Winner is: " << p->getName() << std::endl;
+	this->_server->sendFinalStats(this->_players);
 	this->_server->sendWinner(p->getColor());
 }
 
@@ -95,7 +96,7 @@ void                printT(unsigned long int t)
 AbstractPlayer	*GameLoop::loop(void)
 {
 	MHeuristic		h;
-	int				nbTurn = 0;
+	int				nbTurn = 1;
 	
 	this->_display->displayBoard(this->_board);
 	while (1)
@@ -104,6 +105,7 @@ AbstractPlayer	*GameLoop::loop(void)
 		{
 			this->_getPlayerMove(*p);
 			this->_display->displayBoard(this->_board);
+			this->_server->sendLoopState(p->getLastTime(), nbTurn, p->getColor());
 			if (this->_board.isWinningBoard())
 			{
 				for (auto p : this->_players)
@@ -112,7 +114,7 @@ AbstractPlayer	*GameLoop::loop(void)
 				}
 				return (p);
 			}
-			nbTurn++;
 		}
+		nbTurn++;
 	}
 }

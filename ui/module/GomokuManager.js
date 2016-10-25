@@ -36,6 +36,13 @@ module.exports.launchGomoku = function(config)
 		stateGomoku = false;
 	});
 
+	gomoku.on('error', (err) => {
+		m_comBack.stopConnect();
+		console.log('Gomoku crash:');
+		console.log(err);
+		stateGomoku = false;
+	});
+
 	gomoku.stdout.on('data', (data) => {
 		fs.appendFile('gomoku_stdout.log', data, function(err) {
 			if (err)

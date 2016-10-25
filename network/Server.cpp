@@ -12,7 +12,6 @@ void	Server::signalHandler(int signal) {
 	if (signal == SIGPIPE)
 	{
 		std::cout << "Reconnection" << std::endl;
-		//TODO new game
 	}
 }
 
@@ -112,6 +111,32 @@ void		Server::sendBoard(const Board &board) {
 	this->_nbTry = 0;
 }
 
+void		Server::sendFinalStats(AbstractPlayer **players)
+{
+	nlohmann::json	msg_json;
+	AbstractPlayer	*p;
+
+	msg_json["type"] = "final_stats";
+	for (int i = 0; i < 2; i++)
+	{
+		 p = players[i];
+		if (p->getColor() == Board::Point::BLACK)
+			msg_json["data"]["average_time_black"] = p->getAverage();
+		else
+			msg_json["data"]["average_time_white"] = p->getAverage();
+	}
+	try {
+		this->_sendMsg(msg_json.dump().c_str());
+	} catch (SocketException *e) {
+		std::cout << e->what() << std::endl;
+		delete e;
+		this->_wait();
+		this->_getClient();
+		this->sendFinalStats(players);
+	}
+	this->_nbTry = 0;
+}
+
 void		Server::_wait(void)
 {
 	if (this->_nbTry > 10)
@@ -122,6 +147,27 @@ void		Server::_wait(void)
 	std::cout << "Unable to get response from network" << std::endl;
 	sleep(2);
 	this->_nbTry++;
+}
+
+void		Server::sendLoopState(const std::string &time, int turnNb, const Board::Point &timeRelatedColor)
+{
+	int				clientColor = this->_getClientColor(timeRelatedColor);
+	nlohmann::json	msg_json;
+
+	msg_json["type"] = "loop_stat";
+	msg_json["data"]["time"]["color"] = clientColor;
+	msg_json["data"]["time"]["duration"] = time;
+	msg_json["data"]["turn_nb"] = turnNb;
+
+	try {
+		this->_sendMsg(msg_json.dump().c_str());
+	} catch (SocketException *e) {
+		std::cout << e->what() << std::endl;
+		delete e;
+		this->_wait();
+		this->_getClient();
+		this->sendLoopState(time, turnNb, timeRelatedColor);
+	}
 }
 
 void		Server::sendWinner(const Board::Point &color) {

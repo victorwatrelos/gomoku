@@ -9,6 +9,12 @@ SocketModule = (function() {
 	});
 	socket.on('data', function(data) {
 		switch (data.type) {
+			case "final_stats":
+				DisplayModule.dispFinalStat(data.data);
+				break;
+			case "loop_stat":
+				DisplayModule.dispLoopStat(data.data);
+				break;
 			case "new_game_started":
 				DisplayModule.dispNewGame(false);
 				break;

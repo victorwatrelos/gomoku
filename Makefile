@@ -36,13 +36,13 @@ FRWK=
 .PHONY: clean fclean re all
 .SILENT:
 all:$(NAME_BIN) $(NAME_NODE)
-	cp $(NAME_BIN) $(NODE_FOLDER)
 
 $(NAME_NODE):
 	(cd ui && npm install && bower install && touch gomoku_stdout.log && touch gomoku_stderr.log)
 
 $(NAME_BIN): $(OBJ)
 		$(CC) -o $(NAME_BIN) $(OBJ) $(LIB) $(FRWK) $(INC) $(FLAGS)
+		cp $(NAME_BIN) $(NODE_FOLDER)
 		echo "\t\xF0\x9F\x8F\x81   Compiling \033[35m$(NAME) \033[0mDONE!"
 
 %.o: %.cpp

@@ -14,6 +14,7 @@
 # include "../exception/SocketException.hpp"
 # include <csignal>
 # include "../lib/json.hpp"
+# include "../players/AbstractPlayer.hpp"
 
 class Server
 {
@@ -26,6 +27,8 @@ class Server
 		int		getColor();
 		void	sendBoard(const Board &board);
 		void	sendWinner(const Board::Point &point);
+		void	sendLoopState(const std::string &time, int turnNb, const Board::Point &timeRelatedColor);
+		void	sendFinalStats(AbstractPlayer **players);
 		static void	signalHandler(int signal);
 		static Server	*current;
 	private:
