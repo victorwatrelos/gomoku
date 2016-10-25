@@ -6,3 +6,4 @@ gomoku
 *.swp
 *.swa
 grid*
+*.log

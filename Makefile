@@ -1,6 +1,8 @@
 CC= clang++
 FLAGS=-Wall -Wextra  -std=c++14 -g
-NAME= gomoku
+NAME_BIN= gomoku
+NAME_NODE= ui_gomoku
+NODE_FOLDER=ui
 
 SRC= main.cpp \
 	 players/AbstractPlayer.cpp \
@@ -32,10 +34,14 @@ INC=-isystem $(HOME)/.brew/include/
 FRWK= 
 .PHONY: clean fclean re all
 .SILENT:
-all:$(NAME) 
+all:$(NAME_BIN) $(NAME_NODE)
+	cp $(NAME_BIN) $(NODE_FOLDER)
 
-$(NAME): $(OBJ)
-		$(CC) -o $(NAME) $(OBJ) $(LIB) $(FRWK) $(INC) $(FLAGS)
+$(NAME_NODE):
+	(cd ui && npm install && bower install)
+
+$(NAME_BIN): $(OBJ)
+		$(CC) -o $(NAME_BIN) $(OBJ) $(LIB) $(FRWK) $(INC) $(FLAGS)
 		echo "\t\xF0\x9F\x8F\x81   Compiling \033[35m$(NAME) \033[0mDONE!"
 
 %.o: %.cpp
@@ -48,6 +54,6 @@ clean:
 
 fclean: clean
 		echo "\t\xF0\x9F\x9A\xBD   Full Clean"
-		rm -rf $(NAME)
+		rm -rf $(NAME_BIN)
 
 re: fclean all

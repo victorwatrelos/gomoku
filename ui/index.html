@@ -1,0 +1,125 @@
+<!doctype html>  
+<html lang="en">  
+	<head>
+		<link href="/materialize/bin/materialize.css" rel="stylesheet" />
+		<link href="/css/style.css" rel="stylesheet" />
+
+	</head>
+	<body>
+		<div class="hide-board">
+			<div class="preloader-wrapper big active circle_loader">
+				<div class="spinner-layer spinner-blue-only">
+					<div class="circle-clipper left">
+						<div class="circle"></div>
+					</div><div class="gap-patch">
+						<div class="circle"></div>
+					</div><div class="circle-clipper
+					right">
+						<div class="circle"></div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col s3">
+					<div class="section">
+						<h5>Gomoku</h5>
+						<p>Will you bit the AI?</p>
+					</div>
+				</div>
+				<div class="col s3">
+					<div class="section">
+						<h5>Score</h5>
+						<p>Captured black stone: <span id="nb_black_stone">0</span><br/>
+						Captured white stone: <span id="nb_white_stone">0</span>
+						</p>
+
+					</div>
+				</div>
+				<div class="col s6">
+					<p id="disp_turn_of" class="big">
+						Turn of <span id="player_turn"></span> player,
+						<span id="waiting_action">please play</span>
+					</p>
+					<div id="disp_turn_back">
+						<div class="preloader-wrapper small active">
+							<div class="spinner-layer spinner-green-only">
+								<div class="circle-clipper left">
+									<div class="circle"></div>
+								</div><div class="gap-patch">
+									<div class="circle"></div>
+								</div><div
+				class="circle-clipper
+				right">
+									<div
+		class="circle"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+					<canvas id="c" width="1000px" height="1000px"></canvas>
+				 <div id="winner_div" class="modal">
+					 <div class="modal-content">
+						 <h4>The winner is <span id="player_name"></span></h4>
+						 <p>
+							Maybe some statistics?
+						 </p>
+					 </div>
+					 <div class="modal-footer">
+						 <a href="#!" id="winner_modal_btn" class="modal-action 
+						 waves-effect waves-green btn-flat">New game</a>
+					 </div>
+				 </div>
+				 <div id="ask_new_game" class="modal">
+					 <div class="modal-content">
+						 <h4>New game?</h4>
+						 <p>
+							
+						 </p>
+					 </div>
+					 <div class="modal-footer">
+						 <a href="#!" id="launch_new_game" class="modal-action
+						 waves-effect waves-green btn-flat">Launch new game</a>
+					 </div>
+				 </div>
+			</div>
+		</div>
+		<img style="display: none;" src="/images/board_go.png" id="img_board">
+		<img style="display: none;" src="/images/white_stone.png" id="white_stone">
+		<img style="display: none;" src="/images/black_stone.svg" id="black_stone">
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="/materialize/bin/materialize.js"></script>
+		<script src="/js/DisplayModule.js"></script>
+		<script src="/socket.io/socket.io.js"></script>            
+		<script src="/fabric.js/dist/fabric.js"> </script>
+		<script src="/js/CoordModule.js"></script>
+		<script src="/js/GetStoneModule.js"></script>
+		<script src="/js/BoardModule.js"></script>
+		<script src="/js/EventLoop.js"></script>
+		<script src="/js/SocketModule.js"></script>
+		<script>  
+			var canvas = new fabric.Canvas('c');
+			canvas.setHeight = 1000;
+			canvas.setWidth = 1000;
+			var imgElement = document.getElementById('img_board');
+			var imgInstance = new fabric.Image(imgElement, {
+				width: 1000,
+				height: 1000,
+				lockMovementX: true,
+				lockMovementY: true,
+				lockScalingX: true,
+				lockScalingY: true,
+				lockRotation: true
+			});
+			canvas.setBackgroundImage(imgInstance);
+			BoardModule.setCanvas(canvas);
+			EventLoop.init(canvas);
+			canvas.renderAll();
+		</script>
+	</body>
+</html>
