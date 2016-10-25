@@ -13,6 +13,7 @@
 # include <stdio.h>
 # include "../exception/SocketException.hpp"
 # include <csignal>
+# include "../lib/json.hpp"
 
 class Server
 {
@@ -28,14 +29,16 @@ class Server
 		static void	signalHandler(int signal);
 		static Server	*current;
 	private:
+		void	_wait();
 		int		_getClientColor(const Board::Point &color);
 		int		_listenFd;
 		int		_connfd;
 		void	_initServer();
 		void	_getClient();
-		std::string		*_getMsg(size_t size);
+		nlohmann::json	_getMsg(size_t size = 0);
 		void			_sendMsg(const char *str);
-		const char	*ACCEPT_CO = "ACCEPTCO";
+
+		int		_nbTry = 0;
 		bool	_lostCo = true;
 		std::vector<std::string>	*_splitString(std::string &str);
 };

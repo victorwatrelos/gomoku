@@ -89,102 +89,138 @@ std::vector<std::string>	*Server::_splitString(std::string &str) {
 }
 
 void		Server::sendBoard(const Board &board) {
-	std::string		str = "DISP-";
-
 	auto rawBoard = board.getBoard();
+	std::vector<int>	grid;
+	nlohmann::json		msg_json;
+	msg_json["type"] = "board";
 	for (auto &k: rawBoard)
 	{
-		str += std::to_string(this->_getClientColor(k));
+		grid.push_back(this->_getClientColor(k));
 	}
+	msg_json["data"]["grid"] = grid;
+	msg_json["data"]["blackStone"] = board.getBlackCapturedStone();
+	msg_json["data"]["whiteStone"] = board.getWhiteCapturedStone();
 	try {
-		this->_sendMsg(str.c_str());
+		this->_sendMsg(msg_json.dump().c_str());
 	} catch (SocketException *e) {
 		std::cout << e->what() << std::endl;
 		delete e;
+		this->_wait();
 		this->_getClient();
 		this->sendBoard(board);
 	}
+	this->_nbTry = 0;
+}
+
+void		Server::_wait(void)
+{
+	if (this->_nbTry > 10)
+	{
+		std::cout << "Front is down, exiting" << std::endl;
+		exit(1);
+	}
+	std::cout << "Unable to get response from network" << std::endl;
+	sleep(2);
+	this->_nbTry++;
 }
 
 void		Server::sendWinner(const Board::Point &color) {
 	int		clientColor = this->_getClientColor(color);
 
-	std::string		msg = "WINN-";
+	nlohmann::json msg_json;
 
-	msg += std::to_string(clientColor);
+	msg_json["type"] = "winner";
+	msg_json["data"]["player"] = clientColor;
+
 	try {
-		this->_sendMsg(msg.c_str());
+		this->_sendMsg(msg_json.dump().c_str());
 	} catch (SocketException *e) {
 		std::cout << e->what() << std::endl;
 		delete e;
+		this->_wait();
 		this->_getClient();
 		this->sendWinner(color);
 	}
+	this->_nbTry = 0;
 }
 
 int			Server::getMove(Board::Point &color)
 {
 	int		iColor = this->_getClientColor(color);
-	std::string	msg = "GMOV-";
-	std::string	*res;
+	nlohmann::json msg_json;
+	nlohmann::json res_json;
 
-	msg += std::to_string(iColor);
+	msg_json["type"] = "get_move";
+	msg_json["data"] = iColor;
+
 	try {
-		this->_sendMsg(msg.c_str());
-		res = this->_getMsg(10);
+		this->_sendMsg(msg_json.dump().c_str());
+		res_json = this->_getMsg();
 	} catch (SocketException *e) {
 		std::cout << e->what() << std::endl;
 		delete e;
 		this->_getClient();
-		this->getMove(color);
+		this->_wait();
+		return this->getMove(color);
 	}
-	auto arr = this->_splitString(*res);
-	if (arr->size() < 3 || arr->front() != std::string("SMOV"))
-		return (-1);
-	return (std::stoi(arr->back()));
+	if (res_json["type"] == "move")
+	{
+		this->_nbTry = 0;
+		return res_json["data"]["pos"];
+	}
+	this->_wait();
+	return this->getMove(color);
 }
 
-std::string		*Server::_getMsg(size_t size = 0) {
-	std::string		msg;
-	int				ret = 0;
-	char			*res;
+nlohmann::json	Server::_getMsg(size_t) {
 	char			*p_res;
+	size_t			size = 1024;
+	std::string		res = "";
 
-	res = new char[size + 1]();
-	p_res = res;
-	while (size > 0)
+	p_res = new char[size + 1]();
+	while (42)
 	{
-		if ((ret = read(this->_connfd, p_res, size)) < 0)
+		bzero(p_res, sizeof(char) * (size + 1));
+		if ((read(this->_connfd, p_res, size)) < 0)
 		{
 			this->_lostCo = true;
 			throw new SocketException;
 		}
-		size -= ret;
-		p_res += ret;
+		std::cout << "p_res: " << p_res << std::endl;
+		res += p_res;
+		try {
+			auto tmp = nlohmann::json::parse(res);
+			std::cout << "Complete!" << res << std::endl;
+			this->_nbTry = 0;
+			return tmp;
+		} catch (std::invalid_argument e) {
+			std::cout << "Incomplete" << e.what() << std::endl;
+		}
 	}
-	return new std::string(res);
 }
 
 void	Server::_getClient() {
-	std::string	*res;
+	nlohmann::json	res;
 
 	std::cout << "waiting for client connection" << std::endl;
 	this->_connfd = accept(this->_listenFd, (struct sockaddr*)NULL, NULL);
 
 	try {
-		res = this->_getMsg(sizeof(this->ACCEPT_CO));
+		res = this->_getMsg();
 	} catch (SocketException *e) {
 		std::cout << e->what() << std::endl;
 		delete e;
 		this->_getClient();
 	}
-	if (*res == this->ACCEPT_CO)
+	if (res["ACCEPTCO"] == "OK")
 	{
 		this->_lostCo = false;
 		std::cout << "Client successfully connect" << std::endl;
+		this->_nbTry = 0;
 		return ;
 	}
 	std::cout << "Bad confirmation from client" << std::endl;
+	this->_wait();
 	this->_getClient();
 }
 
