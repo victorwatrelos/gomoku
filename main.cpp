@@ -26,12 +26,7 @@ int		main(int argc, char **argv)
 	Parser::PlayerType	p2;
 
 	p1 = Parser::getPlayer(argc, argv, 1);
-	p2 = Parser::getPlayer(argc, argv, 1);
-	std::cout << "p1: ";
-	disp(p1);
-	std::cout << std::endl << "p2:";
-	disp(p2);
-	std::cout << std::endl;
+	p2 = Parser::getPlayer(argc, argv, 2);
 	GameLoop	game(p1, p2);
 	game.launchGame();
 	return (0);

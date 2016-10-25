@@ -13,7 +13,9 @@ EventLoop = (function() {
 				playerTurn = playerTurn % 2;
 			});
 			$('#launch_new_game').click(function() {
-				SocketModule.sendNewGame();
+				var p1 = $('#player_1_type').is(":checked");
+				var p2 = $('#player_2_type').is(":checked");
+				SocketModule.sendNewGame(p1, p2);
 			});
 			$('#winner_modal_btn').click(function() {
 				$('#winner_div').closeModal();

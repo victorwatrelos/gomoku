@@ -17,7 +17,7 @@ io.on('connection', function(client) {
 	client.on('node-data', function(data) {
 		switch (data.type) {
 			case "new_game":
-				gomokuManager.launchGomoku();
+				gomokuManager.launchGomoku(data.data);
 				m_client.emit('data', {'type': 'new_game_started', 'data': null});
 				break;
 			case "ask_board":

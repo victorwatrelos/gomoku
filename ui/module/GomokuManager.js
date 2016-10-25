@@ -14,14 +14,17 @@ module.exports.isRunning = function()
 	return stateGomoku;
 }
 
-module.exports.launchGomoku = function()
+module.exports.launchGomoku = function(config)
 {
 	if (stateGomoku)
 	{
 		return;
 	}
 	stateGomoku = true;
-	gomoku = spawn('./gomoku');
+	console.log(config);
+	console.log('p1:' + config.p1);
+	console.log('p2:' + config.p2);
+	gomoku = spawn('./gomoku', ['p1:' + config.p1, 'p2:' + config.p2]);
 	m_comBack.connect();
 	gomoku.on('close', (code) => {
 		m_comBack.stopConnect();
@@ -30,7 +33,7 @@ module.exports.launchGomoku = function()
 	});
 
 	gomoku.stdout.on('data', (data) => {
-		fs.writeFile('gomoku_stdout.log', data, function(err) {
+		fs.appendFile('gomoku_stdout.log', data, function(err) {
 			if (err)
 			{
 				return console.log(err);
@@ -39,7 +42,7 @@ module.exports.launchGomoku = function()
 	});
 
 	gomoku.stderr.on('data', (data) => {
-		fs.writeFile('gomoku_stderr.log', data, function(err) {
+		fs.appendFile('gomoku_stderr.log', data, function(err) {
 			if (err)
 			{
 				return console.log(err);

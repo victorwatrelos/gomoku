@@ -44,8 +44,8 @@ SocketModule = (function() {
 			DisplayModule.dispTurnOf(-1);
 			socket.emit('data', move);
 		},
-		sendNewGame: function() {
-			var data = {'type': 'new_game', 'data': null};
+		sendNewGame: function(p1, p2) {
+			var data = {'type': 'new_game', 'data': {'p1': p1 ? 'ai' : 'human', 'p2': p2 ? 'ai' : 'human'}};
 			socket.emit('node-data', data);
 		},
 		askBoard: function() {
