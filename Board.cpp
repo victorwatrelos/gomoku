@@ -753,7 +753,7 @@ std::vector<Board*>		Board::expand(Point color)
 }
 */
 
-std::vector<Board*>		Board::expand(Point color)
+std::vector<Board*>		Board::expand(Point color) const
 {
 	std::vector<Board*>	st;
 	std::unordered_set<int>		dups;
@@ -772,7 +772,7 @@ std::vector<Board*>		Board::expand(Point color)
 	return st;
 }
 
-void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth)
+void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth) const
 {
 	int				i, j, index;
 	int				m, n;

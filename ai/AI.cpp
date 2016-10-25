@@ -303,6 +303,39 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 	return (bestValue);
 }
 
+int			AI::ID(const Board & board, Board::Point color, int depth)
+{
+	std::vector<Board*>	children;
+	int					best_h = -1'000'000;
+	int					best_pos = 0;
+	int					h_value;
+	long long			maxTime = 100'000;
+	long long			time = 0;
+	TIMEP				start, end;
+	int					d = 1;
+
+	children = board.expand(color);
+	while (time < maxTime)
+	{
+		start = std::chrono::high_resolution_clock::now();
+		for (auto child : children)
+		{
+			h_value = -1 * this->negamax(child, d, -1'000'000, 1'000'000, -1);
+			if (h_value > best_h)
+			{
+				best_h = h_value;
+				best_pos = child->getLastMove();
+			}
+		}
+		end = std::chrono::high_resolution_clock::now();
+		time += this->getInt(start, end);
+		d++;
+	}
+	std::cout << "Depth attained : " << d << std::endl;
+	return best_pos;
+}
+
+
 void		AI::resetTimer()
 {
 	this->_t_expansion = 0;

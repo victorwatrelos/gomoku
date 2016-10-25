@@ -42,6 +42,7 @@ class						AI
 		int					minimax(Board *node, int depth, bool player);
 		int					minimaxAB(Board *node, int depth, int A, int B, bool player);
 		int					negamax(Board *node, int depth, int A, int B, int player);
+		int					ID(const Board & board, Board::Point color, int depth);
 
 		int					nb_state = 0;
 
