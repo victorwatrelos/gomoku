@@ -14,6 +14,8 @@ class				LineData : public AbstractLineData
 		virtual ~LineData(void);
 	protected:
 		void		_endOfSeries(void);
+	private:
+		int			_getStoneScore(void);
 };
 
 #endif

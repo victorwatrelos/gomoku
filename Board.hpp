@@ -31,6 +31,9 @@ class								Board
 		bool						isWinningBoard(void) const;
 		int							getIndex(int i, int j) const;
 
+		int							getBlackCapturedStone(void) const;
+		int							getWhiteCapturedStone(void) const;
+
 		uint64_t					getHash() const;
 		int							getScore(Board::Point color);
 
@@ -44,6 +47,23 @@ class								Board
 		bool						isFirstMove() const;
 
 	private:
+		/**
+		 * CheckCapture function
+		 */
+		enum DirIndex {HRIGHT = 0, HLEFT = 1, VUP = 2, VDOWN = 3, DIAG1UP = 4, DIAG1DOWN = 5, DIAG2UP = 6, DIAG2DOWN = 7};
+		void	_checkCapture(int pos, const Board::Point &color);
+		void	_deletePosCheckCapture(int *tmpPos, bool *toDelete, const Board::Point &color);
+		void	_checkLastStoneCheckCapture(int *tmpPos, int *tmpAccrued, bool *toDelete, const Point &colorCurrentStone);
+		void	_initTmpPosCheckCapture(int *tmpPos, int pos);
+		void	_processPosCheckCapture(int *tmpPos, int *tmpAccrued, const Point &oppColor);
+		void	_updatePosCheckCapture(int *tmpPos);
+		void	_addNCheckCapture(int &tmpPos, int n);
+
+		/**
+		 * Board function
+		 */
+		int							_getWhiteCapturedStone(void);
+		int							_getBlackCapturedStone(void);
 		int							_getStreak(Board::Point last, Board::Point curr, int streak) const;
 		bool						_checkWinningLine(bool isRow) const;
 		bool						_checkWinningDiag(bool down) const;
@@ -69,6 +89,8 @@ class								Board
 		boost::circular_buffer<int>	_lastMoves;
 		uint64_t					_hash;
 		int							_lastMove;
+		int							_blackStoneCaptured = 0;
+		int							_whiteStoneCaptured = 0;
 };
 
 #endif

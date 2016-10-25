@@ -28,19 +28,12 @@ BrowseBoard&		BrowseBoard::operator=(const BrowseBoard & rhs)
 
 int						BrowseBoard::browse(const Board &b, Board::Point color)
 {
-	//StdOutDisplay		t;
-
-	//std::cout << "Line data addr in browse board: " << this->_lineData << std::endl;
 	this->_b = &(b.getBoard());
 	this->_color = color;
 	this->_lineData->init(color, &b);
 	this->_oppColor = Board::getOppColor(color);
 	this->_getLines();
-	//std::cout << "for: " << ((color == Board::Point::BLACK) ? "Black" : "White") << std::endl;
-	//t.displayBoard(*b);
-	//std::cout << "My score: " << this->_lineData->getScore() << " b: " << b->getScore(color) << std::endl;
 	return this->_lineData->getScore();
-	//return b->getScore(color);
 }
 
 void					BrowseBoard::_getHLines()
