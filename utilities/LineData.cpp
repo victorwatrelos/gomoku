@@ -40,12 +40,10 @@ void					LineData::_endOfSeries(void)
 
 	if (this->_nbCons <= 0)
 		return ;
-	//this->_display();
 
 	if (this->_nbCons >= 5)
 	{
 		tmpScore = 100'000;
-		//tmpScore = std::pow(4, 5);
 	}
 	else
 	{
