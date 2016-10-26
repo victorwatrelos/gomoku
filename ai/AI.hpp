@@ -23,7 +23,6 @@ namespace			TTUtility
 		Flag			flag;
 		int				age;
 	}					t_ttEntry;
-
 }
 
 class						AI
@@ -37,12 +36,12 @@ class						AI
 
 		void				setInitialDepth(int depth);
 
-		bool				hashComp(const Board *a, const Board *b);
+		bool				hashComp(const Board &a, const Board &b);
 
-		int					minimax(Board *node, int depth, bool player);
-		int					minimaxAB(Board *node, int depth, int A, int B, bool player);
-		int					negamax(Board *node, int depth, int A, int B, int player);
-		int					ID(const Board & board, Board::Point color, int depth);
+//		int					minimax(Board *node, int depth, bool player);
+//		int					minimaxAB(Board *node, int depth, int A, int B, bool player);
+		int					negamax(Board &node, int depth, int A, int B, int player);
+		int					ID(const Board & board, Board::Point color);
 
 		int					nb_state = 0;
 
@@ -59,10 +58,10 @@ class						AI
 
 
 	private:
-		const std::vector<Board *>	_expandNode(Board *node, int player, int depth);
+		const std::vector<Board>	_expandNode(Board &node, int player, int depth);
 		void				_initBaseHashTable(void);
-		void				_updateHistory(Board *node, int depth);
-		uint64_t			_hashBoard(const Board *node) const;
+		void				_updateHistory(Board &node, int depth);
+//		uint64_t			_hashBoard(const Board &node) const;
 
 		AbstractHeuristic	*_h;
 		Board::Point		_player_color;

@@ -13,10 +13,6 @@ Board::Board(const Board &obj)
 	*this = obj;
 }
 
-Board::~Board(void)
-{
-}
-
 Board    								&Board::operator=(const Board &p)
 {
 	this->_board = p.getBoard();
@@ -876,9 +872,9 @@ std::vector<Board*>		Board::expand(Point color)
 }
 */
 
-std::vector<Board*>		Board::expand(Point color) const
+std::vector<Board>		Board::expand(Point color) const
 {
-	std::vector<Board*>	st;
+	std::vector<Board>	st;
 	std::unordered_set<int>		dups;
 	int							set = 0;
 
@@ -888,18 +884,22 @@ std::vector<Board*>		Board::expand(Point color) const
 		set++;
 	}
 	if (set == 0)
-		this->_expandPoint(st, color, GRID_SIZE / 2, dups, 2);
+	{
+		st.push_back(*this);
+		(st.back()).setMove(GRID_SIZE / 2, color);
+	}
+		
+	//	this->_expandPoint(st, color, GRID_SIZE / 2, dups, 2);
 //	showExpand2(dups, *this);
 	if (st.empty())
 		std::cout << "IS EMPTY!!!!!" << std::endl;
 	return st;
 }
 
-void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth) const
+void				Board::_expandPoint(std::vector<Board> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth) const
 {
 	int				i, j, index;
 	int				m, n;
-	Board			*new_board;
 
 	i = pos % GRID_LENGTH - depth;
 	j = pos / GRID_LENGTH - depth;
@@ -923,9 +923,8 @@ void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int po
 			{
 				if (this->isMoveValid(index, color))
 				{
-					new_board = new Board(*this);
-					new_board->setMove(index, color);
-					st.push_back(new_board);
+					st.push_back(*this);
+					(st.back()).setMove(index, color);
 					dups.insert(index);
 				}
 			}

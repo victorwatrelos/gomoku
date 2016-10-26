@@ -1,5 +1,5 @@
 CC= clang++
-FLAGS=-Wall -Wextra  -std=c++14 -g
+FLAGS=-Wall -Wextra  -std=c++14 -O3
 NAME_BIN= gomoku
 NAME_NODE= ui_gomoku
 NODE_FOLDER=ui
