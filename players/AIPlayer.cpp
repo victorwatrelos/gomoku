@@ -135,6 +135,7 @@ void				showExpand(std::unordered_set<int> dups, const Board &board)
 void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 {
 	int					set = 0;
+	std::vector<Board::Point>	board = b.getBoard();
 
 	//this->_browseBoard.browse(b, this->_color);
 	//if ((dups = this->_lineData->getForcedMove()).size() > 0)
@@ -145,8 +146,19 @@ void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 		this->_expandPoints(this->_color, move, dups, b, 2);
 		set++;
 	}
+/*	
+	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
+	{
+		if (board[pos] != PEMPTY)
+		{
+			this->_expandPoints(this->_color, pos, dups, b, 2);
+			set++;
+		}
+	}
+*/	
+
 	if (set == 0)
-		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, b, 1);//TODO set move fixe
+		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, b, 1);
 }
 
 int						AIPlayer::getMove(const Board &board)
@@ -161,14 +173,14 @@ int						AIPlayer::getMove(const Board &board)
 	this->_ai->nb_state = 0;
 /*
 	this->_fillNextMoves(dups, board);
-//	showExpand(dups, board);
+	showExpand(dups, board);
 //	if (dups.size() == 1)
 //		return *(dups.begin());
 	for (auto i : dups)
 	{
 		new_board = board;
 		new_board.setMove(i, this->_color);
-		h_value = -1 * this->_ai->negamax(&new_board, INITIAL_DEPTH, -1'000'000, 1'000'000, -1);
+		h_value = -1 * this->_ai->negamax(new_board, INITIAL_DEPTH, -1'000'000, 1'000'000, -1);
 		if (h_value > best_h)
 		{
 			best_h = h_value;
@@ -176,7 +188,7 @@ int						AIPlayer::getMove(const Board &board)
 		}
 	}
 */
-	best_pos = this->_ai->ID(board, this->_color, INITIAL_DEPTH);
+	best_pos = this->_ai->ID(board, this->_color);
 
 //	std::cout << "best h = " << best_h << std::endl;
 	std::cout << "history size : " << this->_ai->getHistorySize() << std::endl;

@@ -30,8 +30,8 @@ int						BrowseBoard::browse(const Board &b, Board::Point color)
 {
 	this->_b = &(b.getBoard());
 	this->_color = color;
-	this->_lineData->init(color, &b);
 	this->_oppColor = Board::getOppColor(color);
+	this->_lineData->init(color, &b);
 	this->_getLines();
 	return this->_lineData->getScore();
 }

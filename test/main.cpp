@@ -122,7 +122,7 @@ int main(int argc, char **argv)
 {
 	if (argc < 2)
 	{
-		std::cerr << argv[0] << " [full|sorted|force_move] [id_to_try]" << std::endl;
+		std::cerr << argv[0] << " [full|sorted|force_move|test_ai] [id_to_try]" << std::endl;
 		return 1;
 	}
 	if (argc == 3)

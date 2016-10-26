@@ -13,7 +13,7 @@ void		testOneAi(const t_test_ai &t)
 	std::cout << "Base board: " << std::endl;
 	disp.displayBoard(*b);
 	int move = player.getMove(*b);
-	b->setMove(move, Board::Point::WHITE);
+	b->setMove(move, Board::Point::BLACK);
 	std::cout << "Play in " << move % GRID_LENGTH << " " << move / GRID_LENGTH << std::endl;
 	disp.displayBoard(*b);
 }
@@ -21,7 +21,8 @@ void		testOneAi(const t_test_ai &t)
 void		testAi()
 {
 	std::vector<t_test_ai>	lst({
-			{"ai_board_test/test_1"}
+			{"ai_board_test/test_1"},
+			{"ai_board_test/test_2"}
 			});
 	for (auto a : lst)
 	{

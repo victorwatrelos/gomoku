@@ -20,10 +20,10 @@ void	CheckForceMove::setBoards(std::vector<Board> *lstBoard)
 
 void					CheckForceMove::_insertMoveIfValid(int pos)
 {
-	if (this->_board->isMoveValid(pos, Board::getOppColor(this->_playerColor)))
+	if (this->_board->isMoveValid(pos, this->_playerColor))
 	{
 		this->_lstBoard->push_back(Board(*this->_board));
-		this->_lstBoard->back().setMove(pos, Board::getOppColor(this->_playerColor));
+		this->_lstBoard->back().setMove(pos, this->_playerColor);
 	}
 }
 
@@ -46,8 +46,7 @@ void					CheckForceMove::_endOfSeries(void)
 				this->_insertMoveIfValid(this->_posStart);
 		}
 	}
-	if (this->_nbCons == 3
-			&& this->_startingSpace && this->_endingSpace)
+	if (this->_nbCons == 3)
 	{
 		if (this->_interSpace > 0)
 			this->_insertMoveIfValid(this->_posInter);
