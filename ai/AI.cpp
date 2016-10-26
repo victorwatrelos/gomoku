@@ -15,6 +15,8 @@ AI::AI(const AI & rhs)
 AI::AI(AbstractHeuristic *h, Board::Point &color)
 	: _h(h), _player_color(color), _lineData(new CheckForceMove()), _browseBoard(this->_lineData)
 {
+	this->_historyTable.reserve(1'000'000);
+	this->_transpositionTable.reserve(1'000'000);
 }
 
 AI::~AI(void)
@@ -40,9 +42,10 @@ void			AI::_updateHistory(Board *node, int depth)
 
 	if (this->_historyTable.find(hash) == this->_historyTable.end())
 		this->_historyTable[hash] = 0;
-	this->_historyTable[hash] = this->_historyTable[hash] + std::pow(this->_initial_depth - depth, 2);
+//	this->_historyTable[hash] = this->_historyTable[hash] + std::pow(this->_initial_depth - depth, 2);
+	this->_historyTable[hash] = this->_historyTable[hash] + std::pow(depth, 2);
 }
-
+/*
 bool			AI::hashComp(const Board *a, const Board *b)
 {
 	auto ita = this->_historyTable.find(a->getHash());
@@ -53,7 +56,36 @@ bool			AI::hashComp(const Board *a, const Board *b)
 	else if (ita != this->_historyTable.end())
 		return (true);
 	return (false);
-}   
+}
+*/
+bool			AI::hashComp(const Board *a, const Board *b)
+{
+	auto ita = this->_historyTable.find(a->getHash());
+	auto itb = this->_historyTable.find(b->getHash());
+	auto itTTa = this->_transpositionTable.find(a->getHash());
+	auto itTTb = this->_transpositionTable.find(b->getHash());
+
+	if (ita != this->_historyTable.end() && itb != this->_historyTable.end())
+		return (ita->second > itb->second);
+	else if (ita != this->_historyTable.end())
+		return (true);
+	else if (itTTa != this->_transpositionTable.end() && itTTb != this->_transpositionTable.end())
+		return ((itTTa->second).flag > (itTTb->second).flag);
+	else if (itTTa != this->_transpositionTable.end())
+		return (true);
+
+	return (false);
+}
+
+int				AI::getHistorySize()
+{
+	return this->_historyTable.size();
+}
+
+int				AI::getTTSize()
+{
+	return this->_transpositionTable.size();
+}
 
 /*
  * 		MINIMAX
@@ -180,30 +212,49 @@ const std::vector<Board *>		AI::_expandNode(Board *node, int player, int depth)
 	return tmpLstBoard;
 }
 
-#include "../display/StdOutDisplay.hpp"
+/*
+void			AI::_updateTT()
+{
+	uint64_t	hash = node->getHash();
+
+	if (this->_historyTable.find(hash) == this->_historyTable.end())
+		this->_historyTable[hash] = 0;
+	this->_historyTable[hash] = this->_historyTable[hash] + std::pow(this->_initial_depth - depth, 2);
+}
+*/
+
 int				AI::negamax(Board *node, int depth, int A, int B, int player)
 {
 	int		val, bestValue = 0;
 	int		eval;
 	std::vector<Board*>	children;
+	TTUtility::t_ttEntry		entry;
+	int				origA = A;
+	bool				cutoff = false;
 
-	/*
-	if (node->isWinningBoard())
+
+	auto it = this->_transpositionTable.find(node->getHash());
+	if (it != this->_transpositionTable.end())
 	{
-	//	StdOutDisplay	d;
-		//return std::pow(4, 5);
-		//d.displayBoard(*node);
-		//std::cout << "player: " << player << std::endl;
-		//std::cout << "HERE BITCH CONNARD " << 100'000 * (depth + 1) << std::endl;
-		return (100'000 * (depth + 1) * player);
+		entry = it->second;
+		if (entry.depth >= depth)
+		{
+			if (entry.flag == TTUtility::Flag::EXACT)
+				return entry.value;
+			else if (entry.flag == TTUtility::Flag::LOWERBOUND)
+				A = std::max( A, entry.value);
+			else if (entry.flag == TTUtility::Flag::UPPERBOUND)
+				B = std::min( B, entry.value);
+			if (A >= B)
+				return entry.value;
+		}
 	}
-	*/
+
 	if (depth == 0)
 	{
-		this->startTimer();
+//		this->startTimer();
 		eval = this->_h->eval(node, this->_player_color) * player;
-		this->addTime(this->_t_eval);
-		this->_updateHistory(node, depth);
+//		this->addTime(this->_t_eval);
 		return (eval);
 	}
 
@@ -223,9 +274,26 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 		if (A >= B)
 		{
 			this->_updateHistory(child, depth);
+			cutoff = true;
 			break;
 		}
 	}
+
+	if (cutoff == false)
+		this->_updateHistory(node, depth);
+
+
+	entry.value = bestValue;
+	if (bestValue <= origA)
+		entry.flag = TTUtility::Flag::UPPERBOUND;
+	else if (bestValue >= B)
+		entry.flag = TTUtility::Flag::LOWERBOUND;
+	else
+		entry.flag = TTUtility::Flag::EXACT;
+	entry.depth = depth;
+
+	this->_transpositionTable[node->getHash()] = entry;
+
 
 	//this->startTimer();
 	for (auto &i : children)
@@ -234,6 +302,39 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 	//this->addTime(this->_t_vector_clear);
 	return (bestValue);
 }
+
+int			AI::ID(const Board & board, Board::Point color, int depth)
+{
+	std::vector<Board*>	children;
+	int					best_h = -1'000'000;
+	int					best_pos = 0;
+	int					h_value;
+	long long			maxTime = 100'000;
+	long long			time = 0;
+	TIMEP				start, end;
+	int					d = 1;
+
+	children = board.expand(color);
+	while (time < maxTime)
+	{
+		start = std::chrono::high_resolution_clock::now();
+		for (auto child : children)
+		{
+			h_value = -1 * this->negamax(child, d, -1'000'000, 1'000'000, -1);
+			if (h_value > best_h)
+			{
+				best_h = h_value;
+				best_pos = child->getLastMove();
+			}
+		}
+		end = std::chrono::high_resolution_clock::now();
+		time += this->getInt(start, end);
+		d++;
+	}
+	std::cout << "Depth attained : " << d << std::endl;
+	return best_pos;
+}
+
 
 void		AI::resetTimer()
 {

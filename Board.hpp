@@ -37,12 +37,14 @@ class								Board
 		uint64_t					getHash() const;
 		int							getScore(Board::Point color);
 
-		std::vector<Board*>			expand(Point color);
+		std::vector<Board*>			expand(Point color) const;
 		
 		static Point				getOppColor(Point player_col);
 
 		boost::circular_buffer<int>	getLastMoves() const;
 		void						setLastMoves(int pos);
+		int							getLastMove() const; 
+		bool						isFirstMove() const;
 
 	private:
 		/**
@@ -79,13 +81,14 @@ class								Board
 		int							_checkStreakDiag(bool down, Board::Point color) const;
 		int							_checkStreakBackDiag(bool down, Board::Point color) const;
 
-		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth);
+		void						_expandPoint(std::vector<Board *> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth) const;
 
 		void						_addMoveToHash(int index, Board::Point color);
 
 		std::vector<Point>			_board;
 		boost::circular_buffer<int>	_lastMoves;
 		uint64_t					_hash;
+		int							_lastMove;
 		int							_blackStoneCaptured = 0;
 		int							_whiteStoneCaptured = 0;
 };

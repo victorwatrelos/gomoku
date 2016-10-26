@@ -12,6 +12,20 @@
 
 # define TIMEP				std::chrono::high_resolution_clock::time_point	
 
+namespace			TTUtility
+{
+	enum Flag {EXACT = 3, LOWERBOUND = 2, UPPERBOUND = 1};
+
+	typedef struct		s_ttEntry
+	{
+		int				value;
+		int				depth;
+		Flag			flag;
+		int				age;
+	}					t_ttEntry;
+
+}
+
 class						AI
 {
 	public:
@@ -28,6 +42,7 @@ class						AI
 		int					minimax(Board *node, int depth, bool player);
 		int					minimaxAB(Board *node, int depth, int A, int B, bool player);
 		int					negamax(Board *node, int depth, int A, int B, int player);
+		int					ID(const Board & board, Board::Point color, int depth);
 
 		int					nb_state = 0;
 
@@ -38,6 +53,10 @@ class						AI
 		long long			getInt(TIMEP start, TIMEP end);
 		void				printTime(long long dur, std::string str);
 		void				showTime();
+
+		int					getHistorySize();
+		int					getTTSize();
+
 
 	private:
 		const std::vector<Board *>	_expandNode(Board *node, int player, int depth);
@@ -51,6 +70,7 @@ class						AI
 
 		uint64_t			_baseHashTable[GRID_SIZE][2];
 		std::unordered_map<uint64_t, int>	_historyTable;
+		std::unordered_map<uint64_t, TTUtility::t_ttEntry>	_transpositionTable;
 
 
 		long long			_t_expansion;

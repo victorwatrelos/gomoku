@@ -16,11 +16,9 @@ AIPlayer::AIPlayer(const std::string &name, const Board::Point &color)
 {
 	this->_name = name;
 	this->_color = color;
-	std::cout << "MHEur" << std::endl;
 	this->_h = new MHeuristic();
-	std::cout << "AI" << std::endl;
+//	this->_h = new SimpleHeuristic();
 	this->_ai = new AI(this->_h, this->_color);
-	std::cout << "end AI" << std::endl;
 	this->_ai->setInitialDepth(INITIAL_DEPTH);
 }
 
@@ -161,8 +159,9 @@ int						AIPlayer::getMove(const Board &board)
 	std::vector<Board::Point>	b = board.getBoard();
 
 	this->_ai->nb_state = 0;
+/*
 	this->_fillNextMoves(dups, board);
-	showExpand(dups, board);
+//	showExpand(dups, board);
 //	if (dups.size() == 1)
 //		return *(dups.begin());
 	for (auto i : dups)
@@ -176,7 +175,12 @@ int						AIPlayer::getMove(const Board &board)
 			best_pos = i;
 		}
 	}
-	std::cout << "best h = " << best_h << std::endl;
+*/
+	best_pos = this->_ai->ID(board, this->_color, INITIAL_DEPTH);
+
+//	std::cout << "best h = " << best_h << std::endl;
+	std::cout << "history size : " << this->_ai->getHistorySize() << std::endl;
+	std::cout << "TT size : " << this->_ai->getTTSize() << std::endl;
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
 	return best_pos;
 }
