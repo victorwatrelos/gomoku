@@ -849,15 +849,13 @@ void				showBoard(const Board &board)
 	std::cout << std::endl;
 }
 
-/*
-std::vector<Board*>		Board::expand(Point color)
+
+std::vector<Board>		Board::expand(Point color) const
 {
-	std::vector<Board*>	st;
+	std::vector<Board>	st;
 	std::unordered_set<int>		dups;
 	int							set = 0;
 
-//	std::cout << "start expansion" << std::endl;
-//	showBoard(*this);
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
 		if (this->_board[pos] != PEMPTY)
@@ -866,12 +864,15 @@ std::vector<Board*>		Board::expand(Point color)
 			set++;
 		}
 	}
-//	showExpand2(dups, *this);
-//	std::cout << "expansion end" << std::endl;
+	if (set == 0)
+	{
+		st.push_back(*this);
+		(st.back()).setMove(GRID_SIZE / 2, color);
+	}
 	return st;
 }
-*/
 
+/*
 std::vector<Board>		Board::expand(Point color) const
 {
 	std::vector<Board>	st;
@@ -895,6 +896,7 @@ std::vector<Board>		Board::expand(Point color) const
 		std::cout << "IS EMPTY!!!!!" << std::endl;
 	return st;
 }
+*/
 
 void				Board::_expandPoint(std::vector<Board> &st, Board::Point color, int pos, std::unordered_set<int> &dups, int depth) const
 {
