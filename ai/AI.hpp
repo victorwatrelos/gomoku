@@ -20,8 +20,8 @@ namespace			TTUtility
 	{
 		int				value;
 		int				depth;
-		Flag			flag;
 		int				age;
+		Flag			flag;
 	}					t_ttEntry;
 }
 
@@ -61,7 +61,6 @@ class						AI
 		const std::vector<Board>	_expandNode(Board &node, int player, int depth);
 		void				_initBaseHashTable(void);
 		void				_updateHistory(Board &node, int depth);
-//		uint64_t			_hashBoard(const Board &node) const;
 
 		AbstractHeuristic	*_h;
 		Board::Point		_player_color;
