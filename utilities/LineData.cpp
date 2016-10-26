@@ -7,6 +7,29 @@ LineData::~LineData(void)
 {
 }
 
+static int		my_pow(int n)
+{
+	switch (n)
+	{
+		case 0:
+			return 1;
+		case 1:
+			return 4;
+		case 2:
+			return 16;
+		case 3:
+			return 64;
+		case 4:
+			return 256;
+		case 5:
+			return 1024;
+		case 6:
+			return 4096;
+		default:
+			return std::pow(4, n);
+	};
+}
+
 int						LineData::_getStoneScore(void)
 {
 	int		tmpNbStone = 0;
@@ -15,17 +38,17 @@ int						LineData::_getStoneScore(void)
 
 	if ((tmpNbStone = this->_board->getWhiteCapturedStone()) > 0)
 	{
-//		if (tmpNbStone >= 10)
-//			whiteStoneScore = 100'000;
-//		else
-			whiteStoneScore = std::pow(4, tmpNbStone) + 256;
+		//		if (tmpNbStone >= 10)
+		//			whiteStoneScore = 100'000;
+		//		else
+		whiteStoneScore = my_pow(tmpNbStone) + 256;
 	}
 	if ((tmpNbStone = this->_board->getBlackCapturedStone()) > 0)
 	{
-//		if (tmpNbStone >= 10)
-//			blackStoneScore = 100'000;
-//		else
-			blackStoneScore = std::pow(4, tmpNbStone) + 256;
+		//		if (tmpNbStone >= 10)
+		//			blackStoneScore = 100'000;
+		//		else
+		blackStoneScore = my_pow(tmpNbStone) + 256;
 	}
 	if (this->_playerColor == Board::Point::WHITE)
 		return blackStoneScore - whiteStoneScore;
@@ -36,45 +59,36 @@ int						LineData::_getStoneScore(void)
 void					LineData::init(const Board::Point &color, const Board *b)
 {
 	AbstractLineData::init(color, b);
-	
+
 	this->_tot += this->_getStoneScore();
 }
 
 void					LineData::_endOfSeries(void)
 {
 	int		tmpScore;
-	int		nbSpace = 0;
+	int		nbSpace;
 
 	if (this->_nbCons <= 0)
 		return ;
+	nbSpace = 0;
 
-	/*
-	if (this->_nbCons >= 5)
+	tmpScore = my_pow(this->_nbCons);
+	if (this->_nbCons >= 3)
 	{
-		std::cout << "WINN" << std::endl;
-		tmpScore = 100'000;
+		if (this->_startingSpace)
+			nbSpace++;
+		if (this->_endingSpace)
+			nbSpace++;
+		if (this->_interSpace == 0)
+			tmpScore += my_pow(nbSpace);
 	}
 	else
 	{
-	*/
-		tmpScore = std::pow(4, this->_nbCons);
-		if (this->_nbCons >= 3)
+		if (this->_interSpace > 0)
 		{
-			if (this->_startingSpace)
-				nbSpace++;
-			if (this->_endingSpace)
-				nbSpace++;
-			if (this->_interSpace == 0)
-				tmpScore += std::pow(4, nbSpace);
+			tmpScore -= 16;
 		}
-		else
-		{
-			if (this->_interSpace > 0)
-			{
-				tmpScore -= 16;
-			}
-		}
-//	}
+	}
 
 	if (this->_currentColor == this->_playerColor)
 		this->_tot += tmpScore;
