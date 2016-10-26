@@ -4,8 +4,10 @@ Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY), _lastMoves(3), _has
 {
 }
 
-Board::Board(const std::vector<Point> &grid) : _board(grid), _lastMoves(3), _hash(0)
+Board::Board(const std::vector<Point> &grid) : _board(grid), _lastMoves(3)
 {
+	std::cout << "here" << std::endl;
+	this->_hashBoard();
 }
 
 Board::Board(const Board &obj)
@@ -931,5 +933,21 @@ void				Board::_expandPoint(std::vector<Board *> &st, Board::Point color, int po
 			}
 		}
 		i++;
+	}
+}
+
+void		Board::_hashBoard()
+{
+	int			j;
+	Board::Point	p;
+	this->_hash = 0;
+
+	for (int i = 0 ; i < GRID_SIZE ; i++)
+	{
+		if ((p = this->_board[i]) != Board::Point::EMPTY)
+		{
+			j = ((p == Board::Point::BLACK) ? 0 : 1);
+			this->_hash = this->_hash ^ HashUtilities::getBaseHashTableEntry(i, j);
+		}
 	}
 }

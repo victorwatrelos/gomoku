@@ -5,6 +5,7 @@ NAME= gomoku_test
 SRC= main.cpp \
 	 loadBoard.cpp \
 	 testCheckForceMove.cpp \
+	 testAi.cpp \
 	 ../display/AbstractDisplay.cpp \
 	 ../display/StdOutDisplay.cpp \
 	 ../heuristics/MHeuristic.cpp \
@@ -14,6 +15,9 @@ SRC= main.cpp \
 	 ../utilities/HashUtilities.cpp \
 	 ../utilities/BoardUtilities.cpp \
 	 ../utilities/CheckForceMove.cpp \
+	 ../players/AbstractPlayer.cpp \
+	 ../players/AIPlayer.cpp \
+	 ../ai/AI.cpp \
 	 ../Board.cpp
 
 	 #utilities/CheckForceMove.cpp \

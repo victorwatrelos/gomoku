@@ -8,6 +8,7 @@
 #include <vector>
 # include <fstream>
 void	checkForceMove();
+void		testAi();
 
 
 typedef struct		s_test_struct {
@@ -132,5 +133,7 @@ int main(int argc, char **argv)
 		test_heuri(-1, true);
 	else if (strcmp(argv[1], "force_move") == 0)
 		checkForceMove();
+	else if (strcmp(argv[1], "test_ai") == 0)
+		testAi();
 	return 0;
 }
