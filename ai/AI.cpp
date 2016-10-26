@@ -15,7 +15,8 @@ AI::AI(const AI & rhs)
 AI::AI(AbstractHeuristic *h, Board::Point &color)
 	: _h(h), _player_color(color), _lineData(new CheckForceMove()), _browseBoard(this->_lineData)
 {
-	this->_historyTable.reserve(1000000);
+	this->_historyTable.reserve(1'000'000);
+	this->_transpositionTable.reserve(1'000'000);
 }
 
 AI::~AI(void)
@@ -254,7 +255,6 @@ int				AI::negamax(Board *node, int depth, int A, int B, int player)
 //		this->startTimer();
 		eval = this->_h->eval(node, this->_player_color) * player;
 //		this->addTime(this->_t_eval);
-//		this->_updateHistory(node, depth);
 		return (eval);
 	}
 
