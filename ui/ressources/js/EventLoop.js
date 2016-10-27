@@ -12,6 +12,12 @@ EventLoop = (function() {
 				playerTurn++;
 				playerTurn = playerTurn % 2;
 			});
+			canvas.on('mouse:move', function(options) {
+				var rect = canvasElem.getBoundingClientRect();
+				var pos = {x: options.e.clientX - rect.left,
+							y: options.e.clientY - rect.top};
+				BoardModule.setOverlayStone(CoordModule.getLocalPos(pos.x, pos.y));
+			});
 			$('#launch_new_game').click(function() {
 				var p1 = $('#player_1_type').is(":checked");
 				var p2 = $('#player_2_type').is(":checked");
