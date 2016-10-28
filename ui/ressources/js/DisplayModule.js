@@ -2,6 +2,7 @@ DisplayModule = (function() {
 	var loader = $('.hide-board');
 	var backCo = false;	
 	var	disp = true;
+	var	nbTurn = 0;
 	function	dispLoader() {
 		if (backCo)
 		{
@@ -29,20 +30,21 @@ DisplayModule = (function() {
 	}
 	return {
 		dispWinner: function(color) {
-			var	str = "";
+			var	str = '';
 			switch (color) {
 				case 0:
-					str = "The winner is the black player";
+					str = 'The winner is the black player';
 					break;
 				case 1:
-					str = "The winner is the white player";
+					str = 'The winner is the white player';
 					break;
 				case 2:
-					str = "DRAW";
+					str = 'DRAW';
 					break;
 			};
 			$('#winning_info').text(str);
 			$('#winner_div').openModal({dismissible:false});
+			$('#nb_turn_winner').text(nbTurn + ' ');
 
 		},
 		setBackCo: function(state) {
@@ -71,6 +73,7 @@ DisplayModule = (function() {
 			}
 		},
 		dispLoopStat: function(data) {
+			nbTurn = data.turn_nb;
 			$('#nb_turn').text(data.turn_nb);
 			if (data.time.color == 0)
 				$('#black_duration').text(data.time.duration);
