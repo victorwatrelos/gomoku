@@ -34,7 +34,7 @@ const Board::Point	&AbstractPlayer::getColor(void) const {
 
 std::string			AbstractPlayer::getInfo(void) const
 {
-	return "toto";
+	return " ";
 }
 void				AbstractPlayer::addTime(long long t)
 {

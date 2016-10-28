@@ -20,8 +20,8 @@ namespace			TTUtility
 	{
 		int				value;
 		int				depth;
-		Flag			flag;
 		int				age;
+		Flag			flag;
 	}					t_ttEntry;
 }
 
@@ -30,7 +30,7 @@ class						AI
 	public:
 							AI(void);
 							AI(const AI & rhs);
-							AI(AbstractHeuristic *h, Board::Point &color);
+							AI(AbstractHeuristic *h, Board::Point &color, int aiLevel);
 		virtual				~AI(void);
 		AI&					operator=(const AI & rhs);
 
@@ -49,19 +49,20 @@ class						AI
 		void				startTimer();
 		void				addTime(long long &dur);
 		TIMEP				getTime();
+		int					getMaxDepth() const;
 		long long			getInt(TIMEP start, TIMEP end);
 		void				printTime(long long dur, std::string str);
 		void				showTime();
 
 		int					getHistorySize();
 		int					getTTSize();
+		int64_t				getLastTime() const;
 
 
 	private:
-		const std::vector<Board>	_expandNode(Board &node, int player, int depth);
+		const std::vector<Board>	_expandNode(Board &node, int player);
 		void				_initBaseHashTable(void);
 		void				_updateHistory(Board &node, int depth);
-//		uint64_t			_hashBoard(const Board &node) const;
 
 		AbstractHeuristic	*_h;
 		Board::Point		_player_color;
@@ -78,6 +79,9 @@ class						AI
 		TIMEP				_timer;
 		CheckForceMove		*_lineData;
 		BrowseBoard			_browseBoard;
+		int64_t				_timeToCalc;
+		int					_maxDepth = 0;
+		int64_t				_lastTime = 0;
 };
 
 #endif

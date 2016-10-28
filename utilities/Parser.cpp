@@ -14,9 +14,17 @@ static Parser::PlayerType	getInfo(const std::string &arg, int pNb)
 	{
 		return Parser::PlayerType::HUMAN;
 	}
-	if (arg.find("ai", 2) != std::string::npos)
+	if (arg.find("ai1", 2) != std::string::npos)
 	{
-		return Parser::PlayerType::AI;
+		return Parser::PlayerType::AI1;
+	}
+	if (arg.find("ai2", 2) != std::string::npos)
+	{
+		return Parser::PlayerType::AI2;
+	}
+	if (arg.find("ai3", 2) != std::string::npos)
+	{
+		return Parser::PlayerType::AI3;
 	}
 	return Parser::PlayerType::NONE;
 }

@@ -18,7 +18,7 @@ module.exports.kill = function()
 {
 	if (!stateGomoku)
 		return ;
-//	gomoku.kill('SIGINT');
+	gomoku.kill('SIGINT');
 }
 
 module.exports.launchGomoku = function(config)
@@ -29,7 +29,6 @@ module.exports.launchGomoku = function(config)
 	}
 	stateGomoku = true;
 	m_comBack.connect();
-	/*
 	gomoku = spawn('./gomoku', ['p1:' + config.p1, 'p2:' + config.p2]);
 	gomoku.on('close', (code) => {
 		m_comBack.stopConnect();
@@ -61,5 +60,4 @@ module.exports.launchGomoku = function(config)
 			}
 		}); 
 	});
-	*/
 }

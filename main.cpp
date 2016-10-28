@@ -5,21 +5,6 @@
 # include "engine/GameLoop.hpp"
 # include "utilities/Parser.hpp"
 
-void	disp(Parser::PlayerType p)
-{
-	switch (p) {
-		case Parser::PlayerType::AI:
-			std::cout << "AI";
-			break;
-		case Parser::PlayerType::HUMAN:
-			std::cout << "HUMAN";
-			break;
-		case Parser::PlayerType::NONE:
-			std::cout << "NONE";
-			break;
-	};
-}
-
 int		main(int argc, char **argv)
 {
 	Parser::PlayerType	p1;

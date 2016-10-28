@@ -22,6 +22,8 @@ class GameLoop
 		virtual ~GameLoop(void);
 		AbstractPlayer	*loop(void);
 		void			launchGame(void);
+		AbstractPlayer	*_getPlayer(const Parser::PlayerType &type,
+				const std::string &name, const Board::Point &color);
 	private:
 		AbstractPlayer	*_players[2];
 		AbstractDisplay	*_display;

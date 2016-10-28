@@ -11,18 +11,30 @@ AIPlayer::AIPlayer(const AIPlayer & rhs)
 	*this = rhs;
 }
 
-AIPlayer::AIPlayer(const std::string &name, const Board::Point &color)
+AIPlayer::AIPlayer(const std::string &name, const Board::Point &color, int aiLevel)
 	: _lineData(new CheckForceMove()), _browseBoard(this->_lineData)
 {
 	this->_name = name;
 	this->_color = color;
 	this->_h = new MHeuristic();
-//	this->_h = new SimpleHeuristic();
-	this->_ai = new AI(this->_h, this->_color);
+	this->_ai = new AI(this->_h, this->_color, aiLevel);
 	this->_ai->setInitialDepth(INITIAL_DEPTH);
 }
 
 AIPlayer::~AIPlayer(void) {}
+
+std::string			AIPlayer::getInfo(void) const
+{
+	std::stringstream ss;
+
+	ss << "Maximal depth: " << this->_ai->getMaxDepth();
+	return ss.str();
+}
+
+std::string			AIPlayer::getLastTime(void) const
+{
+	return this->_getStrTime(this->_ai->getLastTime());
+}
 
 AIPlayer&			AIPlayer::operator=(const AIPlayer & rhs)
 {
