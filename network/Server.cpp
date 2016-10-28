@@ -240,11 +240,13 @@ nlohmann::json	Server::_getMsg(size_t) {
 		try {
 			auto tmp = nlohmann::json::parse(res);
 			this->_nbTry = 0;
+			delete p_res;
 			return tmp;
 		} catch (std::invalid_argument e) {
 			if (reTry > 100)
 			{
 				std::cerr << "Failure: " << e.what() << std::endl;
+				delete p_res;
 				exit(1);
 			}
 			reTry++;

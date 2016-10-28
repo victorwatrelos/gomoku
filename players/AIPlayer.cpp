@@ -176,33 +176,13 @@ void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
 int						AIPlayer::getMove(const Board &board)
 {
 	Board				new_board;
-	int					best_h = -1'000'000;
 	int					best_pos = 0;
-	int					h_value;
 	std::unordered_set<int>		dups;
 	std::vector<Board::Point>	b = board.getBoard();
 
 	this->_ai->nb_state = 0;
-/*
-	this->_fillNextMoves(dups, board);
-	showExpand(dups, board);
-//	if (dups.size() == 1)
-//		return *(dups.begin());
-	for (auto i : dups)
-	{
-		new_board = board;
-		new_board.setMove(i, this->_color);
-		h_value = -1 * this->_ai->negamax(new_board, INITIAL_DEPTH, -1'000'000, 1'000'000, -1);
-		if (h_value > best_h)
-		{
-			best_h = h_value;
-			best_pos = i;
-		}
-	}
-*/
 	best_pos = this->_ai->ID(board, this->_color);
 
-//	std::cout << "best h = " << best_h << std::endl;
 	std::cout << "history size : " << this->_ai->getHistorySize() << std::endl;
 	std::cout << "TT size : " << this->_ai->getTTSize() << std::endl;
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;

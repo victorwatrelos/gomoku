@@ -38,16 +38,10 @@ int						LineData::_getStoneScore(void)
 
 	if ((tmpNbStone = this->_board->getWhiteCapturedStone()) > 0)
 	{
-		//		if (tmpNbStone >= 10)
-		//			whiteStoneScore = 100'000;
-		//		else
 		whiteStoneScore = my_pow(tmpNbStone) + 256;
 	}
 	if ((tmpNbStone = this->_board->getBlackCapturedStone()) > 0)
 	{
-		//		if (tmpNbStone >= 10)
-		//			blackStoneScore = 100'000;
-		//		else
 		blackStoneScore = my_pow(tmpNbStone) + 256;
 	}
 	if (this->_playerColor == Board::Point::WHITE)

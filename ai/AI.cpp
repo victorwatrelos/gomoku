@@ -106,29 +106,13 @@ int				AI::getTTSize()
 const std::vector<Board>		AI::_expandNode(Board &node, int player)
 {
 	std::unordered_set<int>		dups;
-	std::vector<Board>		lstBoard;
 	std::vector<Board>		tmpLstBoard;
 
-	
-//	this->_browseBoard.browse(*node, this->_player_color);
-//	if ((dups = this->_lineData->getForcedMove()).size() > 0)
-//	{
-//		for (auto i : dups)
-//		{
-//			tmpBoard = new Board(*node);
-//			if (player > 0)
-//				tmpBoard->setMove(i, this->_player_color);
-//			else
-//				tmpBoard->setMove(i, Board::getOppColor(this->_player_color));
-//			lstBoard.push_back(tmpBoard);
-//		}
-//	}
 	
 	if (player == 1)
 		tmpLstBoard = node.expand(this->_player_color);
 	else
 		tmpLstBoard = node.expand(Board::getOppColor(this->_player_color));
-	//lstBoard.insert(lstBoard.end(), tmpLstBoard.begin(), tmpLstBoard.end());
 	return tmpLstBoard;
 }
 
@@ -160,15 +144,11 @@ int				AI::negamax(Board &node, int depth, int A, int B, int player)
 
 	if (depth == 0)
 	{
-//		this->startTimer();
 		eval = this->_h->eval(&node, this->_player_color) * player;
-//		this->addTime(this->_t_eval);
 		return (eval);
 	}
 
-	//this->startTimer();
 	children = this->_expandNode(node, player);
-	//this->addTime(this->_t_expansion);
 	std::sort(children.begin(), children.end(), [this](Board &a, Board &b) {return this->hashComp(a, b); });
 	this->nb_state += children.size();
 
@@ -201,31 +181,10 @@ int				AI::negamax(Board &node, int depth, int A, int B, int player)
 
 	this->_transpositionTable[node.getHash()] = entry;
 
-	//this->startTimer();
 	children.clear();
-	//this->addTime(this->_t_vector_clear);
 	return (bestValue);
 }
-#include "../display/StdOutDisplay.hpp"
 
-void	merge(const std::vector<Board> &lst)
-{
-	std::vector<Board::Point> grid(GRID_SIZE, Board::Point::EMPTY);
-
-	for (auto b : lst)
-	{
-		auto p = b.getBoard();
-		for (int i = 0; i < GRID_SIZE; i++)
-		{
-			if (p[i] != Board::Point::EMPTY)
-			{
-				grid[i] = p[i];
-			}
-		}
-	}
-	StdOutDisplay	disp;
-	disp.displayBoard(Board(grid));
-}
 int			AI::getMaxDepth() const
 {
 	return this->_maxDepth;
@@ -247,7 +206,6 @@ int			AI::ID(const Board & board, Board::Point color)
 	browse.browse(board, color);
 	if (children.size() == 0)
 		children = board.expand(color);
-	merge(children);
 	while (time < this->_timeToCalc)
 	{
 		this->_initial_depth = d;
