@@ -850,6 +850,15 @@ void				showBoard(const Board &board)
 	std::cout << std::endl;
 }
 
+bool					Board::isFinish(const Board::Point &currentColor) const
+{
+	for (int i = 0; i < GRID_SIZE; i++)
+	{
+		if (this->isMoveValid(i, currentColor))
+			return false;
+	}
+	return true;
+}
 
 std::vector<Board>		Board::expand(Point color) const
 {
@@ -865,10 +874,22 @@ std::vector<Board>		Board::expand(Point color) const
 			set++;
 		}
 	}
-	if (set == 0)
+	if (set == 0 && this->_lastMove)
 	{
 		st.push_back(*this);
 		(st.back()).setMove(GRID_SIZE / 2, color);
+	}
+	else if (set == 0)
+	{
+		for (int pos = 0; pos < GRID_SIZE; pos++)
+		{
+			if (this->isMoveValid(pos, color))
+			{
+				st.push_back(*this);
+				st.back().setMove(pos, color);
+				break ;
+			}
+		}
 	}
 	return st;
 }

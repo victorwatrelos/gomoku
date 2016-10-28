@@ -29,7 +29,19 @@ DisplayModule = (function() {
 	}
 	return {
 		dispWinner: function(color) {
-			$('#player_name').text(getNameColor(color));
+			var	str = "";
+			switch (color) {
+				case 0:
+					str = "The winner is the black player";
+					break;
+				case 1:
+					str = "The winner is the white player";
+					break;
+				case 2:
+					str = "DRAW";
+					break;
+			};
+			$('#winning_info').text(str);
 			$('#winner_div').openModal({dismissible:false});
 
 		},

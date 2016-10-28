@@ -44,6 +44,7 @@ class								Board
 		void						setLastMoves(int pos);
 		int							getLastMove() const; 
 		bool						isFirstMove() const;
+		bool						isFinish(const Board::Point &currentColor) const;
 
 	private:
 		/**
@@ -88,7 +89,7 @@ class								Board
 		std::vector<Point>			_board;
 		boost::circular_buffer<int>	_lastMoves;
 		uint64_t					_hash;
-		int							_lastMove;
+		int							_lastMove = -1;
 		int							_blackStoneCaptured = 0;
 		int							_whiteStoneCaptured = 0;
 };

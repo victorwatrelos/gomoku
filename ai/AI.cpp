@@ -254,6 +254,11 @@ int			AI::ID(const Board & board, Board::Point color)
 		start = std::chrono::high_resolution_clock::now();
 		for (auto child : children)
 		{
+			if (child.isWinningBoard())
+			{
+				best_pos = child.getLastMove();
+				goto exit_function;
+			}
 			h_value = -1 * this->negamax(child, d, -1'000'000, 1'000'000, -1);
 			if (h_value > best_h)
 			{
@@ -265,6 +270,7 @@ int			AI::ID(const Board & board, Board::Point color)
 		time += this->getInt(start, end);
 		d++;
 	}
+exit_function:
 	this->_lastTime = time;
 	this->_maxDepth = std::max(this->_maxDepth, d + 1);
 	std::cout << "Depth attained : " << d + 1 << std::endl;

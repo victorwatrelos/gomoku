@@ -47,6 +47,8 @@ AbstractPlayer	*GameLoop::_getPlayer(const Parser::PlayerType &type,
 			return new AIPlayer(name, color, 1);
 		case Parser::PlayerType::AI3:
 			return new AIPlayer(name, color, 2);
+		case Parser::PlayerType::NONE:
+			return new NetworkPlayer(name, color, this->_server);
 	};
 }
 
@@ -77,8 +79,15 @@ void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
 		if (this->_board.isMoveValid(pos, player.getColor()))
 		{
 			this->_board.setMove(pos, player.getColor());
-		//	this->_board.setLastMoves(pos);
 			return ;
+		}
+		else
+		{
+			if (this->_board.isFinish(player.getColor()))
+			{
+				this->_server->sendWinner(Board::Point::EMPTY);
+				exit(0);
+			}
 		}
 		std::cout << "Move invalid" << std::endl;
 	}
