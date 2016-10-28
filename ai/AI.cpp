@@ -24,7 +24,7 @@ AI::AI(AbstractHeuristic *h, Board::Point &color, int aiLevel)
 			this->_timeToCalc = 10'000;
 			break;
 		case 1:
-			this->_timeToCalc = 100'000;
+			this->_timeToCalc = 75'000;
 			break;
 		case 2:
 			this->_timeToCalc = 1'000'000;
