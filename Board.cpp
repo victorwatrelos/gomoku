@@ -372,10 +372,15 @@ bool						Board::_checkWinningDiag(bool down) const
  *		CHECK FOR DOUBLE THREE FUNCTIONS
  */
 
+
+typedef bool(*fn)(int,Board::Point,std::vector<int>);
+
 bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 {
 	std::vector<int>	three(3, -1);
 	std::vector<int>	three2(3, -1);
+
+
 
 	if (this->_checkThreeLine(pos, color, three, false))
 	{
