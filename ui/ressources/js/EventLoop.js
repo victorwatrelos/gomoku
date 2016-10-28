@@ -18,6 +18,12 @@ EventLoop = (function() {
 							y: options.e.clientY - rect.top};
 				BoardModule.setOverlayStone(CoordModule.getLocalPos(pos.x, pos.y));
 			});
+			canvas.on('mouse:out', function(options) {
+				BoardModule.setDispOverlay(false);
+			});
+			canvas.on('mouse:over', function(options) {
+				BoardModule.setDispOverlay(true);
+			});
 			$('#launch_new_game').click(function() {
 				var p1 = $('#player_1_type').is(":checked");
 				var p2 = $('#player_2_type').is(":checked");

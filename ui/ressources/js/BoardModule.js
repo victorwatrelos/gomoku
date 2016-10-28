@@ -3,6 +3,7 @@ BoardModule = (function() {
 	var canvas;
 	var	overlayStone = null;
 	var turnOf = null;
+	var dispOverlay = false;
 	board = Array(grid_size).fill({color: 2, img: null, isLast: false});//Init array to empty
 	for (i = 0; i < grid_size; i++) {
 		board[i] = {color: 2, img: null};
@@ -22,14 +23,25 @@ BoardModule = (function() {
 		setCanvas: function(p_canvas) {
 			canvas = p_canvas;
 	    },
+		setDispOverlay: function(state) {
+			dispOverlay = state;
+			if (dispOverlay || overlayStone === null)
+				return;
+			overlayStone.remove();
+			overlayStone = null;
+		},
 		setOverlayStone: function(pos) {
 			if (turnOf === null)
 				return;
+			dispOverlay = true;
 			if (overlayStone !== null)
 			{
 				overlayStone.remove();
 				overlayStone = null;
 			}
+			dispOverlay = true;
+			if (board[pos].color !== 2)
+				return;
 			overlayStone = GetStoneModule.getStone(turnOf, CoordModule.getDistCoord(pos), false, 0.5);
 			canvas.add(overlayStone);
 		},
