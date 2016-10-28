@@ -374,6 +374,110 @@ bool						Board::_checkWinningDiag(bool down) const
 
 bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 {
+	std::vector<int>	three(3, -1);
+	std::vector<int>	three2(3, -1);
+
+	if (this->_checkThreeLine(pos, color, three, false))
+	{
+		for (int i = 0 ; i < 3 ; i++)
+		{
+			if (three[i] == pos)
+				continue ;
+			if (this->_checkThreeLine(three[i], color, three2, true))
+				return (true);
+			three2.clear();
+		}
+	}
+	three.clear();
+	three2.clear();
+
+	if (this->_checkThreeLine(pos, color, three, true))
+	{
+		for (int i = 0 ; i < 3 ; i++)
+		{
+			if (three[i] == pos)
+				continue ;
+			if (this->_checkThreeLine(three[i], color, three2, false))
+				return (true);
+			three2.clear();
+		}
+	}
+	three.clear();
+	three2.clear();
+	return (false);
+}
+
+void					Board::_resetThreeCheck(std::vector<int> &three, int &it, int &space) const
+{
+	three.clear();
+	it = 0;
+	space = 0;
+}
+
+bool					Board::_checkThreeLine(int pos, Board::Point color, std::vector<int> &three, bool isHoriz) const
+{
+	int					it = 0;
+	int					space = 0;
+	int					i, j, index;
+	int					stop;
+	Board::Point		curr, last;
+
+	if (isHoriz)
+	{
+		i = pos / GRID_LENGTH;
+		j = pos % GRID_LENGTH - 3;
+		stop = (pos % GRID_LENGTH) + 5;
+	}
+	else
+	{
+		i = pos % GRID_LENGTH;
+		j = pos / GRID_LENGTH - 3;
+		stop = (pos / GRID_LENGTH) + 5;
+	}
+	if (j < -2)
+		return (false);
+	else if (j <= 0)
+		j = 1;
+	if (stop >= GRID_LENGTH)
+		stop = GRID_LENGTH;
+	index = this->getIndex(i, j - 1);
+	last = this->_board[index];
+	while (j < stop)
+	{
+		if (isHoriz)
+			index = this->getIndex(j, i);
+		else
+			index = this->getIndex(i, j);
+		if (index != pos)
+			curr = this->_board[index];
+		else
+			curr = color;
+		if (index != pos)
+			curr = this->_board[index];
+		else
+			curr = color;
+		if (it == 3 && curr == PEMPTY)
+			return (true);
+		else if (last == color && curr == PEMPTY && space < 2)
+			space++;
+		else if (((last == PEMPTY && curr == color) || (last == color && curr == color)) && space < 2)
+		{
+			if (it < 3)
+				three[it++] = index;
+			else
+				this->_resetThreeCheck(three, it, space);
+		}
+		else if ((last == PEMPTY && curr == PEMPTY) || (curr != last))
+			this->_resetThreeCheck(three, it, space);
+		last = curr;
+		j++;
+	}
+	return (false);
+}
+
+/*
+bool					Board::_checkDoubleThree(int pos, Board::Point color) const
+{
 	int					*three;
 
 	if ((three = this->_checkThreeLine(pos, color, false)) != nullptr)
@@ -601,6 +705,7 @@ int						*Board::_checkThreeDiag(int pos, Board::Point color) const
 	}
 	return nullptr;
 }
+*/
 
 /*
  *			CHECK FOR MOVE IN CAPTURE
