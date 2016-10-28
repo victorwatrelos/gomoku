@@ -6,9 +6,11 @@
 #include <string>
 #include <sstream>
 #include <vector>
-# include <fstream>
-void	checkForceMove();
+#include <fstream>
+
+void		checkForceMove();
 void		testAi();
+void		testFreeThree();
 
 
 typedef struct		s_test_struct {
@@ -135,5 +137,7 @@ int main(int argc, char **argv)
 		checkForceMove();
 	else if (strcmp(argv[1], "test_ai") == 0)
 		testAi();
+	else if (strcmp(argv[1], "test_free_three") == 0)
+		testFreeThree();
 	return 0;
 }

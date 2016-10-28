@@ -194,7 +194,7 @@ int				AI::negamax(Board &node, int depth, int A, int B, int player)
 }
 #include "../display/StdOutDisplay.hpp"
 
-void	merge(const std::vector<Board> &lst)
+static void	merge(const std::vector<Board> &lst)
 {
 	std::vector<Board::Point> grid(GRID_SIZE, Board::Point::EMPTY);
 

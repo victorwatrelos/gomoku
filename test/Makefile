@@ -6,6 +6,7 @@ SRC= main.cpp \
 	 loadBoard.cpp \
 	 testCheckForceMove.cpp \
 	 testAi.cpp \
+	 testFreeThree.cpp \
 	 ../display/AbstractDisplay.cpp \
 	 ../display/StdOutDisplay.cpp \
 	 ../heuristics/MHeuristic.cpp \
@@ -20,7 +21,6 @@ SRC= main.cpp \
 	 ../ai/AI.cpp \
 	 ../Board.cpp
 
-	 #utilities/CheckForceMove.cpp \
 
 OBJ= $(SRC:.cpp=.o)
 
