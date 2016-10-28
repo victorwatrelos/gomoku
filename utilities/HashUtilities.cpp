@@ -31,22 +31,5 @@ namespace HashUtilities
 		return zorbTable;
 	}
 
-	/*
-uint64_t		AI::_hashBoard(const Board *node) const
-{
-	int			j;
-	Board::Point	p;
-	uint64_t	h = 0;
-
-	for (int i = 0 ; i < GRID_SIZE ; i++)
-	{
-		if ((p = node->lookAt(i)) != Board::Point::EMPTY)
-		{
-			j = ((p == Board::Point::BLACK) ? 0 : 1);
-			h = h ^ this->_baseHashTable[i][j];
-		}
-	}
-	return (h);
-}*/
 
 }

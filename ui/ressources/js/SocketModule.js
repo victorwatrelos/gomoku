@@ -20,6 +20,7 @@ SocketModule = (function() {
 				break;
 			case "get_move":
 				DisplayModule.dispTurnOf(data.data);
+				BoardModule.setTurnOf(data.data);
 				break;
 			case "connected":
 				if (data.data.connected === true)
@@ -46,6 +47,7 @@ SocketModule = (function() {
 		sendMove: function(pos, color) {
 			var move = {'type': 'move', 'data': {'pos': pos, 'color': color}};
 			DisplayModule.dispTurnOf(-1);
+			BoardModule.setTurnOf(null);
 			socket.emit('data', move);
 		},
 		sendNewGame: function(p1, p2) {

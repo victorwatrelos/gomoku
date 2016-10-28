@@ -12,6 +12,7 @@ class				LineData : public AbstractLineData
 		LineData(const LineData &obj);
 		LineData &operator=(const LineData &p);
 		virtual ~LineData(void);
+		virtual void			init(const Board::Point &color, const Board *b);
 	protected:
 		void		_endOfSeries(void);
 	private:

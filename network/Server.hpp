@@ -27,7 +27,7 @@ class Server
 		int		getColor();
 		void	sendBoard(const Board &board);
 		void	sendWinner(const Board::Point &point);
-		void	sendLoopState(const std::string &time, int turnNb, const Board::Point &timeRelatedColor);
+		void	sendLoopState(const AbstractPlayer &player, int turnNb, const Board::Point &timeRelatedColor);
 		void	sendFinalStats(AbstractPlayer **players);
 		static void	signalHandler(int signal);
 		static Server	*current;

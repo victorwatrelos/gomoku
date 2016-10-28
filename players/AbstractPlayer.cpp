@@ -32,6 +32,10 @@ const Board::Point	&AbstractPlayer::getColor(void) const {
 
 }
 
+std::string			AbstractPlayer::getInfo(void) const
+{
+	return "toto";
+}
 void				AbstractPlayer::addTime(long long t)
 {
 	this->_totTime += t;
@@ -41,12 +45,12 @@ void				AbstractPlayer::addTime(long long t)
 	std::cout << this->_getStrTime(t) << std::endl;
 }
 
-std::string			AbstractPlayer::getLastTime(void)
+std::string			AbstractPlayer::getLastTime(void) const
 {
 	return this->_getStrTime(this->_times.back());
 }
 
-std::string		AbstractPlayer::_getStrTime(long long t)
+std::string		AbstractPlayer::_getStrTime(long long t) const
 {
 	int             m, s, ms, us;
 
@@ -59,7 +63,7 @@ std::string		AbstractPlayer::_getStrTime(long long t)
 	return oss.str();
 }
 
-void				AbstractPlayer::dispAverage(void)
+void				AbstractPlayer::dispAverage(void) const
 {
 	std::cout << "Average time for get move of player "
 		<< this->_name << " in " << this->_totGetMove
@@ -67,7 +71,7 @@ void				AbstractPlayer::dispAverage(void)
 	std::cout << this->getAverage() << std::endl;
 }
 
-std::string			AbstractPlayer::getAverage(void)
+std::string			AbstractPlayer::getAverage(void) const
 {
 	long long		t = this->_totTime / this->_totGetMove;
 

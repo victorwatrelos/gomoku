@@ -105,7 +105,7 @@ AbstractPlayer	*GameLoop::loop(void)
 		{
 			this->_getPlayerMove(*p);
 			this->_display->displayBoard(this->_board);
-			this->_server->sendLoopState(p->getLastTime(), nbTurn, p->getColor());
+			this->_server->sendLoopState(*p, nbTurn, p->getColor());
 			if (this->_board.isWinningBoard())
 			{
 				for (auto p : this->_players)

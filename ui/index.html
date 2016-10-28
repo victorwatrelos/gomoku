@@ -91,8 +91,8 @@
 					 <div class="modal-content">
 						 <h4>The winner is <span id="player_name"></span></h4>
 						 <p>
-							Average time for black: <span id="black_average"></span></br>
-							Average time for white: <span id="white_average"></span></br>
+						 Average time for black: <span id="black_average"></span> (<span id="black_info"></span>)</br>
+						 Average time for white: <span id="white_average"></span> (<span id="white_info"></span>)</br>
 						 </p>
 					 </div>
 					 <div class="modal-footer">
@@ -149,6 +149,8 @@
 		<img style="display: none;" src="/images/board_go.png" id="img_board">
 		<img style="display: none;" src="/images/white_stone.png" id="white_stone">
 		<img style="display: none;" src="/images/black_stone.svg" id="black_stone">
+		<img style="display: none;" src="/images/black_stone_last.png" id="black_stone_last">
+		<img style="display: none;" src="/images/white_stone_last.png" id="white_stone_last">
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<script src="/materialize/bin/materialize.js"></script>
 		<script src="/js/DisplayModule.js"></script>
@@ -178,6 +180,7 @@
 			EventLoop.init(canvas);
 			canvas.renderAll();
 			SocketModule.askBoard();
+			SocketModule.sendMove(-1, -1);
 		</script>
 	</body>
 </html>

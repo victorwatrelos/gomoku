@@ -1,4 +1,4 @@
-#include "../Board.hpp"
+#include "loadBoard.hpp"
 # define MAGIC (0xFAF87)
 #include "../display/StdOutDisplay.hpp"
 #include "../heuristics/MHeuristic.hpp"
@@ -7,43 +7,9 @@
 #include <sstream>
 #include <vector>
 # include <fstream>
+void	checkForceMove();
+void		testAi();
 
-static Board::Point		getPointOfChar(char c)
-{
-	switch (c)
-	{
-		case 'X':
-			return Board::Point::BLACK;
-		case 'O':
-			return Board::Point::WHITE;
-	}
-	return Board::Point::EMPTY;
-}
-
-static Board	*getBoard(const std::string &filename)
-{
-	std::string line;
-	std::ifstream infile(filename) ;
-	std::vector<Board::Point>		grid;
-
-	if ( infile ) {
-		while ( getline( infile , line ) ) {
-			for (auto c : line)
-			{
-				if (c == 'X' || c == 'O' || c == '_')
-					grid.push_back(getPointOfChar(c));
-			}
-		}
-	}
-	infile.close( ) ;
-	if (grid.size() != GRID_SIZE)
-	{
-		std::cout << grid.size() << std::endl;
-		std::cout << "Bad size of grid for file " << filename << std::endl;
-		return nullptr;
-	}
-	return new Board(grid);
-}
 
 typedef struct		s_test_struct {
 	std::string		filename;
@@ -55,7 +21,7 @@ typedef struct		s_test_struct {
 	bool			runned = false;
 }					t_test_struct;
 
-void				test_board(t_test_struct &t)
+void				test_board(t_test_struct &t, bool disp)
 {
 	StdOutDisplay		d;
 	MHeuristic			h;
@@ -67,10 +33,11 @@ void				test_board(t_test_struct &t)
 	t.runned = true;
 	t.calcRes = res;
 
-	if (!t.success)
+	if (!t.success || disp)
 	{
 		std::cout << "Trying " << t.desc << ":" << std::endl;
-		std::cout << "Failure" << std::endl;
+		if (!t.success)
+			std::cout << "Failure" << std::endl;
 		d.displayBoard(*b);
 		std::cout << "Expected: " << t.res << " eval: " << res << std::endl;
 	}
@@ -113,9 +80,9 @@ void		displaySorted(std::vector<t_test_struct> t)
 
 }
 
-int main(int argc, char **argv)
+static void	test_heuri(int n, bool disp_sorted)
 {
-	int					i = 0;
+	int	i = 0;
 	std::vector<t_test_struct>		test({
 		{"boards/test_h_line", "Test with 5 H stone", Board::Point::BLACK, 100060},
 		{"boards/test_V_line", "Test with 5 V stone", Board::Point::BLACK, 100060},
@@ -135,21 +102,38 @@ int main(int argc, char **argv)
 		{"boards/toto", "TOTO", Board::Point::BLACK, 32},
 		{"", "", Board::Point::EMPTY, MAGIC, false},
 	});
-	if (argc == 2)
+	if (n >= 0)
 	{
-		i = std::stoi(argv[1]);
-		test_board(test[i]);
+		std::cout << "HERE" << std::endl;
+		test_board(test[n], true);
+		return ;
 	}
-	else
+	while (test[i].res != MAGIC)
 	{
-		while (test[i].res != MAGIC)
-		{
-			test_board(test[i]);
-			i++;
-		}
+		test_board(test[i], false);
+		i++;
 	}
 	displaySuccess(test);
-	if (argc > 2)
+	if (disp_sorted)
 		displaySorted(test);
+}
+
+int main(int argc, char **argv)
+{
+	if (argc < 2)
+	{
+		std::cerr << argv[0] << " [full|sorted|force_move|test_ai] [id_to_try]" << std::endl;
+		return 1;
+	}
+	if (argc == 3)
+		test_heuri(std::stoi(argv[2]), false);
+	else if (strcmp(argv[1], "full") == 0)
+		test_heuri(-1, false);
+	else if (strcmp(argv[1], "sorted") == 0)
+		test_heuri(-1, true);
+	else if (strcmp(argv[1], "force_move") == 0)
+		checkForceMove();
+	else if (strcmp(argv[1], "test_ai") == 0)
+		testAi();
 	return 0;
 }

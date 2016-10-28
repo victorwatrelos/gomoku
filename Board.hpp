@@ -61,6 +61,7 @@ class								Board
 		/**
 		 * Board function
 		 */
+		void						_hashBoard();
 		int							_getWhiteCapturedStone(void);
 		int							_getBlackCapturedStone(void);
 		int							_getStreak(Board::Point last, Board::Point curr, int streak) const;

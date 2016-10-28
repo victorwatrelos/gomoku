@@ -22,6 +22,7 @@ class				AbstractLineData
 		void			setDir(LineType dir);
 		void			endOfLine(void);
 	protected:
+		int				_removeNPos(int pos, int mult);
 		int				_nbCons = 0;
 		Board::Point	_currentColor;
 		Board::Point	_playerColor;
@@ -29,6 +30,8 @@ class				AbstractLineData
 		LineType		_dir;
 		int				_interSpace = 0;
 		int				_posInter;
+		int				_posStart;
+		int				_posEnd;
 		int				_pos;
 		bool			_lastIsSpace = false;
 		bool			_startingSpace = false;

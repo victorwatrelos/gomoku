@@ -7,3 +7,4 @@ gomoku
 *.swa
 grid*
 *.log
+test/gomoku_test

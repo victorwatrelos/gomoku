@@ -66,8 +66,10 @@ DisplayModule = (function() {
 				$('#white_duration').text(data.time.duration);
 		},
 		dispFinalStat: function(data) {
-			$('#black_average').text(data.average_time_black);
-			$('#white_average').text(data.average_time_white);
+			$('#black_average').text(data.black.average_time);
+			$('#white_average').text(data.white.average_time);
+			$('#black_info').text(data.black.info);
+			$('#white_info').text(data.white.info);
 		}
 	}
 })();

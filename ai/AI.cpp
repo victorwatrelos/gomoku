@@ -192,6 +192,26 @@ int				AI::negamax(Board &node, int depth, int A, int B, int player)
 	//this->addTime(this->_t_vector_clear);
 	return (bestValue);
 }
+#include "../display/StdOutDisplay.hpp"
+
+void	merge(const std::vector<Board> &lst)
+{
+	std::vector<Board::Point> grid(GRID_SIZE, Board::Point::EMPTY);
+
+	for (auto b : lst)
+	{
+		auto p = b.getBoard();
+		for (int i = 0; i < GRID_SIZE; i++)
+		{
+			if (p[i] != Board::Point::EMPTY)
+			{
+				grid[i] = p[i];
+			}
+		}
+	}
+	StdOutDisplay	disp;
+	disp.displayBoard(Board(grid));
+}
 
 int			AI::ID(const Board & board, Board::Point color)
 {
@@ -199,12 +219,18 @@ int			AI::ID(const Board & board, Board::Point color)
 	int					best_h = -1'000'000;
 	int					best_pos = 0;
 	int					h_value;
-	long long			maxTime = 200'000;
+	long long			maxTime = 100'000;
 	long long			time = 0;
 	TIMEP				start, end;
 	int					d = 1;
+	CheckForceMove		checkF;
+	BrowseBoard			browse(&checkF);
 
-	children = board.expand(color);
+	checkF.setBoards(&children);
+	browse.browse(board, color);
+	if (children.size() == 0)
+		children = board.expand(color);
+	merge(children);
 	while (time < maxTime)
 	{
 		this->_initial_depth = d;

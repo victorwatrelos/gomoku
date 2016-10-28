@@ -34,8 +34,10 @@ void					AbstractLineData::_display(void)
 		<< "(" << this->_posInter % GRID_LENGTH << "," << this->_posInter / GRID_LENGTH << ")"
 		<< " -- "
 		<< " last is space: " << this->_lastIsSpace <<   " -- "
-		<< " first is space: " << this->_startingSpace <<   " -- "
-		<< " ending space: " << this->_endingSpace <<   " -- "
+		<< " first is space: " << this->_startingSpace << "(" << this->_posStart % GRID_LENGTH << ","
+			<< this->_posStart / GRID_LENGTH << " -- "
+		<< " ending space: " << this->_endingSpace << "(" << this->_posEnd % GRID_LENGTH << "," 
+			<< this->_posEnd / GRID_LENGTH << " -- "
 		<< " nb cons: " << this->_nbCons << std::endl;
 }
 
@@ -114,6 +116,17 @@ bool				AbstractLineData::_hasPlace(int pos)
 	return false;
 }
 
+int						AbstractLineData::_removeNPos(int pos, int mult)
+{
+	int	x = pos % GRID_LENGTH;
+	int y = pos / GRID_LENGTH;
+	auto dir = this->_getDir();
+
+	x -= dir.x * mult;
+	y -= dir.y * mult;
+	return x + y * GRID_LENGTH;
+}
+
 void					AbstractLineData::_addSpace(void)
 {
 	if (this->_nbCons > 0)
@@ -123,8 +136,13 @@ void					AbstractLineData::_addSpace(void)
 			if (this->_lastIsSpace)
 				this->_interSpace--;
 			this->_endingSpace = true;
+			if (this->_lastIsSpace)
+				this->_posEnd = this->_removeNPos(this->_pos, 1);
+			else
+				this->_posEnd = this->_pos;
 			this->_endOfSeries();
 			this->_startingSpace = true;
+			this->_posStart = this->_pos;
 		}
 		else
 		{
@@ -133,7 +151,10 @@ void					AbstractLineData::_addSpace(void)
 		}
 	}
 	else
+	{
 		this->_startingSpace = true;
+		this->_posStart = this->_pos;
+	}
 	this->_lastIsSpace = true;
 }
 
@@ -152,7 +173,10 @@ void					AbstractLineData::_addPointOtherColor(const Board::Point &p, int pos)
 		this->_nbCons = 1;
 	}
 	if (this->_lastIsSpace)
+	{
+		this->_posStart = this->_removeNPos(pos, 1);
 		this->_startingSpace = true;
+	}
 	this->_lastIsSpace = false;
 }
 

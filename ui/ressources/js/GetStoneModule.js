@@ -6,11 +6,15 @@ GetStoneModule = (function () {
 	var margin = stoneSize / 2;
 
 	return {
-		getStone: function(color, coord) {
-			if (color == 0) {
+		getStone: function(color, coord, last = false, op = 1) {
+			if (color == 0 && !last) {
 				imgEl = document.getElementById("black_stone");
-			} else {
+			} else if (color == 1 && !last) {
 				imgEl = document.getElementById("white_stone");
+			} else if (color == 0 && last) {
+				imgEl = document.getElementById("black_stone_last");
+			} else if (color == 1 && last) {
+				imgEl = document.getElementById("white_stone_last");
 			}
 			return new fabric.Image(imgEl, {
 				width: stoneSize,
@@ -22,7 +26,8 @@ GetStoneModule = (function () {
 				lockScalingX: true,
 				lockScalingY: true,
 				lockRotation: true,
-				selectable: false
+				selectable: false,
+				opacity: op
 			});
 		}
 	}

@@ -115,15 +115,18 @@ void		Server::sendFinalStats(AbstractPlayer **players)
 {
 	nlohmann::json	msg_json;
 	AbstractPlayer	*p;
+	std::string		color;
 
 	msg_json["type"] = "final_stats";
 	for (int i = 0; i < 2; i++)
 	{
 		 p = players[i];
 		if (p->getColor() == Board::Point::BLACK)
-			msg_json["data"]["average_time_black"] = p->getAverage();
+			color = "black";
 		else
-			msg_json["data"]["average_time_white"] = p->getAverage();
+			color = "white";
+		msg_json["data"][color]["average_time"] = p->getAverage();
+		msg_json["data"][color]["info"] = p->getInfo();
 	}
 	try {
 		this->_sendMsg(msg_json.dump().c_str());
@@ -149,14 +152,14 @@ void		Server::_wait(void)
 	this->_nbTry++;
 }
 
-void		Server::sendLoopState(const std::string &time, int turnNb, const Board::Point &timeRelatedColor)
+void		Server::sendLoopState(const AbstractPlayer &player, int turnNb, const Board::Point &timeRelatedColor)
 {
 	int				clientColor = this->_getClientColor(timeRelatedColor);
 	nlohmann::json	msg_json;
 
 	msg_json["type"] = "loop_stat";
 	msg_json["data"]["time"]["color"] = clientColor;
-	msg_json["data"]["time"]["duration"] = time;
+	msg_json["data"]["time"]["duration"] = player.getLastTime();
 	msg_json["data"]["turn_nb"] = turnNb;
 
 	try {
@@ -166,7 +169,7 @@ void		Server::sendLoopState(const std::string &time, int turnNb, const Board::Po
 		delete e;
 		this->_wait();
 		this->_getClient();
-		this->sendLoopState(time, turnNb, timeRelatedColor);
+		this->sendLoopState(player, turnNb, timeRelatedColor);
 	}
 }
 
