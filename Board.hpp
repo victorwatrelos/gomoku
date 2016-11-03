@@ -73,6 +73,8 @@ class								Board
 
 		void						_resetThreeCheck(std::vector<int> &three, int &it, int &space) const;
 		bool						_checkThreeLine(int pos, Board::Point color, std::vector<int> &three, bool isHoriz) const;
+		bool						_checkThreeDiag(int pos, Board::Point color, std::vector<int> &three) const;
+		bool						_checkThreeBackDiag(int pos, Board::Point color, std::vector<int> &three) const;
 
 //		void						_resetThreeCheck(int **three, int *it, int *space) const;
 //		int							*_checkThreeLine(int pos, Board::Point color, bool isHoriz) const;
