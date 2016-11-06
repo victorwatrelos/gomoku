@@ -76,9 +76,6 @@ class								Board
 		bool						_checkThreeDiag(int pos, Board::Point color, std::vector<int> &three) const;
 		bool						_checkThreeBackDiag(int pos, Board::Point color, std::vector<int> &three) const;
 
-void								_setFNPcheck(void);
-bool								_checkThreeLineV(int pos, Board::Point color, std::vector<int> &three) const;
-bool								_checkThreeLineH(int pos, Board::Point color, std::vector<int> &three) const;
 /*
 		void						_resetThreeCheck(int **three, int *it, int *space) const;
 		int							*_checkThreeLine(int pos, Board::Point color, bool isHoriz) const;
@@ -105,12 +102,6 @@ bool								_checkThreeLineH(int pos, Board::Point color, std::vector<int> &thre
 		int							_blackStoneCaptured = 0;
 		int							_whiteStoneCaptured = 0;
 		
-		typedef bool (Board::*fn)(int, Board::Point, std::vector<int>&) const;
-
-		std::vector<fn>				_fnp;
-//		std::vector<bool (Board::*)(int, Board::Point, std::vector<int>&)>		_fnp;
-		std::vector<int>			_threeArray;
-		std::vector<int>			_threeArray2;
 		
 };
 

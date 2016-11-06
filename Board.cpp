@@ -4,10 +4,9 @@ Board::Board(void) : _board(GRID_SIZE, Board::Point::EMPTY), _hash(0)
 {
 }
 
-Board::Board(const std::vector<Point> &grid) : _board(grid), _fnp(4), _threeArray(3, -1), _threeArray2(3, -1)
+Board::Board(const std::vector<Point> &grid) : _board(grid)
 {
 	this->_hashBoard();
-	this->_setFNPcheck();
 }
 
 Board::Board(const Board &obj)
@@ -373,62 +372,7 @@ bool						Board::_checkWinningDiag(bool down) const
  *		CHECK FOR DOUBLE THREE FUNCTIONS
  */
 
-void					Board::_setFNPcheck(void)
-{
-	this->_fnp.push_back(&Board::_checkThreeLineH);
-	this->_fnp.push_back(&Board::_checkThreeLineV);
-	this->_fnp.push_back(&Board::_checkThreeDiag);
-	this->_fnp.push_back(&Board::_checkThreeBackDiag);
-}
 
-bool					Board::_checkThreeLineH(int pos, Board::Point color, std::vector<int> &three) const
-{
-	if (this->_checkThreeLine(pos, color, three, true))
-		return (true);
-	return (false);
-}
-
-bool					Board::_checkThreeLineV(int pos, Board::Point color, std::vector<int> &three) const
-{
-	if (this->_checkThreeLine(pos, color, three, false))
-		return (true);
-	return (false);
-}
-
-bool					Board::_checkDoubleThree(int pos, Board::Point color) const
-{
-	std::vector<int>	three(3, -1);
-	std::vector<int>	three2(3, -1);
-	int					i, j, k;
-	fn					tmp;
-
-	for (i = 0 ; i < 4 ; i++)
-	{
-		tmp = this->_fnp[i];
-		if ( (this->*tmp)(pos, color, three))
-		{
-			for (j = 0 ; j < 3 ; j++)
-			{
-				if (three[k] == pos)
-					continue ;
-				k = (i + 1) % 4;
-				while (k != i)
-				{
-					tmp = this->_fnp[k];
-					if ( (this->*tmp)(pos, color, three2))
-						return (true);
-					three2.clear();
-					k = (k + 1) % 4;
-				}
-
-			}
-		}
-		three.clear();
-	}
-	return (false);
-}
-
-/*
 bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 {
 	std::vector<int>	three(3, -1);
@@ -442,17 +386,12 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 				continue ;
 			if (this->_checkThreeLine(three[i], color, three2, true))
 				return (true);
-			three2.clear();
 			if (this->_checkThreeBackDiag(three[i], color, three2))
 				return (true);
-			three2.clear();
 			if (this->_checkThreeDiag(three[i], color, three2))
 				return (true);
-			three2.clear();
 		}
 	}
-	three.clear();
-	three2.clear();
 
 	if (this->_checkThreeLine(pos, color, three, true))
 	{
@@ -462,17 +401,12 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 				continue ;
 			if (this->_checkThreeLine(three[i], color, three2, false))
 				return (true);
-			three2.clear();
 			if (this->_checkThreeBackDiag(three[i], color, three2))
 				return (true);
-			three2.clear();
 			if (this->_checkThreeDiag(three[i], color, three2))
 				return (true);
-			three2.clear();
 		}
 	}
-	three.clear();
-	three2.clear();
 
 	if (this->_checkThreeBackDiag(pos, color, three))
 	{
@@ -482,17 +416,12 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 				continue ;
 			if (this->_checkThreeLine(three[i], color, three2, true))
 				return (true);
-			three2.clear();
 			if (this->_checkThreeLine(three[i], color, three2, false))
 				return (true);
-			three2.clear();
 			if (this->_checkThreeDiag(three[i], color, three2))
 				return (true);
-			three2.clear();
 		}
 	}
-	three.clear();
-	three2.clear();
 
 	if (this->_checkThreeDiag(pos, color, three))
 	{
@@ -502,20 +431,15 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 				continue ;
 			if (this->_checkThreeLine(three[i], color, three2, true))
 				return (true);
-			three2.clear();
 			if (this->_checkThreeLine(three[i], color, three2, false))
 				return (true);
-			three2.clear();
 			if (this->_checkThreeBackDiag(three[i], color, three2))
 				return (true);
-			three2.clear();
 		}
 	}
-	three.clear();
-	three2.clear();
 	return (false);
 }
-*/
+
 void					Board::_resetThreeCheck(std::vector<int> &three, int &it, int &space) const
 {
 	three.clear();
