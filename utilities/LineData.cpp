@@ -63,18 +63,25 @@ void					LineData::_endOfSeries(void)
 	int		nbSpace;
 
 	if (this->_nbCons <= 0)
+	{
+		this->_startingSpace = false;
+		this->_endingSpace = false;
+		this->_nbCons = 0;
 		return ;
+	}
 	nbSpace = 0;
-
 	tmpScore = my_pow(this->_nbCons);
 	if (this->_nbCons >= 3)
 	{
-		if (this->_startingSpace)
-			nbSpace++;
-		if (this->_endingSpace)
-			nbSpace++;
-		if (this->_interSpace == 0)
-			tmpScore += my_pow(nbSpace);
+		if (this->_startingSpace && this->_endingSpace && this->_interSpace == 0)
+		{
+			tmpScore += my_pow(5);
+		}
+		else if (this->_startingSpace || this->_endingSpace)
+		{
+			if (this->_interSpace == 0)
+				tmpScore += my_pow(2);
+		}
 	}
 	else
 	{
