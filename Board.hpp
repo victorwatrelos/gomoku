@@ -6,6 +6,9 @@
 # include <unordered_set>
 # include <iostream>
 # include <cmath>
+# include <string>
+# include <sstream>
+# include <fstream>
 # include "define.hpp"
 # include "utilities/HashUtilities.hpp"
 
@@ -29,6 +32,7 @@ class								Board
 		bool						isMoveValid(int pos, Board::Point color) const;
 		bool						isWinningBoard(void) const;
 		int							getIndex(int i, int j) const;
+		void						loadBoard(const std::string &filename);
 
 		int							getBlackCapturedStone(void) const;
 		int							getWhiteCapturedStone(void) const;
@@ -51,13 +55,15 @@ class								Board
 		 * CheckCapture function
 		 */
 		enum DirIndex {HRIGHT = 0, HLEFT = 1, VUP = 2, VDOWN = 3, DIAG1UP = 4, DIAG1DOWN = 5, DIAG2UP = 6, DIAG2DOWN = 7};
-		void	_checkCapture(int pos, const Board::Point &color);
-		void	_deletePosCheckCapture(int *tmpPos, bool *toDelete, const Board::Point &color);
-		void	_checkLastStoneCheckCapture(int *tmpPos, int *tmpAccrued, bool *toDelete, const Point &colorCurrentStone);
-		void	_initTmpPosCheckCapture(int *tmpPos, int pos);
-		void	_processPosCheckCapture(int *tmpPos, int *tmpAccrued, const Point &oppColor);
-		void	_updatePosCheckCapture(int *tmpPos);
-		void	_addNCheckCapture(int &tmpPos, int n);
+		void			_checkCapture(int pos, const Board::Point &color);
+		void			_deletePosCheckCapture(int *tmpPos, bool *toDelete, const Board::Point &color);
+		void			_checkLastStoneCheckCapture(int *tmpPos, int *tmpAccrued, bool *toDelete,
+													const Point &colorCurrentStone);
+		void			_initTmpPosCheckCapture(int *tmpPos, int pos);
+		void			_processPosCheckCapture(int *tmpPos, int *tmpAccrued, const Point &oppColor);
+		void			_updatePosCheckCapture(int *tmpPos);
+		void			_addNCheckCapture(int &tmpPos, int n);
+		static Point	_getPointOfChar(char c);
 
 		/**
 		 * Board function

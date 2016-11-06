@@ -14,6 +14,45 @@ Board::Board(const Board &obj)
 	*this = obj;
 }
 
+Board::Point		Board::_getPointOfChar(char c)
+{
+	switch (c)
+	{
+		case 'X':
+			return Board::Point::BLACK;
+		case 'O':
+			return Board::Point::WHITE;
+	}
+	return Board::Point::EMPTY;
+}
+
+void					Board::loadBoard(const std::string &filename)
+{
+	std::string line;
+	std::ifstream infile(filename) ;
+	std::vector<Board::Point>		grid;
+
+	if ( infile ) {
+		while ( getline( infile , line ) ) {
+			for (auto c : line)
+			{
+				if (c == 'X' || c == 'O' || c == '_')
+					grid.push_back(this->_getPointOfChar(c));
+			}
+		}
+	} else {
+		std::cerr << "Unable to open the files" << std::endl;
+	}
+	infile.close();
+	if (grid.size() != GRID_SIZE)
+	{
+		std::cerr << grid.size() << std::endl;
+		std::cerr << "Bad size of grid for file " << filename << ", board not loaded" << std::endl;
+		return;
+	}
+	this->_board = grid;
+}
+
 Board    								&Board::operator=(const Board &p)
 {
 	this->_board = p.getBoard();

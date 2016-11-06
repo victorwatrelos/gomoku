@@ -15,6 +15,7 @@ GameLoop::GameLoop(Parser::PlayerType p1, Parser::PlayerType p2) :
 	this->_initServer();
 	this->_createPlayers();
 	this->_initDisplay();
+	//this->_board.loadBoard("toto");
 
 }
 
