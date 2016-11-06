@@ -380,8 +380,6 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 	std::vector<int>	three(3, -1);
 	std::vector<int>	three2(3, -1);
 
-
-
 	if (this->_checkThreeLine(pos, color, three, false))
 	{
 		for (int i = 0 ; i < 3 ; i++)
@@ -633,6 +631,7 @@ bool					Board::_checkThreeBackDiag(int pos, Board::Point color, std::vector<int
 	}
 	return (false);
 }
+
 
 /*
 bool					Board::_checkDoubleThree(int pos, Board::Point color) const

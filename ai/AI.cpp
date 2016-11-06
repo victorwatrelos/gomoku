@@ -209,8 +209,8 @@ static void	merge(const std::vector<Board> &lst)
 			}
 		}
 	}
-	StdOutDisplay	disp;
-	disp.displayBoard(Board(grid));
+//	StdOutDisplay	disp;
+//	disp.displayBoard(Board(grid));
 }
 
 int			AI::ID(const Board & board, Board::Point color)

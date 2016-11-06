@@ -75,11 +75,13 @@ class								Board
 		bool						_checkThreeLine(int pos, Board::Point color, std::vector<int> &three, bool isHoriz) const;
 		bool						_checkThreeDiag(int pos, Board::Point color, std::vector<int> &three) const;
 		bool						_checkThreeBackDiag(int pos, Board::Point color, std::vector<int> &three) const;
-
-//		void						_resetThreeCheck(int **three, int *it, int *space) const;
-//		int							*_checkThreeLine(int pos, Board::Point color, bool isHoriz) const;
-//		int							*_checkThreeDiag(int pos, Board::Point color) const;
-//		int							*_checkThreeBackDiag(int pos, Board::Point color) const;
+/*
+		void						_resetThreeCheck(int **three, int *it, int *space) const;
+		int							*_checkThreeLine(int pos, Board::Point color, bool isHoriz) const;
+		int							*_checkThreeDiag(int pos, Board::Point color) const;
+		int							*_checkThreeBackDiag(int pos, Board::Point color) const;
+*/
+		
 		bool						_checkMoveInCapture(int pos, Board::Point color) const;
 		bool						_checkCapture(Board::Point color, Board::Point opp, int i, int j, int modI, int modJ) const;
 

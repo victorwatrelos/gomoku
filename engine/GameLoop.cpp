@@ -67,7 +67,6 @@ void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
 		if (this->_board.isMoveValid(pos, player.getColor()))
 		{
 			this->_board.setMove(pos, player.getColor());
-		//	this->_board.setLastMoves(pos);
 			return ;
 		}
 		std::cout << "Move invalid" << std::endl;
