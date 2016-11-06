@@ -9,6 +9,7 @@ LineData::~LineData(void)
 
 static int		my_pow(int n)
 {
+	/*
 	switch (n)
 	{
 		case 0:
@@ -28,6 +29,10 @@ static int		my_pow(int n)
 		default:
 			return std::pow(4, n);
 	};
+	*/
+	if (n > 5)
+		n = 5;
+	return std::pow(4, n);
 }
 
 int						LineData::_getStoneScore(void)

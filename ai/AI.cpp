@@ -125,6 +125,11 @@ int				AI::negamax(Board &node, int depth, int A, int B, int player)
 	int						origA = A;
 	bool					cutoff = false;
 
+	if (node.isWinningBoard())
+	{
+		std::cout << "Is winning board" << std::endl;
+		return (100'000 * depth * -1 * player);
+	}
 	auto it = this->_transpositionTable.find(node.getHash());
 	if (it != this->_transpositionTable.end())
 	{
@@ -190,6 +195,27 @@ int			AI::getMaxDepth() const
 	return this->_maxDepth;
 }
 
+#include "../display/StdOutDisplay.hpp"
+
+void	merge(const std::vector<Board> &lst)
+{
+	std::vector<Board::Point> grid(GRID_SIZE, Board::Point::EMPTY);
+
+	for (auto b : lst)
+	{
+		auto p = b.getBoard();
+		for (int i = 0; i < GRID_SIZE; i++)
+		{
+			if (p[i] != Board::Point::EMPTY)
+			{
+				grid[i] = p[i];
+			}
+		}
+	}
+	StdOutDisplay	disp;
+	disp.displayBoard(Board(grid));
+}
+
 int			AI::ID(const Board & board, Board::Point color)
 {
 	std::vector<Board>	children;
@@ -206,6 +232,7 @@ int			AI::ID(const Board & board, Board::Point color)
 	browse.browse(board, color);
 	if (children.size() == 0)
 		children = board.expand(color);
+	merge(children);
 	while (time < this->_timeToCalc)
 	{
 		this->_initial_depth = d;
@@ -214,6 +241,7 @@ int			AI::ID(const Board & board, Board::Point color)
 		{
 			if (child.isWinningBoard())
 			{
+				std::cerr << "Winning at first occ" << std::endl;
 				best_pos = child.getLastMove();
 				goto exit_function;
 			}
