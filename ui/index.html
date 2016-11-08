@@ -38,7 +38,7 @@
 
 					</div>
 				</div>
-				<div class="col s4">
+				<div class="col s3">
 					<div class="section">
 						<h5 id="disp_turn_of">
 							Turn of <span id="player_turn"></span> player
@@ -62,10 +62,16 @@
 						</div>
 					</div>
 				</div>
-				<div class="col s2">
+				<div class="col s3">
 					<div class="section">
 						<h5>Controle</h5>
-						<a id="restart_game" class="waves-effect waves-light btn">Restart game</a>
+						<p>
+							<a id="restart_game" class="waves-effect waves-light btn">Restart game</a>
+						</p>
+						<p>
+							<input type="checkbox" id="help" />
+							<label for="help">Help for weak people</label>
+						</p>
 					</div>
 				</div>
 			</div>
@@ -141,6 +147,7 @@
 		<img style="display: none;" src="/images/black_stone.svg" id="black_stone">
 		<img style="display: none;" src="/images/black_stone_last.png" id="black_stone_last">
 		<img style="display: none;" src="/images/white_stone_last.png" id="white_stone_last">
+		<img style="display: none;" src="/images/stone_help.png" id="stone_help">
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<script src="/materialize/bin/materialize.js"></script>
 		<script src="/js/DisplayModule.js"></script>

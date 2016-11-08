@@ -127,7 +127,6 @@ int				AI::negamax(Board &node, int depth, int A, int B, int player)
 
 	if (node.isWinningBoard())
 	{
-		std::cout << "Is winning board" << std::endl;
 		return (100'000 * depth * -1 * player);
 	}
 	auto it = this->_transpositionTable.find(node.getHash());

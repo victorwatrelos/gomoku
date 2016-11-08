@@ -3,6 +3,7 @@
 
 # include "AbstractPlayer.hpp"
 # include "../network/Server.hpp"
+# include "AIPlayer.hpp"
 
 class NetworkPlayer : public AbstractPlayer
 {
@@ -14,6 +15,8 @@ class NetworkPlayer : public AbstractPlayer
 	private:
 		NetworkPlayer(void);
 		Server	*_server = nullptr;
+		AIPlayer	*_aiPlayer;
+
 };
 #endif
 

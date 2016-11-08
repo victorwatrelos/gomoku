@@ -36,6 +36,9 @@ EventLoop = (function() {
 			$('#restart_game').click(function() {
 				SocketModule.sendForceRestart();
 			});
+			$('#help').change(function() {
+				BoardModule.setHelpDisplay($(this).is(':checked'));
+			});
 		}
 	}
 })();
