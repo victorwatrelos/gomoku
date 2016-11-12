@@ -224,13 +224,12 @@ int			AI::ID(const Board & board, Board::Point color)
 	long long			t_time = 0;
 	TIMEP				start, end;
 	int					d = 1;
-	CheckForceMove		checkF;
-	BrowseBoard			browse(&checkF);
+	CheckForceMove		checkForcedMove;
+	BrowseBoard			browse(&checkForcedMove);
 
-	checkF.setBoards(&children);
+	children = board.expand(color);
+	checkForcedMove.setBoards(&children);
 	browse.browse(board, color);
-	if (children.size() == 0)
-		children = board.expand(color);
 	merge(children);
 	while (t_time < this->_timeToCalc)
 	{
