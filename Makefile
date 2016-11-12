@@ -17,9 +17,9 @@ SRC= main.cpp \
 	 heuristics/BadHeuristic.cpp \
 	 heuristics/SimpleHeuristic.cpp \
 	 heuristics/MHeuristic.cpp \
+	 heuristics/LineData.cpp \
 	 utilities/BrowseBoard.cpp \
 	 utilities/AbstractLineData.cpp \
-	 utilities/LineData.cpp \
 	 utilities/BoardUtilities.cpp \
 	 utilities/CheckForceMove.cpp \
 	 utilities/HashUtilities.cpp \
