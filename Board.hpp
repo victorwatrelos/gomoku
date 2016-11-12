@@ -1,7 +1,6 @@
 #ifndef BOARD_HPP
 # define BOARD_HPP
 
-# include <boost/circular_buffer.hpp>
 # include <vector>
 # include <unordered_set>
 # include <iostream>
@@ -13,8 +12,6 @@
 
 class								Board
 {
-
-
 	public:
 		enum class Point : char {EMPTY, BLACK, WHITE};
 
@@ -34,13 +31,11 @@ class								Board
 		int							getWhiteCapturedStone(void) const;
 
 		uint64_t					getHash() const;
-		int							getScore(Board::Point color);
 
 		std::vector<Board>			expand(Point color) const;
 		
 		static Point				getOppColor(Point player_col);
 
-		boost::circular_buffer<int>	getLastMoves() const;
 		void						setLastMoves(int pos);
 		int							getLastMove() const; 
 		bool						isFirstMove() const;
@@ -70,26 +65,16 @@ class								Board
 		bool						_checkWinningBackDiag(bool down) const;
 		bool						_checkDoubleThree(int pos, Board::Point color) const;
 
-
 		bool						_setCoordDiag(int pos, int &i, int &j, int &stopI, int &stopJ) const;
 		bool						_setCoordBackDiag(int pos, int &i, int &j, int &stopI, int &stopJ) const;
 
-		void						_resetThreeCheck(std::vector<int> &three, int &it, int &space) const;
 		void						_resetThreeCheck(std::vector<int> &three, int &it, int &space, bool &firstSpace) const;
 		bool						_checkThreeLine(int pos, Board::Point color, std::vector<int> &three, bool isHoriz) const;
 		bool						_checkThreeDiag(int pos, Board::Point color, std::vector<int> &three) const;
 		bool						_checkThreeBackDiag(int pos, Board::Point color, std::vector<int> &three) const;
 
-/*
-		void						_resetThreeCheck(int **three, int *it, int *space) const;
-		int							*_checkThreeLine(int pos, Board::Point color, bool isHoriz) const;
-		int							*_checkThreeDiag(int pos, Board::Point color) const;
-		int							*_checkThreeBackDiag(int pos, Board::Point color) const;
-*/
-		
 		bool						_checkMoveInCapture(int pos, Board::Point color) const;
 		bool						_checkCapture(Board::Point color, Board::Point opp, int i, int j, int modI, int modJ) const;
-
 
 		int							_checkStreakLine(bool isRow, Board::Point color) const;
 		int							_checkStreakDiag(bool down, Board::Point color) const;
@@ -100,13 +85,10 @@ class								Board
 		void						_addMoveToHash(int index, Board::Point color);
 
 		std::vector<Point>			_board;
-		boost::circular_buffer<int>	_lastMoves;
 		uint64_t					_hash;
 		int							_lastMove;
 		int							_blackStoneCaptured = 0;
 		int							_whiteStoneCaptured = 0;
-		
-		
 };
 
 #endif

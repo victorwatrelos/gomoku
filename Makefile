@@ -15,7 +15,6 @@ SRC= main.cpp \
 	 engine/GameLoop.cpp \
 	 ai/AI.cpp \
 	 heuristics/BadHeuristic.cpp \
-	 heuristics/SimpleHeuristic.cpp \
 	 heuristics/MHeuristic.cpp \
 	 utilities/BrowseBoard.cpp \
 	 utilities/AbstractLineData.cpp \

@@ -132,35 +132,6 @@ void				showExpand(std::unordered_set<int> dups, const Board &board)
 	std::cout << std::endl;
 }
 
-void					AIPlayer::_fillNextMoves(std::unordered_set<int> &dups, const Board &b)
-{
-	int					set = 0;
-	std::vector<Board::Point>	board = b.getBoard();
-
-	//this->_browseBoard.browse(b, this->_color);
-	//if ((dups = this->_lineData->getForcedMove()).size() > 0)
-	//	return ;
-	//dups = this->_lineData->getForcedMove();
-	for (auto move : b.getLastMoves())
-	{
-		this->_expandPoints(this->_color, move, dups, b, 2);
-		set++;
-	}
-/*	
-	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
-	{
-		if (board[pos] != PEMPTY)
-		{
-			this->_expandPoints(this->_color, pos, dups, b, 2);
-			set++;
-		}
-	}
-*/	
-
-	if (set == 0)
-		this->_expandPoints(this->_color, GRID_SIZE / 2, dups, b, 1);
-}
-
 int						AIPlayer::getMove(const Board &board)
 {
 	Board				new_board;
