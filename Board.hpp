@@ -71,7 +71,11 @@ class								Board
 		bool						_checkDoubleThree(int pos, Board::Point color) const;
 
 
+		bool						_setCoordDiag(int pos, int &i, int &j, int &stopI, int &stopJ) const;
+		bool						_setCoordBackDiag(int pos, int &i, int &j, int &stopI, int &stopJ) const;
+
 		void						_resetThreeCheck(std::vector<int> &three, int &it, int &space) const;
+		void						_resetThreeCheck(std::vector<int> &three, int &it, int &space, bool &firstSpace) const;
 		bool						_checkThreeLine(int pos, Board::Point color, std::vector<int> &three, bool isHoriz) const;
 		bool						_checkThreeDiag(int pos, Board::Point color, std::vector<int> &three) const;
 		bool						_checkThreeBackDiag(int pos, Board::Point color, std::vector<int> &three) const;

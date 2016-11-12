@@ -380,6 +380,7 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 
 	if (this->_checkThreeLine(pos, color, three, false))
 	{
+		std::cout << "got free three " << "VERTIC" << std::endl;
 		for (int i = 0 ; i < 3 ; i++)
 		{
 			if (three[i] == pos)
@@ -395,6 +396,7 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 
 	if (this->_checkThreeLine(pos, color, three, true))
 	{
+		std::cout << "got free three " << "HORIZ" << std::endl;
 		for (int i = 0 ; i < 3 ; i++)
 		{
 			if (three[i] == pos)
@@ -410,6 +412,7 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 
 	if (this->_checkThreeBackDiag(pos, color, three))
 	{
+		std::cout << "got free three " << "BDIAG" << std::endl;
 		for (int i = 0 ; i < 3 ; i++)
 		{
 			if (three[i] == pos)
@@ -425,6 +428,7 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 
 	if (this->_checkThreeDiag(pos, color, three))
 	{
+		std::cout << "got free three " << "DIAG" << std::endl;
 		for (int i = 0 ; i < 3 ; i++)
 		{
 			if (three[i] == pos)
@@ -439,12 +443,21 @@ bool					Board::_checkDoubleThree(int pos, Board::Point color) const
 	}
 	return (false);
 }
-
+/*
 void					Board::_resetThreeCheck(std::vector<int> &three, int &it, int &space) const
 {
 	three.clear();
 	it = 0;
 	space = 0;
+}
+*/
+
+void					Board::_resetThreeCheck(std::vector<int> &three, int &it, int &space, bool &firstSpace) const
+{
+	three.clear();
+	it = 0;
+	space = 0;
+	firstSpace = false;
 }
 
 bool					Board::_checkThreeLine(int pos, Board::Point color, std::vector<int> &three, bool isHoriz) const
@@ -454,6 +467,7 @@ bool					Board::_checkThreeLine(int pos, Board::Point color, std::vector<int> &t
 	int					i, j, index;
 	int					stop;
 	Board::Point		curr, last;
+	bool				firstSpace = false;
 
 	if (isHoriz)
 	{
@@ -473,7 +487,10 @@ bool					Board::_checkThreeLine(int pos, Board::Point color, std::vector<int> &t
 		j = 1;
 	if (stop >= GRID_LENGTH)
 		stop = GRID_LENGTH;
-	index = this->getIndex(i, j - 1);
+	if (isHoriz)
+		index = this->getIndex(j - 1, i);
+	else
+		index = this->getIndex(i, j - 1);
 	last = this->_board[index];
 	while (j < stop)
 	{
@@ -485,27 +502,66 @@ bool					Board::_checkThreeLine(int pos, Board::Point color, std::vector<int> &t
 			curr = this->_board[index];
 		else
 			curr = color;
-		if (index != pos)
-			curr = this->_board[index];
-		else
-			curr = color;
-		if (it == 3 && curr == PEMPTY)
+		if (it == 3 && curr == PEMPTY && firstSpace)
 			return (true);
 		else if (last == color && curr == PEMPTY && space < 2)
 			space++;
 		else if (((last == PEMPTY && curr == color) || (last == color && curr == color)) && space < 2)
 		{
+			if (it == 0 && last == PEMPTY)
+				firstSpace = true;
 			if (it < 3)
 				three[it++] = index;
 			else
-				this->_resetThreeCheck(three, it, space);
+				this->_resetThreeCheck(three, it, space, firstSpace);
 		}
 		else if ((last == PEMPTY && curr == PEMPTY) || (curr != last))
-			this->_resetThreeCheck(three, it, space);
+			this->_resetThreeCheck(three, it, space, firstSpace);
 		last = curr;
 		j++;
 	}
 	return (false);
+}
+
+bool					Board::_setCoordDiag(int pos, int &i, int &j, int &stopI, int &stopJ) const
+{
+	int					k;
+	int					posI, posJ;
+
+	posI = pos % GRID_LENGTH;
+	posJ = pos / GRID_LENGTH;
+
+	i = posI;
+	j = posJ;
+
+	stopI = posI;
+	stopJ = posJ;
+
+	if (i == 0 || j == 0 || i == (GRID_LENGTH - 1) || j == (GRID_LENGTH - 1))
+	{
+		std::cout << "false" << std::endl;
+		return (false);
+	}
+
+	k = 0;
+	while (k < 3 && (i > 1 && j > 1))
+	{
+		i--;
+		j--;
+		k++;
+	}
+
+	k = 0;
+	while (k < 5 && (stopI < GRID_LENGTH && stopJ < GRID_LENGTH))
+	{
+		stopI++;
+		stopJ++;
+		k++;
+	}
+	std::cout << "true" << std::endl;
+	std::cout << "posI : " << posI << " posJ : " << posJ << std::endl;
+	std::cout << "i : " << i << " j : " << j << " stop1 : " << stopI << " stopJ : " << stopJ << std::endl;
+	return (true);
 }
 
 bool					Board::_checkThreeDiag(int pos, Board::Point color, std::vector<int> &three) const
@@ -515,21 +571,24 @@ bool					Board::_checkThreeDiag(int pos, Board::Point color, std::vector<int> &t
 	int					i, j, index;
 	int					stopI, stopJ;
 	Board::Point		curr, last;
+	bool				firstSpace = false;
 
-	i = pos % GRID_LENGTH - 3;
-	j = pos / GRID_LENGTH - 3;
-	stopI = (pos % GRID_LENGTH) + 5;
-	stopJ = (pos / GRID_LENGTH) + 5;
-	if (j < -2 || i < -2)
+//	i = pos % GRID_LENGTH - 3;
+//	j = pos / GRID_LENGTH - 3;
+//	stopI = (pos % GRID_LENGTH) + 5;
+//	stopJ = (pos / GRID_LENGTH) + 5;
+//	if (j < -2 || i < -2)
+//		return (false);
+//	if (j <= 0)
+//		j = 1;
+//	if (i <= 0)
+//		i = 1;
+//	if (stopI >= GRID_LENGTH)
+//		stopI = GRID_LENGTH;
+//	if (stopJ >= GRID_LENGTH)
+//		stopJ = GRID_LENGTH;
+	if (!(this->_setCoordDiag(pos, i, j, stopI, stopJ)))
 		return (false);
-	if (j <= 0)
-		j = 1;
-	if (i <= 0)
-		i = 1;
-	if (stopI >= GRID_LENGTH)
-		stopI = GRID_LENGTH;
-	if (stopJ >= GRID_LENGTH)
-		stopJ = GRID_LENGTH;
 	index = this->getIndex(i - 1, j - 1);
 	last = this->_board[index];
 	while (i < stopI && j < stopJ)
@@ -539,24 +598,67 @@ bool					Board::_checkThreeDiag(int pos, Board::Point color, std::vector<int> &t
 			curr = this->_board[index];
 		else
 			curr = color;
-		if (it == 3 && curr == PEMPTY)
+		if (it == 3 && curr == PEMPTY && firstSpace)
 			return (true);
 		else if (last == color && curr == PEMPTY && space < 2)
 			space++;
 		else if (((last == PEMPTY && curr == color) || (last == color && curr == color)) && space < 2)
 		{
+			if (it == 0 && last == PEMPTY)
+				firstSpace = true;
 			if (it < 3)
 				three[it++] = index;
 			else
-				this->_resetThreeCheck(three, it, space);
+				this->_resetThreeCheck(three, it, space, firstSpace);
 		}
 		else if ((last == PEMPTY && curr == PEMPTY) || (curr != last))
-			this->_resetThreeCheck(three, it, space);
+			this->_resetThreeCheck(three, it, space, firstSpace);
 		last = curr;
 		i++;
 		j++;
 	}
 	return (false);
+}
+
+bool					Board::_setCoordBackDiag(int pos, int &i, int &j, int &stopI, int &stopJ) const
+{
+	int					k;
+	int					posI, posJ;
+
+	posI = pos % GRID_LENGTH;
+	posJ = pos / GRID_LENGTH;
+
+	i = posI;
+	j = posJ;
+
+	stopI = posI;
+	stopJ = posJ;
+
+	if (i == 0 || j == 0 || i == (GRID_LENGTH - 1) || j == (GRID_LENGTH - 1))
+	{
+		std::cout << "false" << std::endl;
+		return (false);
+	}
+
+	k = 0;
+	while (k < 3 && (i < (GRID_LENGTH - 2) && j > 1))
+	{
+		i++;
+		j--;
+		k++;
+	}
+
+	k = 0;
+	while (k < 5 && (stopI > 0 && stopJ < GRID_LENGTH))
+	{
+		stopI--;
+		stopJ++;
+		k++;
+	}
+	std::cout << "true" << std::endl;
+	std::cout << "posI : " << posI << " posJ : " << posJ << std::endl;
+	std::cout << "i : " << i << " j : " << j << " stop1 : " << stopI << " stopJ : " << stopJ << std::endl;
+	return (true);
 }
 
 bool					Board::_checkThreeBackDiag(int pos, Board::Point color, std::vector<int> &three) const
@@ -566,21 +668,24 @@ bool					Board::_checkThreeBackDiag(int pos, Board::Point color, std::vector<int
 	int					i, j, index;
 	int					stopI, stopJ;
 	Board::Point		curr, last;
+	bool				firstSpace = false;
 
-	i = pos % GRID_LENGTH + 3;
-	j = pos / GRID_LENGTH - 3;
-	stopI = pos % GRID_LENGTH - 5;
-	stopJ = (pos / GRID_LENGTH) + 5;
-	if (j < -2 || i > GRID_LENGTH + 1)
+//	i = pos % GRID_LENGTH + 3;
+//	j = pos / GRID_LENGTH - 3;
+//	stopI = pos % GRID_LENGTH - 5;
+//	stopJ = (pos / GRID_LENGTH) + 5;
+//	if (j < -2 || i > GRID_LENGTH + 1)
+//		return (false);
+//	if (j <= 0)
+//		j = 1;
+//	if (i > GRID_LENGTH - 2)
+//		i = GRID_LENGTH - 2;
+//	if (stopI < 0)
+///		stopI = 0;
+//	if (stopJ >= GRID_LENGTH)
+//		stopJ = GRID_LENGTH;
+	if (!(this->_setCoordBackDiag(pos, i, j, stopI, stopJ)))
 		return (false);
-	if (j <= 0)
-		j = 1;
-	if (i > GRID_LENGTH - 2)
-		i = GRID_LENGTH - 2;
-	if (stopI < 0)
-		stopI = 0;
-	if (stopJ >= GRID_LENGTH)
-		stopJ = GRID_LENGTH;
 	index = this->getIndex(i - 1, j - 1);
 	last = this->_board[index];
 	while (i >= stopI && j < stopJ)
@@ -590,19 +695,21 @@ bool					Board::_checkThreeBackDiag(int pos, Board::Point color, std::vector<int
 			curr = this->_board[index];
 		else
 			curr = color;
-		if (it == 3 && curr == PEMPTY)
+		if (it == 3 && curr == PEMPTY && firstSpace)
 			return (true);
 		else if (last == color && curr == PEMPTY && space < 2)
 			space++;
 		else if (((last == PEMPTY && curr == color) || (last == color && curr == color)) && space < 2)
 		{
+			if (it == 0 && last == PEMPTY)
+				firstSpace = true;
 			if (it < 3)
 				three[it++] = index;
 			else
-				this->_resetThreeCheck(three, it, space);
+				this->_resetThreeCheck(three, it, space, firstSpace);
 		}
 		else if ((last == PEMPTY && curr == PEMPTY) || (curr != last))
-			this->_resetThreeCheck(three, it, space);
+			this->_resetThreeCheck(three, it, space, firstSpace);
 		last = curr;
 		i--;
 		j++;
