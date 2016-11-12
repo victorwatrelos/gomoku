@@ -904,6 +904,7 @@ std::vector<Board>		Board::expand(Point color) const
 	std::vector<Board>	st;
 	std::unordered_set<int>		dups;
 	int							set = 0;
+	int							x, y;
 
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
@@ -913,10 +914,12 @@ std::vector<Board>		Board::expand(Point color) const
 			set++;
 		}
 	}
-	if (set == 0 && this->_lastMove)
+	if (set == 0 && this->_lastMove == -1)
 	{
+		x = (std::rand() % (GRID_LENGTH - 4)) + 2;
+		y = (std::rand() % (GRID_LENGTH - 4)) + 2;
 		st.push_back(*this);
-		(st.back()).setMove(GRID_SIZE / 2, color);
+		(st.back()).setMove(x + y * GRID_LENGTH, color);
 	}
 	else if (set == 0)
 	{

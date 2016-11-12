@@ -9,6 +9,8 @@
 # include <string>
 # include <sstream>
 # include <fstream>
+# include <cstdlib>
+# include <ctime>
 # include "define.hpp"
 # include "utilities/HashUtilities.hpp"
 
