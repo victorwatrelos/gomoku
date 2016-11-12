@@ -14,7 +14,7 @@ typedef struct		s_check_force_move {
 	std::string		filename;
 }					t_check_force_move;
 
-void	merge(const std::vector<Board> &lst)
+static void	merge(const std::vector<Board> &lst)
 {
 	std::vector<Board::Point> grid(GRID_SIZE, Board::Point::EMPTY);
 

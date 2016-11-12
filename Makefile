@@ -39,7 +39,7 @@ FRWK=
 all:$(NAME_BIN) $(NAME_NODE)
 
 test:
-	(cd test && make && ./gomoku_test)
+	(cd test && make && ./gomoku_test sorted)
 
 $(NAME_NODE):
 	(cd ui && npm install && bower install && touch gomoku_stdout.log && touch gomoku_stderr.log)

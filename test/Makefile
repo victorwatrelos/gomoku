@@ -9,9 +9,9 @@ SRC= main.cpp \
 	 ../display/AbstractDisplay.cpp \
 	 ../display/StdOutDisplay.cpp \
 	 ../heuristics/MHeuristic.cpp \
+	 ../heuristics/LineData.cpp \
 	 ../utilities/BrowseBoard.cpp \
 	 ../utilities/AbstractLineData.cpp \
-	 ../utilities/LineData.cpp \
 	 ../utilities/HashUtilities.cpp \
 	 ../utilities/BoardUtilities.cpp \
 	 ../utilities/CheckForceMove.cpp \
