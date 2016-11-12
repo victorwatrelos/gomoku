@@ -2,8 +2,8 @@
 # define LINEDATA
 
 # include "../Board.hpp"
-# include "BoardUtilities.hpp"
-# include "AbstractLineData.hpp"
+# include "../utilities/BoardUtilities.hpp"
+# include "../utilities/AbstractLineData.hpp"
 
 class				LineData : public AbstractLineData
 {

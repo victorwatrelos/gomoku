@@ -4,7 +4,7 @@
 # include <cstring>
 # include "../Board.hpp"
 # include "AbstractLineData.hpp"
-# include "LineData.hpp"
+# include "../heuristics/LineData.hpp"
 
 class					BrowseBoard
 {

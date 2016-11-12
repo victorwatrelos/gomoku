@@ -32,8 +32,6 @@ void					CheckForceMove::_endOfSeries(void)
 {
 	if (this->_nbCons <= 0)
 		return ;
-	//this->_display();
-
 	if (this->_nbCons == 4)
 	{
 		if (this->_interSpace > 0)

@@ -9,6 +9,8 @@ LineData::~LineData(void)
 
 static int		my_pow(int n)
 {
+	if (n > 5)
+		n = 5;
 	switch (n)
 	{
 		case 0:
@@ -38,17 +40,11 @@ int						LineData::_getStoneScore(void)
 
 	if ((tmpNbStone = this->_board->getWhiteCapturedStone()) > 0)
 	{
-		//		if (tmpNbStone >= 10)
-		//			whiteStoneScore = 100'000;
-		//		else
-		whiteStoneScore = my_pow(tmpNbStone) + 256;
+		whiteStoneScore = my_pow(tmpNbStone + 2) + 256;
 	}
 	if ((tmpNbStone = this->_board->getBlackCapturedStone()) > 0)
 	{
-		//		if (tmpNbStone >= 10)
-		//			blackStoneScore = 100'000;
-		//		else
-		blackStoneScore = my_pow(tmpNbStone) + 256;
+		blackStoneScore = my_pow(tmpNbStone + 2) + 256;
 	}
 	if (this->_playerColor == Board::Point::WHITE)
 		return blackStoneScore - whiteStoneScore;
@@ -69,24 +65,31 @@ void					LineData::_endOfSeries(void)
 	int		nbSpace;
 
 	if (this->_nbCons <= 0)
+	{
+		this->_startingSpace = false;
+		this->_endingSpace = false;
+		this->_nbCons = 0;
 		return ;
+	}
 	nbSpace = 0;
-
 	tmpScore = my_pow(this->_nbCons);
 	if (this->_nbCons >= 3)
 	{
-		if (this->_startingSpace)
-			nbSpace++;
-		if (this->_endingSpace)
-			nbSpace++;
-		if (this->_interSpace == 0)
-			tmpScore += my_pow(nbSpace);
+		if (this->_startingSpace && this->_endingSpace && this->_interSpace == 0)
+		{
+			tmpScore += my_pow(5);
+		}
+		else if (this->_startingSpace || this->_endingSpace)
+		{
+			if (this->_interSpace == 0)
+				tmpScore += my_pow(2);
+		}
 	}
 	else
 	{
 		if (this->_interSpace > 0)
 		{
-			tmpScore -= 16;
+			tmpScore -= std::pow(4, this->_nbCons - 1);
 		}
 	}
 

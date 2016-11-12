@@ -24,8 +24,6 @@ BrowseBoard&		BrowseBoard::operator=(const BrowseBoard & rhs)
 	return *this;
 }
 
-//# include "../display/StdOutDisplay.hpp"
-
 int						BrowseBoard::browse(const Board &b, Board::Point color)
 {
 	this->_b = &(b.getBoard());

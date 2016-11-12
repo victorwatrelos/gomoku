@@ -23,7 +23,7 @@ class Server
 		Server(const Server &obj);
 		Server &operator=(const Server &p);
 		virtual ~Server(void);
-		int		getMove(Board::Point &color);
+		int		getMove(Board::Point &color, int concelorPos);
 		int		getColor();
 		void	sendBoard(const Board &board);
 		void	sendWinner(const Board::Point &point);

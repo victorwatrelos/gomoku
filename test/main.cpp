@@ -102,6 +102,11 @@ static void	test_heuri(int n, bool disp_sorted)
 		{"boards/test_2_stone_space", "Test with 2 H stone with hole", Board::Point::BLACK, 24},
 		{"boards/test_1_stone", "Test with 1 H stone", Board::Point::BLACK, 16},
 		{"boards/toto", "TOTO", Board::Point::BLACK, 32},
+		{"boards/toto2", "TOTO", Board::Point::BLACK, 32},
+		{"boards/toto3", "TOTO", Board::Point::BLACK, 32},
+		{"boards/toto4", "TOTO", Board::Point::BLACK, 32},
+		{"boards/toto5", "TOTO", Board::Point::BLACK, 32},
+		{"boards/toto6", "TOTO", Board::Point::BLACK, 32},
 		{"", "", Board::Point::EMPTY, MAGIC, false},
 	});
 	if (n >= 0)
@@ -112,6 +117,7 @@ static void	test_heuri(int n, bool disp_sorted)
 	}
 	while (test[i].res != MAGIC)
 	{
+		std::cout << "Testing:" << i << std::endl;
 		test_board(test[i], false);
 		i++;
 	}

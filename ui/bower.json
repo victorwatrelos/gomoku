@@ -16,7 +16,6 @@
   ],
   "dependencies": {
     "jquery": "^3.1.0",
-    "fabric.js": "fabric#^1.6.4",
-    "materialize": "^0.97.7"
+    "fabric.js": "fabric#^1.6.4"
   }
 }

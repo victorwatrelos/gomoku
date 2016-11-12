@@ -1,7 +1,7 @@
 <!doctype html>  
 <html lang="en">  
 	<head>
-		<link href="/materialize/bin/materialize.css" rel="stylesheet" />
+		<link href="/css/materialize.css" rel="stylesheet" />
 		<link href="/css/style.css" rel="stylesheet" />
 
 	</head>
@@ -38,10 +38,10 @@
 
 					</div>
 				</div>
-				<div class="col s4">
+				<div class="col s3">
 					<div class="section">
 						<h5 id="disp_turn_of">
-							Turn of <span id="player_turn"></span> player,
+							Turn of <span id="player_turn"></span> player
 							<span id="waiting_action">please play</span>
 						</h5>
 						<div id="disp_turn_back">
@@ -62,10 +62,16 @@
 						</div>
 					</div>
 				</div>
-				<div class="col s2">
+				<div class="col s3">
 					<div class="section">
 						<h5>Controle</h5>
-						<a id="restart_game" class="waves-effect waves-light btn">Restart game</a>
+						<p>
+							<a id="restart_game" class="waves-effect waves-light btn">Restart game</a>
+						</p>
+						<p>
+							<input type="checkbox" id="help" />
+							<label for="help">Help for weak people</label>
+						</p>
 					</div>
 				</div>
 			</div>
@@ -80,8 +86,8 @@
 				<div class="col s4">
 					<h5>Time</h5>
 					<p>
-					Black take <span id="black_duration"></span><br/>
-					White take <span id="white_duration"></span>
+					Black took <span id="black_duration"></span><br/>
+					White took <span id="white_duration"></span>
 					</p>
 				</div>
 			</div>
@@ -89,10 +95,13 @@
 					<canvas id="c" width="1000px" height="1000px"></canvas>
 				 <div id="winner_div" class="modal">
 					 <div class="modal-content">
-						 <h4>The winner is <span id="player_name"></span></h4>
+						 <h4 id="winning_info">The winner is </h4>
 						 <p>
 						 Average time for black: <span id="black_average"></span> (<span id="black_info"></span>)</br>
 						 Average time for white: <span id="white_average"></span> (<span id="white_info"></span>)</br>
+						 </p>
+						 <p>
+							Turn: <span id="nb_turn_winner"></span>
 						 </p>
 					 </div>
 					 <div class="modal-footer">
@@ -103,56 +112,44 @@
 				 <div id="ask_new_game" class="modal">
 					 <div class="modal-content">
 						 <h4>New game?</h4>
-						 <div class="row"></div>
-						<div class="row">
-							<form class="col s12">
-								<div class="row">
-									<div class="col s4">
-										Player 1 artificial intelligence
-									</div>
-									<div class="col s6">
-									<div class="switch">
-										<label>
-											 Off
-											<input id="player_1_type" type="checkbox">
-											<span class="lever"></span>
-											On
-										</label>
-									</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col s4">
-										Player 2 artificial intelligence
-									</div>
-									<div class="col s6">
-									<div class="switch">
-										<label>
-											 Off
-											<input id="player_2_type" type="checkbox">
-											<span class="lever"></span>
-											On
-										</label>
-									</div>
-									</div>
-								</div>
-							</form>
-						</div>
+						 <div class="row">
+							 <div class="input-field col s5">
+								 <select id="player_1_type">
+									 <option value="human">Human</option>
+									 <option selected="selected" value="ai1">Easy AI</option>
+									 <option value="ai2">Medium AI</option>
+									 <option value="ai3">Hard AI</option>
+								 </select>
+								 <label>Choose black player</label>
+							 </div>
+						 </div>
+						 <div class="row">
+							 <div class="input-field col s5">
+								 <select id="player_2_type">
+									 <option value="human">Human</option>
+									 <option value="ai1">Easy AI</option>
+									 <option value="ai2">Medium AI</option>
+									 <option value="ai3">Hard AI</option>
+								 </select>
+								 <label>Choose white player</label>
+							 </div>
+						 </div>
 					 </div>
 					 <div class="modal-footer">
 						 <a href="#!" id="launch_new_game" class="modal-action
-						 waves-effect waves-green btn-flat">Launch new game</a>
+							 waves-effect waves-green btn-flat">Launch new game</a>
 					 </div>
 				 </div>
-			</div>
-		</div>
+			 </div>
+		 </div>
 		<img style="display: none;" src="/images/board_go.png" id="img_board">
 		<img style="display: none;" src="/images/white_stone.png" id="white_stone">
 		<img style="display: none;" src="/images/black_stone.svg" id="black_stone">
 		<img style="display: none;" src="/images/black_stone_last.png" id="black_stone_last">
 		<img style="display: none;" src="/images/white_stone_last.png" id="white_stone_last">
+		<img style="display: none;" src="/images/stone_help.png" id="stone_help">
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-		<script src="/materialize/bin/materialize.js"></script>
+		<script src="/js/materialize.js"></script>
 		<script src="/js/DisplayModule.js"></script>
 		<script src="/socket.io/socket.io.js"></script>            
 		<script src="/fabric.js/dist/fabric.js"> </script>
@@ -162,6 +159,8 @@
 		<script src="/js/EventLoop.js"></script>
 		<script src="/js/SocketModule.js"></script>
 		<script>  
+		$(document).ready(function() {
+			$('select').material_select();
 			var canvas = new fabric.Canvas('c');
 			canvas.setHeight = 1000;
 			canvas.setWidth = 1000;
@@ -181,6 +180,7 @@
 			canvas.renderAll();
 			SocketModule.askBoard();
 			SocketModule.sendMove(-1, -1);
+		});
 		</script>
 	</body>
 </html>

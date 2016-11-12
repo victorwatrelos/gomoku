@@ -25,9 +25,9 @@ EventLoop = (function() {
 				BoardModule.setDispOverlay(true);
 			});
 			$('#launch_new_game').click(function() {
-				var p1 = $('#player_1_type').is(":checked");
-				var p2 = $('#player_2_type').is(":checked");
-				SocketModule.sendNewGame(p1, p2);
+				var p1 = $('#player_1_type').val();
+				var p2 = $('#player_2_type').val();
+				SocketModule.sendNewGame(p1, p2, 0);
 			});
 			$('#winner_modal_btn').click(function() {
 				$('#winner_div').closeModal();
@@ -35,6 +35,9 @@ EventLoop = (function() {
 			});
 			$('#restart_game').click(function() {
 				SocketModule.sendForceRestart();
+			});
+			$('#help').change(function() {
+				BoardModule.setHelpDisplay($(this).is(':checked'));
 			});
 		}
 	}

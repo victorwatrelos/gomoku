@@ -12,11 +12,26 @@ AI::AI(const AI & rhs)
 	*this = rhs;
 }
 
-AI::AI(AbstractHeuristic *h, Board::Point &color)
+AI::AI(AbstractHeuristic *h, Board::Point &color, int aiLevel)
 	: _h(h), _player_color(color), _lineData(new CheckForceMove()), _browseBoard(this->_lineData)
 {
 	this->_historyTable.reserve(1'000'000);
 	this->_transpositionTable.reserve(1'000'000);
+	std::cout << "ailevel: " << aiLevel << std::endl;
+	switch (aiLevel)
+	{
+		case 0:
+			this->_timeToCalc = 10'000;
+			break;
+		case 1:
+			this->_timeToCalc = 75'000;
+			break;
+		case 2:
+			this->_timeToCalc = 1'000'000;
+			break;
+		default:
+			this->_timeToCalc = 10'000;
+	};
 }
 
 AI::~AI(void)
@@ -88,33 +103,16 @@ int				AI::getTTSize()
 	return this->_transpositionTable.size();
 }
 
-const std::vector<Board>		AI::_expandNode(Board &node, int player, int depth)
+const std::vector<Board>		AI::_expandNode(Board &node, int player)
 {
 	std::unordered_set<int>		dups;
-	std::vector<Board>		lstBoard;
 	std::vector<Board>		tmpLstBoard;
-	Board						*tmpBoard;
 
-	
-//	this->_browseBoard.browse(*node, this->_player_color);
-//	if ((dups = this->_lineData->getForcedMove()).size() > 0)
-//	{
-//		for (auto i : dups)
-//		{
-//			tmpBoard = new Board(*node);
-//			if (player > 0)
-//				tmpBoard->setMove(i, this->_player_color);
-//			else
-//				tmpBoard->setMove(i, Board::getOppColor(this->_player_color));
-//			lstBoard.push_back(tmpBoard);
-//		}
-//	}
 	
 	if (player == 1)
 		tmpLstBoard = node.expand(this->_player_color);
 	else
 		tmpLstBoard = node.expand(Board::getOppColor(this->_player_color));
-	//lstBoard.insert(lstBoard.end(), tmpLstBoard.begin(), tmpLstBoard.end());
 	return tmpLstBoard;
 }
 
@@ -127,6 +125,10 @@ int				AI::negamax(Board &node, int depth, int A, int B, int player)
 	int						origA = A;
 	bool					cutoff = false;
 
+	if (node.isWinningBoard())
+	{
+		return (100'000 * depth * -1 * player);
+	}
 	auto it = this->_transpositionTable.find(node.getHash());
 	if (it != this->_transpositionTable.end())
 	{
@@ -146,15 +148,11 @@ int				AI::negamax(Board &node, int depth, int A, int B, int player)
 
 	if (depth == 0)
 	{
-//		this->startTimer();
 		eval = this->_h->eval(&node, this->_player_color) * player;
-//		this->addTime(this->_t_eval);
 		return (eval);
 	}
 
-	//this->startTimer();
-	children = this->_expandNode(node, player, depth);
-	//this->addTime(this->_t_expansion);
+	children = this->_expandNode(node, player);
 	std::sort(children.begin(), children.end(), [this](Board &a, Board &b) {return this->hashComp(a, b); });
 	this->nb_state += children.size();
 
@@ -187,11 +185,15 @@ int				AI::negamax(Board &node, int depth, int A, int B, int player)
 
 	this->_transpositionTable[node.getHash()] = entry;
 
-	//this->startTimer();
 	children.clear();
-	//this->addTime(this->_t_vector_clear);
 	return (bestValue);
 }
+
+int			AI::getMaxDepth() const
+{
+	return this->_maxDepth;
+}
+
 #include "../display/StdOutDisplay.hpp"
 
 static void	merge(const std::vector<Board> &lst)
@@ -219,24 +221,30 @@ int			AI::ID(const Board & board, Board::Point color)
 	int					best_h = -1'000'000;
 	int					best_pos = 0;
 	int					h_value;
-	long long			maxTime = 100'000;
-	long long			time = 0;
+	long long			t_time = 0;
 	TIMEP				start, end;
 	int					d = 1;
-	CheckForceMove		checkF;
-	BrowseBoard			browse(&checkF);
+	CheckForceMove		checkForcedMove;
+	BrowseBoard			browse(&checkForcedMove);
 
-	checkF.setBoards(&children);
+	children = board.expand(color);
+	checkForcedMove.setBoards(&children);
 	browse.browse(board, color);
-	if (children.size() == 0)
-		children = board.expand(color);
 	merge(children);
-	while (time < maxTime)
+	while (t_time < this->_timeToCalc)
 	{
 		this->_initial_depth = d;
 		start = std::chrono::high_resolution_clock::now();
 		for (auto child : children)
 		{
+			if (child.isWinningBoard())
+			{
+				std::cerr << "Winning at first occ" << std::endl;
+				best_pos = child.getLastMove();
+				end = std::chrono::high_resolution_clock::now();
+				t_time += this->getInt(start, end);
+				goto exit_function;
+			}
 			h_value = -1 * this->negamax(child, d, -1'000'000, 1'000'000, -1);
 			if (h_value > best_h)
 			{
@@ -245,11 +253,19 @@ int			AI::ID(const Board & board, Board::Point color)
 			}
 		}
 		end = std::chrono::high_resolution_clock::now();
-		time += this->getInt(start, end);
+		t_time += this->getInt(start, end);
 		d++;
 	}
+exit_function:
+	this->_lastTime = t_time;
+	this->_maxDepth = std::max(this->_maxDepth, d + 1);
 	std::cout << "Depth attained : " << d + 1 << std::endl;
 	return best_pos;
+}
+
+int64_t			AI::getLastTime() const
+{
+	return this->_lastTime;
 }
 
 /*

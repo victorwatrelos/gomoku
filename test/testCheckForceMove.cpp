@@ -2,8 +2,8 @@
 # define MAGIC (0xFAF87)
 #include "../display/StdOutDisplay.hpp"
 #include "../utilities/CheckForceMove.hpp"
-#include "loadBoard.hpp"
 # include "../utilities/BrowseBoard.hpp"
+#include "loadBoard.hpp"
 
 #include <string>
 #include <sstream>

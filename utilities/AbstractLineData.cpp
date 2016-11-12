@@ -31,13 +31,13 @@ void					AbstractLineData::_display(void)
 		<< " player col: " << this->_getColor(this->_currentColor) <<   " -- "
 		<< " interSpace: " << this->_interSpace << " -- "
 		<< " inter pos: " << this->_posInter
-		<< "(" << this->_posInter % GRID_LENGTH << "," << this->_posInter / GRID_LENGTH << ")"
-		<< " -- "
+		<< "(" << this->_posInter % GRID_LENGTH + 1<< "," << this->_posInter / GRID_LENGTH + 1<< ")"
+		<< ") -- "
 		<< " last is space: " << this->_lastIsSpace <<   " -- "
-		<< " first is space: " << this->_startingSpace << "(" << this->_posStart % GRID_LENGTH << ","
-			<< this->_posStart / GRID_LENGTH << " -- "
-		<< " ending space: " << this->_endingSpace << "(" << this->_posEnd % GRID_LENGTH << "," 
-			<< this->_posEnd / GRID_LENGTH << " -- "
+		<< " first is space: " << this->_startingSpace << "(" << this->_posStart % GRID_LENGTH + 1 << ","
+			<< this->_posStart / GRID_LENGTH + 1 << ") -- "
+		<< " ending space: " << this->_endingSpace << "(" << this->_posEnd % GRID_LENGTH + 1 << "," 
+			<< this->_posEnd / GRID_LENGTH + 1 << ") -- "
 		<< " nb cons: " << this->_nbCons << std::endl;
 }
 
@@ -112,7 +112,6 @@ bool				AbstractLineData::_hasPlace(int pos)
 		else
 			break;
 	}
-	//std::cout << "Here (x: " << startX << ", y: " << startY << ")" << std::endl;
 	return false;
 }
 
@@ -180,8 +179,20 @@ void					AbstractLineData::_addPointOtherColor(const Board::Point &p, int pos)
 	this->_lastIsSpace = false;
 }
 
+/*
+static std::string		getColor(const Board::Point &p)
+{
+	if (p == Board::Point::BLACK)
+		return "X";
+	if (p == Board::Point::WHITE)
+		return "O";
+	return "_";
+}
+*/
+
 void					AbstractLineData::addPoint(const Board::Point &p, int pos)
 {
+//	std::cout << "Color: " << getColor(p) << " pos: " << pos << std::endl;
 	this->_pos = pos;
 	if (this->_nbCons > 0 && this->_currentColor == p)
 		this->_addPointSameColor();

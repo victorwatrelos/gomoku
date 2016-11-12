@@ -14,6 +14,45 @@ Board::Board(const Board &obj)
 	*this = obj;
 }
 
+Board::Point		Board::_getPointOfChar(char c)
+{
+	switch (c)
+	{
+		case 'X':
+			return Board::Point::BLACK;
+		case 'O':
+			return Board::Point::WHITE;
+	}
+	return Board::Point::EMPTY;
+}
+
+void					Board::loadBoard(const std::string &filename)
+{
+	std::string line;
+	std::ifstream infile(filename) ;
+	std::vector<Board::Point>		grid;
+
+	if ( infile ) {
+		while ( getline( infile , line ) ) {
+			for (auto c : line)
+			{
+				if (c == 'X' || c == 'O' || c == '_')
+					grid.push_back(this->_getPointOfChar(c));
+			}
+		}
+	} else {
+		std::cerr << "Unable to open the files" << std::endl;
+	}
+	infile.close();
+	if (grid.size() != GRID_SIZE)
+	{
+		std::cerr << grid.size() << std::endl;
+		std::cerr << "Bad size of grid for file " << filename << ", board not loaded" << std::endl;
+		return;
+	}
+	this->_board = grid;
+}
+
 Board    								&Board::operator=(const Board &p)
 {
 	this->_board = p.getBoard();
@@ -680,11 +719,22 @@ bool					Board::_checkMoveInCapture(int pos, Board::Point color) const
  *			EXPAND FUNCTIONS
  */
 
+bool					Board::isFinish(const Board::Point &currentColor) const
+{
+	for (int i = 0; i < GRID_SIZE; i++)
+	{
+		if (this->isMoveValid(i, currentColor))
+			return false;
+	}
+	return true;
+}
+
 std::vector<Board>		Board::expand(Point color) const
 {
 	std::vector<Board>	st;
 	std::unordered_set<int>		dups;
 	int							set = 0;
+	int							x, y;
 
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
@@ -694,10 +744,24 @@ std::vector<Board>		Board::expand(Point color) const
 			set++;
 		}
 	}
-	if (set == 0)
+	if (set == 0 && this->_lastMove == -1)
 	{
+		x = (std::rand() % (GRID_LENGTH - 4)) + 2;
+		y = (std::rand() % (GRID_LENGTH - 4)) + 2;
 		st.push_back(*this);
-		(st.back()).setMove(GRID_SIZE / 2, color);
+		(st.back()).setMove(x + y * GRID_LENGTH, color);
+	}
+	else if (set == 0)
+	{
+		for (int pos = 0; pos < GRID_SIZE; pos++)
+		{
+			if (this->isMoveValid(pos, color))
+			{
+				st.push_back(*this);
+				st.back().setMove(pos, color);
+				break ;
+			}
+		}
 	}
 	return st;
 }

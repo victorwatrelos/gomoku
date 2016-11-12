@@ -1,7 +1,7 @@
 #include "GameLoop.hpp"
 
 GameLoop::GameLoop(void) :
-	_p1(Parser::PlayerType::AI), _p2(Parser::PlayerType::HUMAN)
+	_p1(Parser::PlayerType::AI1), _p2(Parser::PlayerType::HUMAN)
 {
 	this->_initServer();
 	this->_createPlayers();
@@ -15,6 +15,7 @@ GameLoop::GameLoop(Parser::PlayerType p1, Parser::PlayerType p2) :
 	this->_initServer();
 	this->_createPlayers();
 	this->_initDisplay();
+//	this->_board.loadBoard("toto");
 
 }
 
@@ -34,15 +35,27 @@ GameLoop	&GameLoop::operator=(const GameLoop &p) {
 	return *this;
 }
 
+AbstractPlayer	*GameLoop::_getPlayer(const Parser::PlayerType &type,
+		const std::string &name, const Board::Point &color)
+{
+	switch (type)
+	{
+		case Parser::PlayerType::HUMAN:
+			return new NetworkPlayer(name, color, this->_server);
+		case Parser::PlayerType::AI1:
+			return new AIPlayer(name, color, 0);
+		case Parser::PlayerType::AI2:
+			return new AIPlayer(name, color, 1);
+		case Parser::PlayerType::AI3:
+			return new AIPlayer(name, color, 2);
+		case Parser::PlayerType::NONE:
+			return new NetworkPlayer(name, color, this->_server);
+	};
+}
+
 void		GameLoop::_createPlayers(void) {
-	if (this->_p1 == Parser::PlayerType::AI)
-		this->_players[0] = new AIPlayer("Black", Board::Point::BLACK);
-	else
-		this->_players[0] = new NetworkPlayer("Black", Board::Point::BLACK, this->_server);
-	if (this->_p2 == Parser::PlayerType::AI)
-		this->_players[1] = new AIPlayer("White", Board::Point::WHITE);
-	else
-		this->_players[1] = new NetworkPlayer("White", Board::Point::WHITE, this->_server);
+	this->_players[0] = this->_getPlayer(this->_p1, "Black", Board::Point::BLACK);
+	this->_players[1] = this->_getPlayer(this->_p2, "White", Board::Point::WHITE);
 }
 
 void		GameLoop::_initServer(void) {
@@ -68,6 +81,14 @@ void		GameLoop::_getPlayerMove(AbstractPlayer &player) {
 		{
 			this->_board.setMove(pos, player.getColor());
 			return ;
+		}
+		else
+		{
+			if (this->_board.isFinish(player.getColor()))
+			{
+				this->_server->sendWinner(Board::Point::EMPTY);
+				exit(0);
+			}
 		}
 		std::cout << "Move invalid" << std::endl;
 	}

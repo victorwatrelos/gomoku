@@ -11,18 +11,30 @@ AIPlayer::AIPlayer(const AIPlayer & rhs)
 	*this = rhs;
 }
 
-AIPlayer::AIPlayer(const std::string &name, const Board::Point &color)
+AIPlayer::AIPlayer(const std::string &name, const Board::Point &color, int aiLevel)
 	: _lineData(new CheckForceMove()), _browseBoard(this->_lineData)
 {
 	this->_name = name;
 	this->_color = color;
 	this->_h = new MHeuristic();
-//	this->_h = new SimpleHeuristic();
-	this->_ai = new AI(this->_h, this->_color);
+	this->_ai = new AI(this->_h, this->_color, aiLevel);
 	this->_ai->setInitialDepth(INITIAL_DEPTH);
 }
 
 AIPlayer::~AIPlayer(void) {}
+
+std::string			AIPlayer::getInfo(void) const
+{
+	std::stringstream ss;
+
+	ss << "Maximal depth: " << this->_ai->getMaxDepth();
+	return ss.str();
+}
+
+std::string			AIPlayer::getLastTime(void) const
+{
+	return this->_getStrTime(this->_ai->getLastTime());
+}
 
 AIPlayer&			AIPlayer::operator=(const AIPlayer & rhs)
 {
@@ -31,47 +43,6 @@ AIPlayer&			AIPlayer::operator=(const AIPlayer & rhs)
 	this->_h = rhs._h;
 	this->_ai = rhs._ai;
 	return *this;
-}
-/*
-int					AIPlayer::getMove(const Board &board)
-{
-	Board				new_board;
-	int					best_h = -1;
-	int					best_pos = 0;
-	int					h_value;
-
-	this->_ai->nb_state = 0;
-	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
-	{
-		if (board.isMoveValid(pos, this->_color))
-		{
-			new_board = board;
-			new_board.setMove(pos, this->_color);
-			h_value = this->_ai->minimax(&new_board, 1, true);
-			if (h_value > best_h)
-			{
-				best_h = h_value;
-				best_pos = pos;
-			}
-		}
-	}
-	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;
-	return best_pos;
-}
-*/
-
-void                printTTT(unsigned long int t, int a)
-{
-	int             m, s, ms, us;
-
-	m = (t / 60000000);
-	s = (t / 1000000) % 60;
-	ms = (t / 1000) % 1000;
-	us = t % 1000;
-	if (a == 1)
-		printf("Time taken for expansion: %dm%ds%dms%dus\n", m, s, ms, us);
-	else if (a == 2)
-		printf("Time taken for minmax iter: %dm%ds%dms%dus\n", m, s, ms, us);
 }
 
 void				AIPlayer::_expandPoints(Board::Point color, int pos, std::unordered_set<int> &dups, const Board &b, int depth)
@@ -108,60 +79,16 @@ void				AIPlayer::_expandPoints(Board::Point color, int pos, std::unordered_set<
 	}
 }
 
-void				showExpand(std::unordered_set<int> dups, const Board &board)
-{
-	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
-	{
-		if (pos % GRID_LENGTH == 0)
-			std::cout << std::endl;
-		if (dups.find(pos) != dups.end())
-		{
-			if (board.lookAt(pos) != PEMPTY)
-				std::cout << "X ";
-			else
-				std::cout << "O ";
-		}
-		else
-		{
-			if (board.lookAt(pos) != PEMPTY)
-				std::cout << "E ";
-			else
-				std::cout << "_ ";
-		}
-	}
-	std::cout << std::endl;
-}
-
 int						AIPlayer::getMove(const Board &board)
 {
 	Board				new_board;
-	int					best_h = -1'000'000;
 	int					best_pos = 0;
-	int					h_value;
 	std::unordered_set<int>		dups;
 	std::vector<Board::Point>	b = board.getBoard();
 
 	this->_ai->nb_state = 0;
-/*
-	this->_fillNextMoves(dups, board);
-	showExpand(dups, board);
-//	if (dups.size() == 1)
-//		return *(dups.begin());
-	for (auto i : dups)
-	{
-		new_board = board;
-		new_board.setMove(i, this->_color);
-		h_value = -1 * this->_ai->negamax(new_board, INITIAL_DEPTH, -1'000'000, 1'000'000, -1);
-		if (h_value > best_h)
-		{
-			best_h = h_value;
-			best_pos = i;
-		}
-	}
-*/
 	best_pos = this->_ai->ID(board, this->_color);
 
-//	std::cout << "best h = " << best_h << std::endl;
 	std::cout << "history size : " << this->_ai->getHistorySize() << std::endl;
 	std::cout << "TT size : " << this->_ai->getTTSize() << std::endl;
 	std::cout << "nb state explored : " << this->_ai->nb_state << std::endl;

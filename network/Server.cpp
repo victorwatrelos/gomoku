@@ -193,14 +193,15 @@ void		Server::sendWinner(const Board::Point &color) {
 	this->_nbTry = 0;
 }
 
-int			Server::getMove(Board::Point &color)
+int			Server::getMove(Board::Point &color, int concelorPos)
 {
 	int		iColor = this->_getClientColor(color);
 	nlohmann::json msg_json;
 	nlohmann::json res_json;
 
 	msg_json["type"] = "get_move";
-	msg_json["data"] = iColor;
+	msg_json["data"]["color"] = iColor;
+	msg_json["data"]["concelor_pos"] = concelorPos;
 
 	try {
 		this->_sendMsg(msg_json.dump().c_str());
@@ -210,7 +211,7 @@ int			Server::getMove(Board::Point &color)
 		delete e;
 		this->_getClient();
 		this->_wait();
-		return this->getMove(color);
+		return this->getMove(color, concelorPos);
 	}
 	if (res_json["type"] == "move")
 	{
@@ -218,7 +219,7 @@ int			Server::getMove(Board::Point &color)
 		return res_json["data"]["pos"];
 	}
 	this->_wait();
-	return this->getMove(color);
+	return this->getMove(color, concelorPos);
 }
 
 nlohmann::json	Server::_getMsg(size_t) {
@@ -240,11 +241,13 @@ nlohmann::json	Server::_getMsg(size_t) {
 		try {
 			auto tmp = nlohmann::json::parse(res);
 			this->_nbTry = 0;
+			delete p_res;
 			return tmp;
 		} catch (std::invalid_argument e) {
 			if (reTry > 100)
 			{
 				std::cerr << "Failure: " << e.what() << std::endl;
+				delete p_res;
 				exit(1);
 			}
 			reTry++;
