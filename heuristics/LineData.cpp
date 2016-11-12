@@ -89,7 +89,7 @@ void					LineData::_endOfSeries(void)
 	{
 		if (this->_interSpace > 0)
 		{
-			tmpScore -= 16;
+			tmpScore -= std::pow(4, this->_nbCons - 1);
 		}
 	}
 

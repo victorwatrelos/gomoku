@@ -15,6 +15,8 @@ io.on('connection', function(client) {
 		m_client.emit('data', {'type': 'ask_new_game', 'data': null});
 
 	client.on('node-data', function(data) {
+		console.log('front-to-node-data: ');
+		console.log(data);
 		switch (data.type) {
 			case "new_game":
 				gomokuManager.launchGomoku(data.data);
@@ -30,6 +32,8 @@ io.on('connection', function(client) {
 		};
 	});
 	client.on('data', function(data) {
+		console.log('front-to-back-data: ');
+		console.log(data);
 		comBack.sendData(data);
 	});
 	client.on('error', function(err) {
@@ -39,6 +43,8 @@ io.on('connection', function(client) {
 }
 
 module.exports.sendData = function(data) {
+	console.log('data: ');
+	console.log(data);
 	if (data.type == "board")
 	{
 		tmp_board = data;

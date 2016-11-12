@@ -221,7 +221,7 @@ int			AI::ID(const Board & board, Board::Point color)
 	int					best_h = -1'000'000;
 	int					best_pos = 0;
 	int					h_value;
-	long long			time = 0;
+	long long			t_time = 0;
 	TIMEP				start, end;
 	int					d = 1;
 	CheckForceMove		checkF;
@@ -232,7 +232,7 @@ int			AI::ID(const Board & board, Board::Point color)
 	if (children.size() == 0)
 		children = board.expand(color);
 	merge(children);
-	while (time < this->_timeToCalc)
+	while (t_time < this->_timeToCalc)
 	{
 		this->_initial_depth = d;
 		start = std::chrono::high_resolution_clock::now();
@@ -242,6 +242,8 @@ int			AI::ID(const Board & board, Board::Point color)
 			{
 				std::cerr << "Winning at first occ" << std::endl;
 				best_pos = child.getLastMove();
+				end = std::chrono::high_resolution_clock::now();
+				t_time += this->getInt(start, end);
 				goto exit_function;
 			}
 			h_value = -1 * this->negamax(child, d, -1'000'000, 1'000'000, -1);
@@ -252,11 +254,11 @@ int			AI::ID(const Board & board, Board::Point color)
 			}
 		}
 		end = std::chrono::high_resolution_clock::now();
-		time += this->getInt(start, end);
+		t_time += this->getInt(start, end);
 		d++;
 	}
 exit_function:
-	this->_lastTime = time;
+	this->_lastTime = t_time;
 	this->_maxDepth = std::max(this->_maxDepth, d + 1);
 	std::cout << "Depth attained : " << d + 1 << std::endl;
 	return best_pos;

@@ -13,7 +13,16 @@ NetworkPlayer::NetworkPlayer(const std::string &name, const Board::Point &color,
 }
 
 int		NetworkPlayer::getMove(const Board & board) {
-	int	pos = this->_aiPlayer->getMove(board);
+	int		pos;
+
+	if (this->_lastPos < 0 || (this->_hashLastBoard != board.getHash()))
+	{
+		pos = this->_aiPlayer->getMove(board);
+	} else {
+		pos = this->_lastPos;
+	}
+	this->_hashLastBoard = board.getHash();
+	this->_lastPos = pos;
 	return this->_server->getMove(this->_color, pos);
 }
 

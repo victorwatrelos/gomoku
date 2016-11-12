@@ -16,6 +16,8 @@ class NetworkPlayer : public AbstractPlayer
 		NetworkPlayer(void);
 		Server	*_server = nullptr;
 		AIPlayer	*_aiPlayer;
+		uint64_t	_hashLastBoard = 0;
+		int			_lastPos = -1;
 
 };
 #endif
