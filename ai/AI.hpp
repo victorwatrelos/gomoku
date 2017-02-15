@@ -10,7 +10,7 @@
 # include "../utilities/CheckForceMove.hpp"
 # include "../utilities/BrowseBoard.hpp"
 
-# define TIMEP				std::chrono::high_resolution_clock::time_point	
+using time_point = std::chrono::high_resolution_clock::time_point;
 
 namespace			TTUtility
 {
@@ -48,9 +48,9 @@ class						AI
 		void				resetTimer(void);
 		void				startTimer();
 		void				addTime(long long &dur);
-		TIMEP				getTime();
+		time_point				getTime();
 		int					getMaxDepth() const;
-		long long			getInt(TIMEP start, TIMEP end);
+		long long			getInt(time_point start, time_point end);
 		void				printTime(long long dur, std::string str);
 		void				showTime();
 
@@ -76,7 +76,7 @@ class						AI
 		long long			_t_expansion;
 		long long			_t_eval;
 		long long			_t_vector_clear;
-		TIMEP				_timer;
+		time_point			_timer;
 		CheckForceMove		*_lineData;
 		BrowseBoard			_browseBoard;
 		int64_t				_timeToCalc;

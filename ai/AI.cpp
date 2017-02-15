@@ -222,7 +222,7 @@ int			AI::ID(const Board & board, Board::Point color)
 	int					best_pos = 0;
 	int					h_value;
 	long long			t_time = 0;
-	TIMEP				start, end;
+	time_point				start, end;
 	int					d = 1;
 	CheckForceMove		checkForcedMove;
 	BrowseBoard			browse(&checkForcedMove);
@@ -286,18 +286,18 @@ void		AI::startTimer()
 
 void		AI::addTime(long long &dur)
 {
-	TIMEP	end;
+	time_point	end;
 
 	end = getTime();
 	dur += getInt(this->_timer, end);
 }
 
-TIMEP		AI::getTime()
+time_point		AI::getTime()
 {
 	return std::chrono::high_resolution_clock::now();
 }
 
-long long	AI::getInt(TIMEP start, TIMEP end)
+long long	AI::getInt(time_point start, time_point end)
 {
 	return std::chrono::duration_cast<std::chrono::microseconds>( end - start ).count();
 }
