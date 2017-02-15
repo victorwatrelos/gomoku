@@ -4,7 +4,7 @@ AI::AI(void)
 	: _lineData(new CheckForceMove()), _browseBoard(this->_lineData)
 {
 	this->_h = nullptr;
-	this->_player_color = PEMPTY;
+	this->_player_color = Board::Point::EMPTY;
 }
 
 AI::AI(const AI & rhs)

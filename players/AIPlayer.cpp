@@ -3,7 +3,7 @@
 AIPlayer::AIPlayer(void) 
 	: _lineData(new CheckForceMove()), _browseBoard(this->_lineData) {
 	this->_name = "AIPlayer";
-	this->_color = PEMPTY;
+	this->_color = Board::Point::EMPTY;
 }
 
 AIPlayer::AIPlayer(const AIPlayer & rhs)

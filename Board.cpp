@@ -506,20 +506,20 @@ bool					Board::_checkThreeLine(int pos, Board::Point color, std::vector<int> &t
 			curr = this->_board[index];
 		else
 			curr = color;
-		if (it == 3 && curr == PEMPTY && firstSpace)
+		if (it == 3 && curr == Board::Point::EMPTY && firstSpace)
 			return (true);
-		else if (last == color && curr == PEMPTY && space < 2)
+		else if (last == color && curr == Board::Point::EMPTY && space < 2)
 			space++;
-		else if (((last == PEMPTY && curr == color) || (last == color && curr == color)) && space < 2)
+		else if (((last == Board::Point::EMPTY && curr == color) || (last == color && curr == color)) && space < 2)
 		{
-			if (it == 0 && last == PEMPTY)
+			if (it == 0 && last == Board::Point::EMPTY)
 				firstSpace = true;
 			if (it < 3)
 				three[it++] = index;
 			else
 				this->_resetThreeCheck(three, it, space, firstSpace);
 		}
-		else if ((last == PEMPTY && curr == PEMPTY) || (curr != last))
+		else if ((last == Board::Point::EMPTY && curr == Board::Point::EMPTY) || (curr != last))
 			this->_resetThreeCheck(three, it, space, firstSpace);
 		last = curr;
 		j++;
@@ -577,20 +577,20 @@ bool					Board::_checkThreeDiag(int pos, Board::Point color, std::vector<int> &t
 			curr = this->_board[index];
 		else
 			curr = color;
-		if (it == 3 && curr == PEMPTY && firstSpace)
+		if (it == 3 && curr == Board::Point::EMPTY && firstSpace)
 			return (true);
-		else if (last == color && curr == PEMPTY && space < 2)
+		else if (last == color && curr == Board::Point::EMPTY && space < 2)
 			space++;
-		else if (((last == PEMPTY && curr == color) || (last == color && curr == color)) && space < 2)
+		else if (((last == Board::Point::EMPTY && curr == color) || (last == color && curr == color)) && space < 2)
 		{
-			if (it == 0 && last == PEMPTY)
+			if (it == 0 && last == Board::Point::EMPTY)
 				firstSpace = true;
 			if (it < 3)
 				three[it++] = index;
 			else
 				this->_resetThreeCheck(three, it, space, firstSpace);
 		}
-		else if ((last == PEMPTY && curr == PEMPTY) || (curr != last))
+		else if ((last == Board::Point::EMPTY && curr == Board::Point::EMPTY) || (curr != last))
 			this->_resetThreeCheck(three, it, space, firstSpace);
 		last = curr;
 		i++;
@@ -649,20 +649,20 @@ bool					Board::_checkThreeBackDiag(int pos, Board::Point color, std::vector<int
 			curr = this->_board[index];
 		else
 			curr = color;
-		if (it == 3 && curr == PEMPTY && firstSpace)
+		if (it == 3 && curr == Board::Point::EMPTY && firstSpace)
 			return (true);
-		else if (last == color && curr == PEMPTY && space < 2)
+		else if (last == color && curr == Board::Point::EMPTY && space < 2)
 			space++;
-		else if (((last == PEMPTY && curr == color) || (last == color && curr == color)) && space < 2)
+		else if (((last == Board::Point::EMPTY && curr == color) || (last == color && curr == color)) && space < 2)
 		{
-			if (it == 0 && last == PEMPTY)
+			if (it == 0 && last == Board::Point::EMPTY)
 				firstSpace = true;
 			if (it < 3)
 				three[it++] = index;
 			else
 				this->_resetThreeCheck(three, it, space, firstSpace);
 		}
-		else if ((last == PEMPTY && curr == PEMPTY) || (curr != last))
+		else if ((last == Board::Point::EMPTY && curr == Board::Point::EMPTY) || (curr != last))
 			this->_resetThreeCheck(three, it, space, firstSpace);
 		last = curr;
 		i--;
@@ -738,7 +738,7 @@ std::vector<Board>		Board::expand(Point color) const
 
 	for (int pos = 0 ; pos < GRID_SIZE ; pos++)
 	{
-		if (this->_board[pos] != PEMPTY)
+		if (this->_board[pos] != Board::Point::EMPTY)
 		{
 			this->_expandPoint(st, color, pos, dups, 2);
 			set++;

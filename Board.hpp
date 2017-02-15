@@ -13,8 +13,6 @@
 # include "define.hpp"
 # include "utilities/HashUtilities.hpp"
 
-# define PEMPTY						(Board::Point::EMPTY)
-
 class								Board
 {
 	public:
