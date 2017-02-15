@@ -8,11 +8,10 @@
 # include "../heuristics/MHeuristic.hpp"
 # include <sstream>
 
-# define INITIAL_DEPTH 2
-
 class						AIPlayer : public AbstractPlayer
 {
 	public:
+		static const int	INITIAL_DEPTH = 2;
 							AIPlayer(void);
 							AIPlayer(const AIPlayer & rhs);
 							AIPlayer(const std::string &name, const Board::Point &color, int aiLevel = 1);

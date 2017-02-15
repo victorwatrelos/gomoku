@@ -1,5 +1,6 @@
 #ifndef SOCKETEXCEPTION
 # define SOCKETEXCEPTION
+
 class SocketException : public std::exception
 {
 	public:
@@ -8,5 +9,6 @@ class SocketException : public std::exception
 		return "Socket disconnect";
 	}
 };
+
 #endif
 

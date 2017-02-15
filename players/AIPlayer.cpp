@@ -18,7 +18,7 @@ AIPlayer::AIPlayer(const std::string &name, const Board::Point &color, int aiLev
 	this->_color = color;
 	this->_h = new MHeuristic();
 	this->_ai = new AI(this->_h, this->_color, aiLevel);
-	this->_ai->setInitialDepth(INITIAL_DEPTH);
+	this->_ai->setInitialDepth(AIPlayer::INITIAL_DEPTH);
 }
 
 AIPlayer::~AIPlayer(void) {}
